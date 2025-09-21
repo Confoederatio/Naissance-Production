@@ -177,7 +177,8 @@ var path = require("path");
 		
 		//Declare local instance variables
 		var load_patterns = (!options.do_not_import_UF) ? [
-			"UF/js/vercengen/(vercengen_initialisation).js",
+			"!UF/archives",
+			//"UF/js/vercengen/(vercengen_initialisation).js",
 			"UF"
 		] : [];
 			load_patterns = load_patterns.concat(options.load_files);
