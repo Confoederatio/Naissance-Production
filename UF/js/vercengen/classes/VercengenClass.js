@@ -8,6 +8,12 @@ ve.Class = class {
 	constructor (arg0_options) {
 		//Convert from parameters
 		let options = (arg0_options) ? arg0_options : {};
+		
+		//Declare local instance variables
+		this.id = Class.generateRandomID(ve.Class); //Non-Vercengen objects can be used freely
+		
+		this.class_window = undefined;
+		this.instance_window = undefined;
 	}
 	
 	//Class methods
@@ -19,12 +25,12 @@ ve.Class = class {
 	
 	}
 	
-	isClosed () {
-	
+	isClosed (arg0_mode) {
+		//Return statement
 	}
 	
-	isOpen () {
-	
+	isOpen (arg0_mode) {
+		//Return statement
 	}
 	
 	open (arg0_mode, arg1_options) {
