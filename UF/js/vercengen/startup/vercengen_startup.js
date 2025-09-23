@@ -160,6 +160,9 @@ var path = require("path");
 	 */
 	ve.initialise = function () {
 		new DALS.Timeline(); //Initialise starting timeline
+		setTimeout(() => {
+			ve.Component.linter(); //Lint ve.Component library
+		}, 100);
 	};
 	
 	/**

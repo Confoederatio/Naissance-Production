@@ -1,1 +1,3 @@
-//Initialise class
+ve.Window = class {
+
+};
