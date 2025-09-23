@@ -25,7 +25,7 @@
 				Object.iterate(components_obj, (local_key, local_value) => {
 					try {
 						if (local_value.is_vercengen_component) {
-							let target_cell_el = this.element.querySelector(`table td[id=${local_value.x}-${local_value.y}]`);
+							let target_cell_el = this.element.querySelector(`table td[id"=${local_value.x}-${local_value.y}"]`);
 							
 							target_cell_el.innerHTML = "";
 							target_cell_el.appendChild(local_value.element);
