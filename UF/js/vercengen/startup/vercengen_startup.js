@@ -156,6 +156,13 @@ var path = require("path");
 	};
 	
 	/**
+	 * Initialises Vercengen and associated UF files.
+	 */
+	ve.initialise = function () {
+		new DALS.Timeline(); //Initialise starting timeline
+	};
+	
+	/**
 	 * Initialises a Vercengen app, alongside necessary UF imports.
 	 *
 	 * arg0_options: {@link Object}

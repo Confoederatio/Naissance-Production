@@ -18,6 +18,7 @@ DALS.Action = class {
 		//Declare local instance variables
 		this.id = Class.generateRandomID(DALS.Action);
 		this.redo_function = redo_function;
+		this.timeline = undefined; //Populated upon .addAction()
 		
 		//Assign Action to DALS.Timeline
 		if (!options.timeline) {
