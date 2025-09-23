@@ -115,10 +115,11 @@ DALS.Timeline = class {
 		DALS.loadState(this.value[0]);
 		
 		//Continue redoing actions starting from the cached state until we hit the target ID
-		for (let i = 1; i < this.value.length; i++)
-			if (this.value[i].id === action_id)
-				if (this.value[i].redo_function)
-					this.value[i].redo_function();
+		for (let i = 1; i < this.value.length; i++) {
+			if (this.value[i].redo_function)
+				this.value[i].redo_function();
+			if (this.value[i].id === action_id) break; //Break once we have hit the target ID
+		}
 	}
 	
 	jumpToEnd () {
