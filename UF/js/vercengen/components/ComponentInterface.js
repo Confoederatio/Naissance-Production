@@ -23,7 +23,7 @@ setTimeout(() => {
 		 * Iterates over al components and assigns their coordinates.
 		 * @param {Object} arg0_components_obj
 		 */
-		static assignComponentCoordinates (arg0_components_obj) {
+		static assignComponentCoordinates (arg0_components_obj) { //[WIP] - Finish function body
 			//Convert from parameters
 			let components_obj = arg0_components_obj;
 			
