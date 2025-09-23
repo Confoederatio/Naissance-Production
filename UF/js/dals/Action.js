@@ -6,37 +6,51 @@ DALS.Action = class {
 	static instances = [];
 	
 	//Constructor/getter/setter
-	constructor (arg0_redo_function, arg1_undo_function, arg2_options) {
+	constructor (arg0_redo_function, arg1_options) {
 		//Convert from parameters
 		let redo_function = arg0_redo_function;
-		let undo_function = arg1_undo_function;
-		let options = (arg2_options) ? arg2_options : {};
+		let options = (arg1_options) ? arg1_options : {};
 		
 		//Internal guard clauses
 		if (typeof redo_function !== "function")
-			throw new Error(`arg0_redo_function must be of type 'function' for dals.Action.`);
-		if (undo_function === undefined)
-			throw new Error(`arg0_undo_function must be of type 'function' for dals.Action.`);
+			throw new Error(`arg0_redo_function must be of type 'function' for DALS.Action.`);
 		
-		//Assign Action to dals.Timeline
+		//Declare local instance variables
+		this.id = Class.generateRandomID(DALS.Action);
+		this.redo_function = redo_function;
+		
+		//Assign Action to DALS.Timeline
 		if (!options.timeline) {
-		
+			//Assign to current_timeline
+			DALS.Timeline.current_timeline.addAction(this);
 		} else {
 			//Assign to specified timeline
-			
+			DALS.Timeline.getTimeline(options.timeline)
+				.addAction(this);
 		}
-	}
-	
-	get () {
-	
-	}
-	
-	set () {
-	
+		
+		DALS.Action.instances.push(this);
 	}
 	
 	//Class methods
-	delete () {
+	delete (arg0_options) {
+		//Declare local instance variables
+		let options = (arg0_options) ? arg0_options : {
+			removed_from_timeline: false
+		};
+		
+		//Iterate over DALS.Action.instances; delete rom DALS.Action.instances
+		for (let i = 0; i < DALS.Action.instances.length; i++)
+			if (DALS.Action.instances[i] === this) {
+				DALS.Action.instances.splice(i, 1);
+				break;
+			}
+		if (!options.removed_from_timeline)
+			if (this.timeline)
+				this.timeline.removeAction(this);
+	}
 	
+	jumpTo () {
+		this.timeline.jumpToAction(this.id);
 	}
 };
