@@ -27,10 +27,6 @@ ve.Class = class {
 	
 	}
 	
-	limit (arg0_function) {
-	
-	}
-	
 	open (arg0_mode, arg1_options) {
 	
 	}
@@ -68,8 +64,5 @@ ve.Class = class {
 		
 		//Return statement
 		return state_obj;
-	}
-	
-	setState (arg0_state_obj) {
 	}
 };
