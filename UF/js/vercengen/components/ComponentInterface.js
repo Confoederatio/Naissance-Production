@@ -1,5 +1,5 @@
 	setTimeout(() => {
-		ve.Interface = class veInterface extends ve.Component {
+		ve.Interface = class Interface extends ve.Component {
 			constructor (arg0_components_obj, arg1_options) {
 				super();
 				
@@ -8,6 +8,7 @@
 				let options = (arg1_options) ? arg1_options : {};
 				
 				//Declare local instance variables
+				this.components_obj = components_obj;
 				this.dimensions = [0, 0]; //Populate this.dimensions to [width, height];
 				this.element = document.createElement("span");
 				
@@ -17,25 +18,11 @@
 				this.element.innerHTML = html_string.join("");
 				
 				//Iterate over all keys in components_obj that .is_vercengen_component to find max dimensions needed for the table before invoking this.resize()
-				components_obj = ve.Interface.assignComponentCoordinates(components_obj);
-				this.dimensions = ve.Interface.getDefinedComponentDimensions(components_obj);
-				this.resize(this.dimensions[0] + 1, this.dimensions[1] + 1);
-				
-				//Populate x-y with individual Vercengen components in mutated components_obj
-				Object.iterate(components_obj, (local_key, local_value) => {
-					try {
-						if (local_value.is_vercengen_component) {
-							let target_cell_el = this.element.querySelector(`table td[id"=${local_value.x}-${local_value.y}"]`);
-							
-							target_cell_el.innerHTML = "";
-							target_cell_el.appendChild(local_value.element);
-						}
-					} catch (e) { console.error(e); }
-				});
+				this.redraw();
 			}
 			
 			/**
-			 * Iterates over al components and assigns their coordinates.
+			 * Iterates over all components and assigns their coordinates.
 			 * @param {Object} arg0_components_obj
 			 */
 			static assignComponentCoordinates (arg0_components_obj) {
@@ -94,6 +81,50 @@
 				
 				//Return statement
 				return defined_dimensions;
+			}
+			
+			addComponent (arg0_component_id, arg1_component_obj) {
+				//Convert from parameters
+				let component_id = arg0_component_id;
+				let component_obj = arg1_component_obj;
+				
+				//Assign x, y coordinates to component_obj
+				this.components_obj[component_id] = component_obj;
+				this.redraw();
+			}
+			
+			/**
+			 * Redraws the entire UI for {@link ve.Interface}, including refreshing individual table cells.
+			 */
+			redraw () {
+				this.components_obj = ve.Interface.assignComponentCoordinates(this.components_obj);
+				this.dimensions = ve.Interface.getDefinedComponentDimensions(this.components_obj);
+				this.resize(this.dimensions[0] + 1, this.dimensions[1] + 1);
+				
+				//Populate x-y with individual Vercengen components in mutated components_obj
+				this.refresh();
+			}
+			
+			refresh () {
+				Object.iterate(this.components_obj, (local_key, local_value) => {
+					try {
+						if (local_value.is_vercengen_component) {
+							let target_cell_el = this.element.querySelector(`table td[id="${local_value.x}-${local_value.y}"]`);
+							
+							target_cell_el.innerHTML = "";
+							target_cell_el.appendChild(local_value.element);
+						}
+					} catch (e) { console.error(e); }
+				});
+			}
+			
+			removeComponent (arg0_component_obj) {
+				//Convert from parameters
+				let component_obj = arg0_component_obj;
+				
+				//Remove component_obj, refresh this ve.Interface
+				component_obj.remove();
+				this.refresh();
 			}
 			
 			resize (arg0_width, arg1_height) {

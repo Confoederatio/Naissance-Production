@@ -1,5 +1,5 @@
 setTimeout(() => {
-	ve.Number = class veNumber extends ve.Component {
+	ve.Number = class Number extends ve.Component {
 		constructor (arg0_value, arg1_options) {
 			super();
 			
@@ -31,10 +31,6 @@ setTimeout(() => {
 			container_el.appendChild(this.element);
 		}
 		
-		delete () {
-			this.element.remove();
-		}
-		
 		get () {
 			//Return statement
 			return this.value;
@@ -47,6 +43,10 @@ setTimeout(() => {
 			//Set value and update UI
 			this.value = value;
 			this.element.querySelector("input").value = this.value;
+		}
+		
+		remove () {
+			this.element.remove();
 		}
 		
 		//Class methods
