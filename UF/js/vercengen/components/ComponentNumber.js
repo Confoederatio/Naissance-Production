@@ -15,8 +15,9 @@ setTimeout(() => {
 			if (options.name) html_string.push(`<span>${options.name}</span> `);
 			html_string.push(`<input type = "number">`);
 			
-			//Populate element and initialise handlers
+			//Populate element and initialise handlers; set .instance
 			this.element.innerHTML = html_string.join("");
+			this.element.instance = this;
 			this.element.querySelector("input").addEventListener("input", (e) => {
 				this.value = Number(e.target.value);
 			});
@@ -28,6 +29,10 @@ setTimeout(() => {
 			
 			//Set variable_key, append to container_el
 			container_el.appendChild(this.element);
+		}
+		
+		delete () {
+			this.element.remove();
 		}
 		
 		get () {

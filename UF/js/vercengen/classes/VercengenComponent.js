@@ -9,6 +9,10 @@ ve.Component = class {
 		Object.iterate(global.ve, (local_key, local_value) => {
 			try {
 				if (Object.getPrototypeOf(local_value) === ve.Component) {
+					//Check if delete() method exists
+					if (typeof local_value.prototype.delete !== "function")
+						console.error(`ve.Component: ve.${local_key} does not have a valid delete() function to remove its corresponding DOM element upon being cleared.`);
+					
 					//Check if get()/set() methods exist
 					if (typeof local_value.prototype.get !== "function")
 						console.error(`ve.Component: ve.${local_key} does not have a valid get() function.`);
