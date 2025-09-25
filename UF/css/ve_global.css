@@ -3,7 +3,6 @@ html, head, body {
     margin: 0px;
     width: 100%;
 }
-
 .ve.overlay {
     position: fixed;
     bottom: 0px;
@@ -13,4 +12,27 @@ html, head, body {
 
     height: 100dvh;
     width: 100dvw;
+}
+
+/* -- Vercengen themes -- */
+:root {
+    --accent-primary-colour: rgba(200, 40, 40);
+    --accent-secondary-colour: rgba(240, 60, 60);
+    --bg-primary-colour: rgba(0, 0, 0, 0.85);
+    --bg-secondary-colour: rgba(35, 35, 35);
+    --hover-colour: rgba(255, 255, 255, 0.3);
+
+    --header-colour: white;
+    --header-font-family: "Karla";
+    --header-font-size: 1rem;
+    --header-font-weight: 700;
+    --image-filter: brightness(100);
+
+    --body-colour: white;
+    --body-font-family: "Karla";
+    --body-font-size: 0.85rem;
+    --body-font-weight: 300;
+
+    --default-width: 12rem;
+    --padding: 0.5rem;
 }

@@ -88,7 +88,6 @@ ve.Window = class {
 		`;
 		this.element.style.zIndex = ve.Window.instances.length.toString();
 		
-		
 		//Instantiate element handlers
 		if (this.options.can_close && !this.options.headless && !this.options.is_static) {
 			let close_button = document.createElement("img");
@@ -106,7 +105,7 @@ ve.Window = class {
 			});
 		if (this.options.draggable && !this.options.is_static)
 			HTML.elementDragHandler(this.element, {
-				is_resizable: (this.options.is_resizable && !this.options.is_static)
+				is_resizable: (this.options.resizeable && !this.options.is_static)
 			});
 		
 		//Push Window instance to ve.Window.instances

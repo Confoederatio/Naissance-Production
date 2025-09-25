@@ -149,7 +149,8 @@
 			
 			for (let i = 0; i < handles.length; i++)
 				(function (edge) {
-					var handle = document.createElement('div');
+					let handle = document.createElement('div');
+					
 					handle.className = 'resize-handle resize-' + edge;
 					handle.style.position = 'absolute';
 					handle.style.zIndex = '1000';

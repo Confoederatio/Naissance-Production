@@ -3,8 +3,8 @@ setTimeout(() => {
 		constructor () {
 			super();
 			
-			this.number = new ve.Number(5);
-			super.open("instance");
+			this.number = new ve.Number(5, { name: "Test Number" });
+			super.open("instance", { name: "Help" });
 			
 			setInterval(() => {
 				console.log(this.number.v);
