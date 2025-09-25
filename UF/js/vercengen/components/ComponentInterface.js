@@ -1,11 +1,10 @@
 setTimeout(() => {
 	ve.Interface = class Interface extends ve.Component {
 		constructor (arg0_components_obj, arg1_options) {
-			super();
-			
 			//Convert from parameters
 			let components_obj = arg0_components_obj;
 			let options = (arg1_options) ? arg1_options : {};
+				super(options);
 			
 			//Declare local instance variables
 			this.components_obj = components_obj;
@@ -14,10 +13,6 @@ setTimeout(() => {
 				this.element.setAttribute("component", "ve-interface");
 				this.element.instance = this;
 				HTML.applyCSSStyle(this.element, options.style);
-			this.height = options.height;
-			this.width = options.width;
-			this.x = options.x;
-			this.y = options.y;
 			
 			let html_string = [];
 			html_string.push(`<table></table>`);

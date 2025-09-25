@@ -1,9 +1,17 @@
 ve.Component = class {
-	constructor () {
+	constructor (arg0_options) {
+		//Convert from parameters
+		let options = (arg0_options) ? arg0_options : {};
+		
 		//Declare local instance variables
 		let child_class = this.constructor;
 		
 		this.is_vercengen_component = true;
+		
+		this.height = options.height;
+		this.width = options.width;
+		this.x = options.x;
+		this.y = options.y;
 	}
 	
 	//Runs over all ve classes that extend ve.Component and lint them

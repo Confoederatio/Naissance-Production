@@ -88,7 +88,8 @@
 		
 		//Iterate over object and put together attribute_string
 		Object.iterate(object, (local_key, local_value) => {
-			attribute_string.push(`${local_key} = "${local_value}"`);
+			if (local_value !== undefined)
+				attribute_string.push(`${local_key} = "${local_value}"`);
 		});
 		
 		//Format attribute_string

@@ -1,11 +1,10 @@
 setTimeout(() => {
 	ve.Number = class veNumber extends ve.Component {
 		constructor (arg0_value, arg1_options) {
-			super();
-			
 			//Convert from parameters
 			let value = arg0_value;
 			let options = (arg1_options) ? arg1_options : {};
+				super(options);
 			
 			//Initialise options
 			options.attributes = options.attributes ? options.attributes : {};
@@ -21,18 +20,14 @@ setTimeout(() => {
 			this.element = document.createElement("span");
 				this.element.setAttribute("component", "ve-number");
 				this.element.instance = this;
-				HTML.applyCSSStyle(this.element, options.style);
-			this.height = options.height;
-			this.width = options.width;
-			this.x = options.x;
-			this.y = options.y;
+			HTML.applyCSSStyle(this.element, options.style);
 			
 			this.value = value;
 			
 			//Format HTML string
 			let html_string = [];
 			if (options.name) html_string.push(`<span>${options.name}</span> `);
-			html_string.push(`<input type = "number"${objectToAttributes(attributes)}>`);
+			html_string.push(`<input type = "number"${HTML.objectToAttributes(attributes)}>`);
 			
 			//Populate element and initialise handlers; set .instance
 			this.element.innerHTML = html_string.join("");
