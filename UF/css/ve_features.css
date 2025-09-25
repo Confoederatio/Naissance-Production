@@ -65,5 +65,9 @@
         font-size: var(--body-font-size);
         font-weight: var(--body-font-weight);
         padding: var(--padding);
+
+        overflow-x: auto;
+        scrollbar-color: white transparent;
+        scrollbar-width: thin;
     }
 }

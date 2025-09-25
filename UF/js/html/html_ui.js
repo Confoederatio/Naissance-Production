@@ -2,17 +2,6 @@
 {
 	if (!global.HTML) global.HTML = {};
 	
-	HTML.applyCSSStyleObject = function (arg0_el, arg1_style_obj) {
-		//Convert from parameters
-		let el = (typeof arg0_el === "object") ? arg0_el : document.querySelector(arg0_el);
-		let style_obj = (arg1_style_obj) ? arg1_style_obj : {};
-		
-		//Iterate over style_obj and apply it to el.style
-		Object.iterate(style_obj, (local_key, local_value) => {
-			el.style[local_key] = local_value.toString();
-		});
-	}
-	
 	/**
 	 * Creates a foldable element that can be minimised/expanded.
 	 *
@@ -162,7 +151,7 @@
 					}
 					
 					el.appendChild(handle);
-					handle.onmousedown = function(e) {
+					handle.onmousedown = function (e) {
 						e.stopPropagation();
 						is_resizing = true;
 						resize_edge = edge; // This 'edge' is correctly scoped thanks to the IIFE.
@@ -206,6 +195,7 @@
 			var viewport_height = window.innerHeight;
 			var viewport_width = window.innerWidth;
 			
+			if (document.querySelector(`[contenteditable]:not(#window-name):focus, input:focus`)) return;
 			e.preventDefault();
 			
 			if (is_resizing && options.is_resizable) {
@@ -299,47 +289,5 @@
 		
 		//Return statement
 		return el;
-	};
-	
-	HTML.getCSSPosition = function (arg0_anchor, arg1_x, arg2_y) {
-		//Convert from parameters
-		let anchor = (arg0_anchor) ? arg0_anchor : "top_left";
-		let x_coord = parseInt(arg1_x);
-		let y_coord = parseInt(arg2_y);
-		
-		//Declare local instance variables
-		let return_obj = {};
-		let x_string = (typeof x_coord === "string") ? x_coord : `${x_coord}px`;
-		let y_string = (typeof y_coord === "string") ? y_coord : `${y_coord}px`;
-		
-		//Set return_obj styles based on anchor
-		if (anchor === "top_left") {
-			return_obj.left = x_string;
-			return_obj.top = y_string;
-		} else if (anchor === "top_right") {
-			return_obj.right = x_string;
-			return_obj.top = y_string;
-		} else if (anchor === "bottom_left") {
-			return_obj.bottom = y_string;
-			return_obj.left = x_string;
-		} else if (anchor === "bottom_right") {
-			return_obj.bottom = y_string;
-			return_obj.right = x_string;
-		}
-		
-		//Return statement
-		return return_obj;
-	};
-	
-	HTML.getCSSSize = function (arg0_width, arg1_height) {
-		//Convert from parameters
-		let width = arg0_width;
-		let height = arg1_height;
-		
-		//Return statement
-		return {
-			height: (typeof this.height === "string") ? this.height : `${this.height}px`,
-			width: (typeof this.width === "string") ? this.width : `${this.width}px`
-		};
 	};
 }

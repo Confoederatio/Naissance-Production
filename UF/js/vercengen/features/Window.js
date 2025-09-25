@@ -103,10 +103,12 @@ ve.Window = class {
 			HTML.createSection({
 				selector: `.ve.window[id="${this.id}"] #feature-header, .ve.window[id="${this.id}"] #feature-body`
 			});
-		if (this.options.draggable && !this.options.is_static)
+		if (this.options.draggable && !this.options.is_static) {
+			this.element.classList.add("draggable");
 			HTML.elementDragHandler(this.element, {
 				is_resizable: (this.options.resizeable && !this.options.is_static)
 			});
+		}
 		
 		//Push Window instance to ve.Window.instances
 		this.refresh(this.components_obj);

@@ -1,0 +1,7 @@
+/* -- Generic Component styling -- */
+[component] input {
+    field-sizing: content;
+    min-width: calc(var(--default-width)/4);
+}
+
+/* -- ve.Number -- */

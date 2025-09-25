@@ -11,6 +11,13 @@ setTimeout(() => {
 			this.components_obj = components_obj;
 			this.dimensions = [0, 0]; //Populate this.dimensions to [width, height];
 			this.element = document.createElement("span");
+				this.element.setAttribute("component", "ve-interface");
+				this.element.instance = this;
+				HTML.applyCSSStyle(this.element, options.style);
+			this.height = options.height;
+			this.width = options.width;
+			this.x = options.x;
+			this.y = options.y;
 			
 			let html_string = [];
 			html_string.push(`<table></table>`);
@@ -133,6 +140,19 @@ setTimeout(() => {
 					if (local_value.is_vercengen_component) {
 						let target_cell_el = this.element.querySelector(`table td[id="${local_value.x}-${local_value.y}"]`);
 						
+						//Parse height, width
+						if (local_value.height !== undefined) {
+							target_cell_el.setAttribute("rowspan", local_value.height);
+						} else {
+							target_cell_el.removeAttribute("rowspan");
+						}
+						if (local_value.width !== undefined) {
+							target_cell_el.setAttribute("colspan", local_value.width);
+						} else {
+							target_cell_el.removeAttribute("colspan");
+						}
+						
+						//Set inner cell contents
 						target_cell_el.innerHTML = "";
 						target_cell_el.appendChild(local_value.element);
 					}

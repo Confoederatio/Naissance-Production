@@ -22,6 +22,6 @@
   "author": "Vis/Australis",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^29.0.1"
+    "electron": "^38.1.2"
   }
 }
