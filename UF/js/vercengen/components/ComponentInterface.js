@@ -21,7 +21,7 @@ setTimeout(() => {
 			this.redraw();
 		}
 		
-		bindTo (arg0_container_el) {
+		bind (arg0_container_el) {
 			//Convert from parameters
 			let container_el = arg0_container_el;
 			
