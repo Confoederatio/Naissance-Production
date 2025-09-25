@@ -1,5 +1,5 @@
 setTimeout(() => {
-	ve.Number = class Number extends ve.Component {
+	ve.Number = class veNumber extends ve.Component {
 		constructor (arg0_value, arg1_options) {
 			super();
 			
@@ -10,6 +10,7 @@ setTimeout(() => {
 			//Declare local instance variables
 			let html_string = [];
 			this.element = document.createElement("span");
+				this.element.instance = this;
 			this.value = value;
 			
 			if (options.name) html_string.push(`<span>${options.name}</span> `);
@@ -17,10 +18,10 @@ setTimeout(() => {
 			
 			//Populate element and initialise handlers; set .instance
 			this.element.innerHTML = html_string.join("");
-			this.element.instance = this;
 			this.element.querySelector("input").addEventListener("input", (e) => {
-				this.value = Number(e.target.value);
+				this.value = global.Number(e.target.value);
 			});
+			this.v = this.value;
 		}
 		
 		bindTo (arg0_container_el) {
@@ -31,12 +32,12 @@ setTimeout(() => {
 			container_el.appendChild(this.element);
 		}
 		
-		get () {
+		get v () {
 			//Return statement
 			return this.value;
 		}
 		
-		set (arg0_value) {
+		set v (arg0_value) {
 			//Convert from parameters
 			let value = arg0_value;
 			

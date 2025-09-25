@@ -11,17 +11,19 @@ ve.Component = class {
 		Object.iterate(global.ve, (local_key, local_value) => {
 			try {
 				if (Object.getPrototypeOf(local_value) === ve.Component) {
+					let local_description = Object.getOwnPropertyDescriptor(local_value.prototype, "v");
+					
 					//Check if get()/set() methods exist
-					if (typeof local_value.prototype.get !== "function")
-						console.error(`ve.Component: ve.${local_key} does not have a valid get() function.`);
-					if (typeof local_value.prototype.set !== "function")
-						console.error(`ve.Component: ve.${local_key} does not have a valid set() function.`);
+					if (!local_description || typeof local_description.get !== "function")
+						console.error(`ve.Component: ve.${local_key} does not have a valid get v() function.`);
+					if (!local_description || typeof local_description.set !== "function")
+						console.error(`ve.Component: ve.${local_key} does not have a valid set v() function.`);
 					
 					//Check if remove() method exists
 					if (typeof local_value.prototype.remove !== "function")
 						console.error(`ve.Component: ve.${local_key} does not have a valid remove() function to remove its corresponding DOM element upon being cleared.`);
 				}
-			} catch (e) {}
+			} catch (e) { console.error(e); }
 		});
 	}
 };

@@ -1,6 +1,6 @@
 //Import Node.js libraries
-var fs = require("fs");
-var path = require("path");
+global.fs = require("fs");
+global.path = require("path");
 
 //Initialise functions
 {
@@ -159,7 +159,14 @@ var path = require("path");
 	 * Initialises Vercengen and associated UF files.
 	 */
 	ve.initialise = function () {
+		//Initialise UF handlers
 		new DALS.Timeline(); //Initialise starting timeline
+		HTML.initialise();
+		
+		ve.window_overlay_el = document.createElement("div");
+		ve.window_overlay_el.id = "ve-overlay";
+		ve.window_overlay_el.setAttribute("class", "ve overlay");
+		document.body.appendChild(ve.window_overlay_el);
 		setTimeout(() => {
 			ve.Component.linter(); //Lint ve.Component library
 		}, 100);
