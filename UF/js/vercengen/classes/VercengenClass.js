@@ -19,6 +19,11 @@ ve.Class = class {
 	//Class methods
 	close (arg0_mode) {
 		//Convert from parameters
+		let mode = arg0_mode;
+		
+		//Close class_window/instance_window
+		this[`${mode}_window`].remove();
+		delete this[`${mode}_window`];
 	}
 	
 	draw (arg0_function, arg1_interval) {
@@ -27,31 +32,73 @@ ve.Class = class {
 	
 	isClosed (arg0_mode) {
 		//Return statement
+		return (!(this.class_window || this.instance_window));
 	}
 	
 	isOpen (arg0_mode) {
 		//Return statement
+		return (this.class_window || this.instance_window);
 	}
 	
 	/**
-	 * Opens the relevant window
+	 * Opens the relevant {@link ve.Window} or other Feature responsible for containing either class or instance variables.
+	 *
 	 * @param {string} [arg0_mode="instance"] - Whether the UI is bound to 'class'/'instance'. If 'class', it displays all static Vercengen fields.
 	 * @param {Object} [arg1_options]
 	 *  @param {boolean} [arg1_options.do_not_close_if_open=false] - Whether to close the Window already bound to class_window or instance_window
-	 *  @param {boolean} [arg1_options.is_window=false] - If the item is not a Window, then it is a frozen form of a Window with a constant z-index that cannot be moved/closed
+	 *  @param {string} [arg1_options.type="window"] - Either 'static'/'window'. 'static' by default if `.anchor`/`.x`/`.y` are specified.
 	 *
-	 *  @param {string} [arg1_options.anchor="top_left"] - Either 'bottom_left'/'bottom_right'/'top_left'/'top_right'. If neither this nor .x/.y are defined, the UI is spawned at the cursor position
+	 *  @param {string} [arg1_options.anchor="top_left"] - Either 'bottom_left'/'bottom_right'/'top_left'/'top_right'. If neither this nor .x/.y are defined, the UI is spawned at the cursor position.
 	 *  @param {number|string} [arg1_options.height]
 	 *  @param {number|string} [arg1_options.width]
-	 *  @param {number|string} [arg1_options.x] - Mouse coordinates if undefined
-	 *  @param {number|string} [arg1_options.y] - Mouse coordinates if undefined
+	 *  @param {number|string} [arg1_options.x] - Mouse coordinates if undefined.
+	 *  @param {number|string} [arg1_options.y] - Mouse coordinates if undefined.
 	 */
 	open (arg0_mode, arg1_options) { //[WIP] - Finish function body
 		//Convert from parameters
 		let mode = (arg0_mode) ? arg0_mode : "instance";
 		let options = (arg1_options) ? arg1_options : {};
 		
+		//Initialise options
+		if (options.type === undefined &&
+			(options.anchor !== undefined || options.x !== undefined || options.y !== undefined)
+		) options.type = "static";
+		
+		if (options.anchor === undefined) options.anchor = "top_left";
+		if (options.x === undefined) options.x = HTML.mouse_x;
+		if (options.y === undefined) options.y = HTML.mouse_y;
+		
 		//Declare local instance variables
+		let state_obj = this.getState();
+		
+		let class_components_obj = {};
+		let instance_components_obj = {};
+		
+		//Close window if open first
+		if (this.isOpen(mode) && !options.do_not_close_if_open) this.close(mode);
+		
+		//Iterate over all properties in class that .is_vercengen_component and append them to class_components_obj
+		Object.iterate(state_obj, (local_key, local_value) => {
+			if (local_key.startsWith("static-")) {
+				class_components_obj[local_key] = local_value;
+			} else {
+				instance_components_obj[local_key] = local_value;
+			}
+		});
+		
+		//Open ve.Window if either 'static'/'window'
+		let components_obj = (mode === "class") ? class_components_obj : instance_components_obj;
+		
+		if (options.type === "static") {
+			this[`${mode}_window`] = new ve.Window(components_obj, { is_static: true, ...options });
+		} else if (options.type === "window") {
+			this[`${mode}_window`] = new ve.Window(components_obj, {
+				draggable: true,
+				is_static: false,
+				resizeable: true,
+				...options
+			});
+		}
 	}
 	
 	//State methods
