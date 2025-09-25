@@ -64,10 +64,6 @@ ve.Class = class {
 			(options.anchor !== undefined || options.x !== undefined || options.y !== undefined)
 		) options.type = "static";
 		
-		if (options.anchor === undefined) options.anchor = "top_left";
-		if (options.x === undefined) options.x = HTML.mouse_x;
-		if (options.y === undefined) options.y = HTML.mouse_y;
-		
 		//Declare local instance variables
 		let state_obj = this.getState();
 		
@@ -89,9 +85,10 @@ ve.Class = class {
 		//Open ve.Window if either 'static'/'window'
 		let components_obj = (mode === "class") ? class_components_obj : instance_components_obj;
 		
+		console.log(state_obj, components_obj)
 		if (options.type === "static") {
 			this[`${mode}_window`] = new ve.Window(components_obj, { is_static: true, ...options });
-		} else if (options.type === "window") {
+		} else {
 			this[`${mode}_window`] = new ve.Window(components_obj, {
 				draggable: true,
 				is_static: false,
@@ -109,7 +106,10 @@ ve.Class = class {
 		let state_obj = {};
 		
 		//Fetch instance fields in child class
-		let instance_fields = Object.keys(this);
+		let instance_fields = {};
+			Object.iterate(this, (local_key, local_value) => {
+				instance_fields[local_key] = local_value
+			});
 		
 		//Fetch static fields unique to child class, mutate their keys to have 'static-' prepended to them.
 		let static_fields = Object.getOwnPropertyNames(child_class).filter((key) => (

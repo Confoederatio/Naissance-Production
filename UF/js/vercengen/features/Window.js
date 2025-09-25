@@ -62,6 +62,7 @@ ve.Window = class {
 		//Declare local instance variables
 		this.options = options;
 		
+		this.components_obj = components_obj;
 		this.element = document.createElement("div");
 		this.id = Class.generateRandomID(ve.Window);
 		this.x = options.x;
@@ -109,7 +110,7 @@ ve.Window = class {
 			});
 		
 		//Push Window instance to ve.Window.instances
-		this.refresh(components_obj);
+		this.refresh(this.components_obj);
 		ve.window_overlay_el.appendChild(this.element);
 		ve.Window.instances.push(this);
 	}
@@ -223,5 +224,7 @@ ve.Window = class {
 				ve.Window.instances.splice(i, 1);
 				break;
 			}
+		
+		this.element.remove();
 	}
 };
