@@ -1,7 +1,22 @@
 /* -- Generic Component styling -- */
 [component] input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--body-colour);
+    color: var(--body-colour);
     field-sizing: content;
+    font-family: var(--body-font-family);
     min-width: calc(var(--default-width)/4);
+}
+
+/* -- ve.Interface -- */
+td:has([component="ve-interface"]) {
+    padding-inline-start: 0.5rem;
+}
+[component="ve-interface"] {
+    summary:hover {
+        cursor: pointer;
+    }
 }
 
 /* -- ve.Number -- */

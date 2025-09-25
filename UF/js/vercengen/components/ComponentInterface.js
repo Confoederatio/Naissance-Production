@@ -5,8 +5,15 @@ setTimeout(() => {
 			let components_obj = arg0_components_obj;
 			let options = (arg1_options) ? arg1_options : {};
 				super(options);
+				
+			//Initialise options
+			if (options.is_folder !== false) options.is_folder = true;
 			
 			//Declare local instance variables
+			let attributes = {
+				open: options.open,
+				...options.attributes
+			};
 			this.components_obj = components_obj;
 			this.dimensions = [0, 0]; //Populate this.dimensions to [width, height];
 			this.element = document.createElement("span");
@@ -15,7 +22,12 @@ setTimeout(() => {
 				HTML.applyCSSStyle(this.element, options.style);
 			
 			let html_string = [];
-			html_string.push(`<table></table>`);
+			if (options.is_folder) {
+				html_string.push(`<details class = "ve interface-folder"${HTML.objectToAttributes(attributes)}>`);
+					html_string.push(`<summary>${(options.name) ? options.name : "Folder"}</summary>`);
+			}
+					html_string.push(`<table></table>`);
+				html_string.push(`</details>`);
 			
 			this.element.innerHTML = html_string.join("");
 			

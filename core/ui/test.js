@@ -3,11 +3,16 @@ setTimeout(() => {
 		constructor () {
 			super();
 			
-			this.number = new ve.Number(5, { name: "Test Number" });
+			this.interface = new ve.Interface({
+				test: new ve.Number(5, { name: "Test Number" }),
+				more_interface: new ve.Interface({
+					help: new ve.Number(1)
+				}, { name: "More UI" })
+			}, { open: true })
 			super.open("instance", { name: "Help" });
 			
 			setInterval(() => {
-				console.log(this.number.v);
+				console.log(this.interface.v.test.v);
 			}, 3000);
 		}
 	}
