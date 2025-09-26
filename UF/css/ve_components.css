@@ -9,6 +9,8 @@
     min-width: calc(var(--default-width)/4);
 }
 
+/* -- ve.Colour -- */
+
 /* -- ve.Interface -- */
 td:has([component="ve-interface"]) {
     padding-inline-start: 0.5rem;
