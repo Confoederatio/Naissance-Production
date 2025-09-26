@@ -2,6 +2,12 @@
 {
 	if (!global.Colour) global.Colour = {};
 	
+	/**
+	 * Converts a hex string to RGBA.
+	 *
+	 * @param {string} arg0_hex
+	 * @returns {number[]}
+	 */
 	Colour.convertHexToRGBA = function (arg0_hex) {
 		//Convert from parameters
 		let hex = arg0_hex;

@@ -22,12 +22,19 @@ ve.Class = class {
 		let mode = arg0_mode;
 		
 		//Close class_window/instance_window
+		clearInterval(this.draw_loop);
+		delete this.draw_loop;
 		this[`${mode}_window`].remove();
 		delete this[`${mode}_window`];
 	}
 	
 	draw (arg0_function, arg1_interval) {
-	
+		//Convert from parameters
+		let local_function = arg0_function;
+		let interval = (arg1_interval) ? parseInt(arg1_interval) : 0;
+		
+		//Set draw loop
+		this.draw_loop = setInterval(() => { local_function(this); }, interval);
 	}
 	
 	isClosed (arg0_mode) {
