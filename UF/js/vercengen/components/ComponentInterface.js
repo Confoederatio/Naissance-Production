@@ -35,14 +35,6 @@ setTimeout(() => {
 			this.redraw();
 		}
 		
-		bind (arg0_container_el) {
-			//Convert from parameters
-			let container_el = arg0_container_el;
-			
-			//Set variable_key, append to container_el
-			container_el.appendChild(this.element);
-		}
-		
 		get v () {
 			//Return statement
 			return this.components_obj;

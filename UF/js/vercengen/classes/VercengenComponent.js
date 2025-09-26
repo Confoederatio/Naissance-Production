@@ -14,6 +14,14 @@ ve.Component = class {
 		this.y = options.y;
 	}
 	
+	bind (arg0_container_el) {
+		//Convert from parameters
+		let container_el = arg0_container_el;
+		
+		//Set variable_key, append to container_el
+		container_el.appendChild(this.element);
+	}
+	
 	//Runs over all ve classes that extend ve.Component and lint them
 	static linter () {
 		Object.iterate(global.ve, (local_key, local_value) => {
