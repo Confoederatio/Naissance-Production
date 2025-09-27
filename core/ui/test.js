@@ -5,6 +5,11 @@ setTimeout(() => {
 			
 			this.interface = new ve.Interface({
 				test: new ve.Number(5, { name: "Test Number" }),
+				datalist: new ve.Datalist({
+					one: true,
+					two: false,
+					three: false
+				}),
 				more_interface: new ve.Interface({
 					help: new ve.Number(1),
 					colour: new ve.Colour([255, 255, 255], { name: "Colour" }),
