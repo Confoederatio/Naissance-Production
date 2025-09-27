@@ -7,7 +7,16 @@ setTimeout(() => {
 				test: new ve.Number(5, { name: "Test Number" }),
 				more_interface: new ve.Interface({
 					help: new ve.Number(1),
-					colour: new ve.Colour([255, 255, 255], { name: "Colour" })
+					colour: new ve.Colour([255, 255, 255], { name: "Colour" }),
+					checkbox_land: new ve.Checkbox({
+						checkbox_one: true,
+						checkbox_two: false,
+						checkbox_three: false,
+						checkbox_four: {
+							checkbox_five: true,
+							checkbox_six: false
+						}
+					})
 				}, { name: "More UI" })
 			}, { open: true })
 			super.open("instance", { name: "Help" });
