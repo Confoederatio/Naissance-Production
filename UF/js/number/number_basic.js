@@ -1,5 +1,45 @@
 //Initialise methods
 {
+	Math.alphabetise = function (arg0_string) {
+		//Convert from parameters
+		let string = arg0_string.toString();
+		
+		//Declare local instance variables
+		let alphabet_array = "abcdefghij";
+		let alphabetised_string = "";
+		
+		//Iterate over number to alphabetise it
+		for (let i = 0; i < string.length; i++)
+			if (!isNaN(parseInt(string[i]))) {
+				alphabetised_string += alphabet_array[parseInt(string[i])];
+			} else {
+				alphabetised_string += string[i];
+			}
+		
+		//Return statement
+		return alphabetised_string;
+	};
+	
+	Math.numerise = function (arg0_string) {
+		//Convert from parameters
+		let string = arg0_string.toString();
+		
+		//Declare local instance variables
+		let alphabet_array = { a: 0, b: 1, c: 2, d: 3, e: 4, f: 5, g: 6, h: 7, i: 8, j: 9 };
+		let alphabetised_string = "";
+		
+		//Iterate over string to convert it back into numbers
+		for (let i = 0; i < string.length; i++)
+			if (alphabet_array[string[i]] !== undefined) {
+				alphabetised_string += alphabet_array[string[i]];
+			} else {
+				alphabetised_string += string[i];
+			}
+		
+		//Return statement
+		return alphabetised_string;
+	};
+	
 	/**
 	 * Generates a random number between [arg0_min, arg1_max].
 	 *
