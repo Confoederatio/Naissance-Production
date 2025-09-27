@@ -71,7 +71,7 @@
 		//Iterate over all elapsed months
 		for (let i = 0; i < date_obj.month - 1; i++)
 			days += Date.months[all_months[i]].days;
-		if (Date.isLeapYear(date.year) && date.month >= 2) days++;
+		if (Date.isLeapYear(date_obj.year) && date_obj.month >= 2) days++;
 		
 		//Return statement
 		return days;
@@ -123,7 +123,7 @@
 		let months = 0;
 		
 		//Iterate over all_months and calculate months
-		Object.iterate(date.months, (local_key, local_value) => {
+		Object.iterate(Date.months, (local_key, local_value) => {
 			let local_days_in_month = local_value.days;
 				if (is_leap_year && local_value.leap_year_days)
 					local_days_in_month = local_value.leap_year_days;
@@ -137,30 +137,45 @@
 	
 	Date.getTimestamp = function (arg0_date_object) {
 		//Convert from parameters
-		let date_obj = arg0_date_object;
-		
-		//Guard clause
-		if (typeof date_obj === "string") {
-			if (date_obj.startsWith("t")) return date_obj;
-			date_obj = parseInt(date_obj);
-		}
-		if (!isNaN(parseInt(date_obj))) return date_obj;
+		let date_obj = {
+			...Date.getBlankDate(),
+			...arg0_date_object
+		};
 		
 		//Declare local instance variables
-		let leap_years = Date.getLeapYearsBefore(date_obj.year);
-		let year_minutes = (leap_years*366 + (date_obj.year - leap_years)*365)*24*60;
+		let minutes = 0;
 		
-		let timestamp_number = Math.floor(
-			year_minutes +
-			Date.getDaysInMonths(date_obj)*24*60 +
-			date_obj.day*24*60 +
-			date_obj.hour*60 +
-			date_obj.minute
-		);
-		timestamp_number = Math.alphabetise(timestamp_number);
+		//1. Add years
+		if (date_obj.year >= 0) {
+			for (let i = 0; i < date_obj.year; i++)
+				minutes += (Date.isLeapYear(i) ? 366 : 365)*24*60;
+		} else {
+			for (let i = -1; i >= date_obj.year; i--)
+				minutes -= (Date.isLeapYear(i) ? 366 : 365)*24*60;
+		}
+		
+		//2. Add months
+		let all_months = Object.keys(Date.months);
+		
+		//Iterate until hitting date_obj.month
+		for (let i = 0; i < date_obj.month; i++) {
+			let local_month = Date.months[all_months[i]];
+			let days_in_month = local_month.days;
+			
+			if (Date.isLeapYear(date_obj.year) && local_month.leap_year_days)
+				days_in_month = local_month.leap_year_days;
+			
+			minutes += days_in_month*24*60;
+		}
+		
+		//3. Add days
+		minutes += date_obj.day*24*60;
+		
+		//4. Add hours; minutes
+		minutes += date_obj.hour*60 + date_obj.minute;
 		
 		//Return statement
-		return `${(timestamp_number >= 0) ? "tz" : "t"}_${timestamp_number}`;
+		return `${(minutes >= 0) ? "tz_" : "t_"}${Math.alphabetise(Math.abs(minutes))}`;
 	};
 	
 	Date.isLeapYear = function (arg0_year) {
