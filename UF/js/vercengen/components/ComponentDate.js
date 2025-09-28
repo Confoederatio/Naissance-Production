@@ -26,17 +26,17 @@ setTimeout(() => {
 			let html_string = [];
 			
 			html_string.push(`<input id = "day" class = "day-input" placeholder = "1st" size = "4"${attributes_string}>`);
-			html_string.push(`<input id = "month" class = "month-input" list = "months" placeholder = "${Date.months[Date.all_months[0]].name}">`);
+			html_string.push(`<input id = "month" class = "month-input" list = "months" placeholder = "${Date.months[Date.all_months[0]].name}"${attributes_string}>`);
 			html_string.push(`<datalist id = "months">`);
 				Object.iterate(Date.months, (local_key, local_value) => {
 					html_string.push(`<option value = "${local_value.name}">${local_value.month + 1}</option>`);
 				});
 			html_string.push(`</datalist>`);
-			html_string.push(`<input id = "year" class = "year-input">`);
+			html_string.push(`<input id = "year" class = "year-input"${attributes_string}>`);
 			html_string.push(`<span id = "year-type">AD</span>`);
 			
-			html_string.push(`<input id = "hour" value = "00" placeholder = "00" size = "2">`);
-			html_string.push(`<input id = "minute" value = "00" placeholder = "00" size = "2">`);
+			html_string.push(`<input id = "hour" value = "00" placeholder = "00" size = "2"${attributes_string}>`);
+			html_string.push(`<input id = "minute" value = "00" placeholder = "00" size = "2"${attributes_string}>`);
 			
 			this.element.innerHTML = html_string.join("");
 			
