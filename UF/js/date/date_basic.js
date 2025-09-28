@@ -55,9 +55,28 @@
 		}
 	};
 	
+	Date.all_months = Object.keys(Date.months);
+	
+	for (let i = 0; i < Date.all_months.length; i++)
+		Date.months[Date.all_months[i]].month = i;
+	
 	Date.getBlankDate = function () {
 		//Return statement
 		return { year: 0, month: 0, day: 0, hour: 0, minute: 0 };
+	};
+	
+	Date.getCurrentDate = function () {
+		//Declare local instance variables
+		let current_date = new Date();
+		
+		//Return statement
+		return {
+			year: current_date.getFullYear(),
+			month: current_date.getMonth() + 1,
+			day: current_date.getDate(),
+			hour: current_date.getHours(),
+			minute: current_date.getMinutes()
+		};
 	};
 	
 	Date.getDaysInMonths = function (arg0_date_object) {
@@ -96,7 +115,7 @@
 	
 	Date.getMonth = function (arg0_month_name) {
 		//Convert from parameters
-		let month_name = arg0_month_name.toString();
+		let month_name = arg0_month_name.toString().toLowerCase();
 		
 		//Declare local instance variables
 		let all_months = Object.keys(Date.months);

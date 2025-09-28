@@ -1,5 +1,5 @@
 setTimeout(() => {
-	ve.Datalist = class veCheckbox extends ve.Component {
+	ve.Datalist = class veDatalist extends ve.Component {
 		constructor (arg0_value, arg1_options) {
 			//Convert from parameters
 			let value = arg0_value;
@@ -54,9 +54,11 @@ setTimeout(() => {
 			if (typeof value === "object") {
 				//Iterate over all keys in value and assign <option> tags to the datalist
 				Object.iterate(value, (local_key, local_value) => {
-					html_string.push(`<option value = "${local_key}">`);
-					if (local_value)
-						this.element.querySelector(`input[type="text"]`).value = local_key;
+					if (local_key === "selected") {
+						this.element.querySelector(`input[type="text"]`).value = local_value;
+					} else {
+						html_string.push(`<option value = "${local_key}">${local_value}</option>`);
+					}
 				});
 				this.element.querySelector("datalist").innerHTML = html_string.join("");
 			} else if (typeof value === "string") {
