@@ -164,34 +164,81 @@
 		//Declare local instance variables
 		let minutes = 0;
 		
-		//1. Add years
-		if (date_obj.year >= 0) {
-			for (let i = 0; i < date_obj.year; i++)
-				minutes += (Date.isLeapYear(i) ? 366 : 365)*24*60;
-		} else {
-			for (let i = -1; i >= date_obj.year; i--)
-				minutes -= (Date.isLeapYear(i) ? 366 : 365)*24*60;
+		//Normalise date_obj
+		{
+			//1. Normalise minutes to hours
+			if (date_obj.minute >= 60) {
+				date_obj.hour += Math.floor(date_obj.minute/60);
+				date_obj.minute = date_obj.minute % 60;
+			}
+			
+			//2. Normalise hours to days
+			if (date_obj.hour >= 24) {
+				date_obj.day += Math.floor(date_obj.hour/24);
+				date_obj.hour = date_obj.hour % 24;
+			}
+			
+			//3. Normalise months to years
+			if (date_obj.month >= 12) {
+				date_obj.year += Math.floor(date_obj.month/12);
+				date_obj.month = date_obj.month % 12;
+			}
+			
+			//4. Normalise days to months
+			while (true) {
+				let all_months = Object.keys(Date.months);
+				let local_month = Date.months[all_months[date_obj.month]];
+				
+				let days_in_month = local_month.days;
+				
+				//Handle leap years; normalise days
+				if (Date.isLeapYear(date_obj.year) && local_month.leap_year_days)
+					days_in_month = local_month.leap_year_days;
+				if (date_obj.day >= days_in_month) {
+					date_obj.day -= days_in_month;
+					date_obj.month++;
+					
+					if (date_obj.month >= 12) {
+						date_obj.year++;
+						date_obj.month = 0;
+					}
+				} else {
+					break;
+				}
+			}
 		}
 		
-		//2. Add months
-		let all_months = Object.keys(Date.months);
-		
-		//Iterate until hitting date_obj.month
-		for (let i = 0; i < date_obj.month; i++) {
-			let local_month = Date.months[all_months[i]];
-			let days_in_month = local_month.days;
+		//Calculate timestamp
+		{
+			//1. Add years
+			if (date_obj.year >= 0) {
+				for (let i = 0; i < date_obj.year; i++)
+					minutes += (Date.isLeapYear(i) ? 366 : 365)*24*60;
+			} else {
+				for (let i = -1; i >= date_obj.year; i--)
+					minutes -= (Date.isLeapYear(i) ? 366 : 365)*24*60;
+			}
 			
-			if (Date.isLeapYear(date_obj.year) && local_month.leap_year_days)
-				days_in_month = local_month.leap_year_days;
+			//2. Add months
+			let all_months = Object.keys(Date.months);
 			
-			minutes += days_in_month*24*60;
+			//Iterate until hitting date_obj.month
+			for (let i = 0; i < date_obj.month; i++) {
+				let local_month = Date.months[all_months[i]];
+				let days_in_month = local_month.days;
+				
+				if (Date.isLeapYear(date_obj.year) && local_month.leap_year_days)
+					days_in_month = local_month.leap_year_days;
+				
+				minutes += days_in_month*24*60;
+			}
+			
+			//3. Add days
+			minutes += date_obj.day*24*60;
+			
+			//4. Add hours; minutes
+			minutes += date_obj.hour*60 + date_obj.minute;
 		}
-		
-		//3. Add days
-		minutes += date_obj.day*24*60;
-		
-		//4. Add hours; minutes
-		minutes += date_obj.hour*60 + date_obj.minute;
 		
 		//Return statement
 		return `${(minutes >= 0) ? "tz_" : "t_"}${Math.alphabetise(Math.abs(minutes))}`;
