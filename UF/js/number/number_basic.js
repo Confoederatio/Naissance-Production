@@ -64,4 +64,13 @@
 		//Return statement
 		return (!options.do_not_round) ? Math.round(random_number) : random_number;
 	};
+	
+	Math.returnSafeNumber = function (arg0_number, arg1_default) {
+		//Convert from parameters
+		let number = parseFloat(arg0_number);
+		let default_value = (arg1_default !== undefined) ? arg1_default : 0;
+		
+		//Return statement
+		return (!isNaN(number)) ? number : default_value;
+	};
 }
