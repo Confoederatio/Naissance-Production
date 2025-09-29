@@ -6,6 +6,7 @@ setTimeout(() => {
 			this.interface = new ve.Interface({
 				test: new ve.Number(5, { name: "Test Number" }),
 				date_test: new ve.Date(),
+				date_length: new ve.DateLength(),
 				datalist: new ve.Datalist({
 					one: "1",
 					two: "2",

@@ -4,7 +4,7 @@ setTimeout(() => {
 			//Convert from parameters
 			let value = arg0_value;
 			let options = (arg1_options) ? arg1_options : {};
-			super(options);
+				super(options);
 			
 			//Initialise options
 			options.attributes = (options.attributes) ? options.attributes : {};
@@ -29,7 +29,7 @@ setTimeout(() => {
 			
 			let button_el = this.element.querySelector("button");
 			button_el.addEventListener("onclick", (e) => {
-				if (this.value) this.value();
+				if (this.value) this.value(e);
 			});
 			this.v = this.value;
 		}

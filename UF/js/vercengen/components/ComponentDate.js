@@ -25,6 +25,7 @@ setTimeout(() => {
 			let attributes_string = HTML.objectToAttributes(attributes);
 			let html_string = [];
 			
+			if (options.name) html_string.push(`<span>${options.name}</span> `);
 			html_string.push(`<input id = "day" class = "day-input" placeholder = "1st" size = "4"${attributes_string}>`);
 			html_string.push(`<input id = "month" class = "month-input" list = "months" placeholder = "${Date.months[Date.all_months[0]].name}"${attributes_string}>`);
 			html_string.push(`<datalist id = "months">`);
