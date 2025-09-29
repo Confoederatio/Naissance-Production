@@ -1,5 +1,7 @@
 setTimeout(() => {
 	ve.Number = class veNumber extends ve.Component {
+		static demo_value = 1;
+		
 		constructor (arg0_value, arg1_options) {
 			//Convert from parameters
 			let value = arg0_value;

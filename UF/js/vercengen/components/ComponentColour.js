@@ -2,7 +2,7 @@ setTimeout(() => {
 	ve.Colour = class veColour extends ve.Component {
 		constructor (arg0_value, arg1_options) {
 			//Convert from parameters
-			let value = arg0_value;
+			let value = (arg0_value) ? arg0_value : [255, 255, 255];
 			let options = (arg1_options) ? arg1_options : {};
 			super(options);
 			

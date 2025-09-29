@@ -1,0 +1,26 @@
+if (!global.ve) global.ve = {};
+
+setTimeout(() => {
+	ve.Demo = class veDemo extends ve.Class { //[WIP] - Make sure .name is always populated by local_key
+		//Declare local instance variables
+		constructor (arg0_options) {
+			super();
+			this.ve_fields = {};
+			
+			Object.iterate(global.ve, (local_key, local_value) => {
+				try {
+					if (Object.getPrototypeOf(local_value) === ve.Component) {
+						let local_arguments = [];
+						if (local_value.demo_value !== undefined) local_arguments.push(local_value.demo_value);
+						if (local_value.demo_options !== undefined) local_arguments.push(local_value.demo_options);
+						
+						this.ve_fields[local_key] = new ve[local_key](...local_arguments);
+					}
+				} catch (e) { console.error(e); }
+			});
+			
+			this.ve_interface = new ve.Interface(this.ve_fields);
+			super.open("instance", { name: "Test" });
+		}
+	};
+});
