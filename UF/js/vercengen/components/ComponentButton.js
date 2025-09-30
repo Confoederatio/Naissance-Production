@@ -10,7 +10,7 @@ ve.Button = class veButton extends ve.Component {
 		if (options.name === undefined) options.name = "Confirm";
 		
 		//Declare local instance variables
-		this.element = document.createElement("span");
+		this.element = document.createElement("div");
 			this.element.setAttribute("component", "ve-button");
 			this.element.instance = this;
 		HTML.applyCSSStyle(this.element, options.style);

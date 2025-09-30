@@ -1,44 +1,50 @@
-ve.Colour = class veColour extends ve.Component {
+ve.Password = class vePassword extends ve.Component {
+	static demo_value = "password";
+	
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
-		let value = (arg0_value) ? arg0_value : [255, 255, 255];
+		let value = arg0_value;
 		let options = (arg1_options) ? arg1_options : {};
-		super(options);
-		
+			super(options);
+			
 		//Initialise options
-		options.attributes = options.attributes ? options.attributes : {};
+		options.attributes = (options.attributes) ? options.attributes : {};
 		
 		//Declare local instance variables
+		let attributes = {
+			readonly: options.disabled,
+			...options.attributes
+		};
 		this.element = document.createElement("div");
-		this.element.setAttribute("component", "ve-colour");
-		this.element.instance = this;
+			this.element.setAttribute("component", "ve-password");
+			this.element.instance = this;
 		HTML.applyCSSStyle(this.element, options.style);
 		
 		this.value = value;
 		
 		//Format HTML string
 		let html_string = [];
-		if (options.name) html_string.push(`<span>${options.name}</span> `);
-		html_string.push(`<input type = "color"${HTML.objectToAttributes(options.attributes)}>`);
+		if (options.name) html_string.push(`<span>${options.name}</span>`);
+		html_string.push(`<input type = "password"${HTML.objectToAttributes(attributes)}>`);
 		
-		//Populate element and initialise handlers; set .instance
+		//Populate element and initialise handlers
 		this.element.innerHTML = html_string.join("");
 		
 		let input_el = this.element.querySelector("input");
 		input_el.addEventListener("input", (e) => {
-			this.value = e.target.value;
+			this.value = global.String(e.target.value);
 		});
 		this.v = this.value;
 	}
 	
 	get v () {
 		//Return statement
-		return Colour.convertHexToRGBA(this.value);
+		return this.value;
 	}
 	
 	set v (arg0_value) {
 		//Convert from parameters
-		let value = Colour.convertRGBAToHex(arg0_value);
+		let value = arg0_value;
 		
 		//Set value and update UI
 		this.value = value;
@@ -48,14 +54,5 @@ ve.Colour = class veColour extends ve.Component {
 	
 	remove () {
 		this.element.remove();
-	}
-	
-	//Class methods
-	toString () {
-		return String(this.value);
-	}
-	
-	valueOf () {
-		return this.value;
 	}
 };

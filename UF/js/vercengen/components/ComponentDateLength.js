@@ -1,71 +1,69 @@
-setTimeout(() => {
-	ve.DateLength = class veDateLength extends ve.Component {
-		constructor(arg0_value, arg1_options) {
-			//Convert from parameters
-			let value = arg0_value;
-			let options = (arg1_options) ? arg1_options : {};
-				super(options);
-				
-			//Initialise options
-			options.attributes = (options.attributes) ? options.attributes : {};
+ve.DateLength = class veDateLength extends ve.Component {
+	constructor(arg0_value, arg1_options) {
+		//Convert from parameters
+		let value = arg0_value;
+		let options = (arg1_options) ? arg1_options : {};
+			super(options);
 			
-			//Declare local instance variables
-			let attributes = {
-				readonly: options.disabled,
-				...options.attributes
-			};
-			this.element = document.createElement("span");
-				this.element.setAttribute("component", "ve-datelength");
-				this.element.instance = this;
-			HTML.applyCSSStyle(this.element, options.style);
-			
-			this.value = value;
-			
-			//Format HTML string
-			let html_string = [];
-			if (options.name) html_string.push(`<span>${options.name}</span> `);
-			html_string.push(`
-				<div class = "date-container">
-					<input id = "years" size = "6" type = "number" placeholder = "Years">
-					<input id = "months" size = "6" type = "number" min = "1" max = "12" placeholder = "Months">
-					<input id = "days" size = "5" type = "number" placeholder = "Days">
-				</div>
-				<div class = "clock-container">
-					<input id = "hours" size = "2" min = "0" max = "23" type = "number" placeholder = "HH"> :
-					<input id = "minutes" size = "2" min = "0" max = "23" type = "number" placeholder = "MM">
-				</div>
-			`);
-			
-			//Populate element and initialise handlers
-			this.element.innerHTML = html_string.join("");
-		}
+		//Initialise options
+		options.attributes = (options.attributes) ? options.attributes : {};
 		
-		get v () {
-			//Return statement
-			return Date.convertTimestampToDate(Date.getTimestamp({
-				year: parseInt(this.element.querySelector(`#years`).value),
-				month: parseInt(this.element.querySelector(`#months`).value),
-				day: parseInt(this.element.querySelector(`#days`).value),
-				hour: parseInt(this.element.querySelector(`#hours`).value),
-				minute: parseInt(this.element.querySelector(`#minutes`).value)
-			}));
-		}
+		//Declare local instance variables
+		let attributes = {
+			readonly: options.disabled,
+			...options.attributes
+		};
+		this.element = document.createElement("div");
+			this.element.setAttribute("component", "ve-datelength");
+			this.element.instance = this;
+		HTML.applyCSSStyle(this.element, options.style);
 		
-		set v (arg0_value) {
-			//Convert from parameters
-			let value = arg0_value;
-			
-			//Declare local instance variables
-			this.element.querySelector(`#years`).value = Math.returnSafeNumber(value.year);
-			this.element.querySelector(`#months`).value = Math.returnSafeNumber(value.month)
-			this.element.querySelector(`#days`).value = Math.returnSafeNumber(value.day);
-			this.element.querySelector(`#hours`).value = Math.returnSafeNumber(value.hour);
-			this.element.querySelector(`#minutes`).value = Math.returnSafeNumber(value.minute);
-			if (this.options.onchange) this.options.onchange(this.value);
-		}
+		this.value = value;
 		
-		remove () {
-			this.element.remove();
-		}
+		//Format HTML string
+		let html_string = [];
+		if (options.name) html_string.push(`<span>${options.name}</span> `);
+		html_string.push(`
+			<div class = "date-container">
+				<input id = "years" size = "6" type = "number" placeholder = "Years">
+				<input id = "months" size = "6" type = "number" min = "1" max = "12" placeholder = "Months">
+				<input id = "days" size = "5" type = "number" placeholder = "Days">
+			</div>
+			<div class = "clock-container">
+				<input id = "hours" size = "2" min = "0" max = "23" type = "number" placeholder = "HH"> :
+				<input id = "minutes" size = "2" min = "0" max = "23" type = "number" placeholder = "MM">
+			</div>
+		`);
+		
+		//Populate element and initialise handlers
+		this.element.innerHTML = html_string.join("");
 	}
-}, 0);
+	
+	get v () {
+		//Return statement
+		return Date.convertTimestampToDate(Date.getTimestamp({
+			year: parseInt(this.element.querySelector(`#years`).value),
+			month: parseInt(this.element.querySelector(`#months`).value),
+			day: parseInt(this.element.querySelector(`#days`).value),
+			hour: parseInt(this.element.querySelector(`#hours`).value),
+			minute: parseInt(this.element.querySelector(`#minutes`).value)
+		}));
+	}
+	
+	set v (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Declare local instance variables
+		this.element.querySelector(`#years`).value = Math.returnSafeNumber(value.year);
+		this.element.querySelector(`#months`).value = Math.returnSafeNumber(value.month)
+		this.element.querySelector(`#days`).value = Math.returnSafeNumber(value.day);
+		this.element.querySelector(`#hours`).value = Math.returnSafeNumber(value.hour);
+		this.element.querySelector(`#minutes`).value = Math.returnSafeNumber(value.minute);
+		if (this.options.onchange) this.options.onchange(this.value);
+	}
+	
+	remove () {
+		this.element.remove();
+	}
+}

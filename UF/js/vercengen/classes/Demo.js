@@ -11,12 +11,11 @@ ve.Demo = class veDemo extends ve.Class { //[WIP] - Make sure .name is always po
 					if (local_value.demo_value !== undefined) local_arguments.push(local_value.demo_value);
 					if (local_value.demo_options !== undefined) local_arguments.push(local_value.demo_options);
 					
-					this.ve_fields[local_key] = new ve[local_key](...local_arguments);
+					this[local_key] = new ve[local_key](...local_arguments);
 				}
 			} catch (e) { console.error(e); }
 		});
 		
-		this.ve_interface = new ve.Interface(this.ve_fields);
 		super.open("instance", { 
 			name: "Test",
 			x: 50,
