@@ -1,4 +1,15 @@
 ve.Radio = class veRadio extends ve.Component {
+	static demo_value = {
+		radio_one: true,
+		radio_two: false,
+		radio_three: false,
+		radio_submenu: {
+			radio_four: false,
+			radio_five: false
+		}
+	};
+	static instances = [];
+	
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
 		let value = arg0_value;
@@ -14,21 +25,22 @@ ve.Radio = class veRadio extends ve.Component {
 			this.element.instance = this;
 		HTML.applyCSSStyle(this.element, options.style);
 		
+		this.id = Class.generateRandomID(ve.Radio);
 		this.value = value;
 		
 		//Format html_string
 		let html_string = [];
-		html_string.push(`<fieldset>`);
+		html_string.push(`<form><fieldset>`);
 			if (options.name)
 				html_string.push(`<legend>${options.name}</legend>`);
 			html_string.push(`<ul>`);
 				if (typeof this.value === "object") {
-					html_string.push(...ve.Radio.generateHTMLRecursively(this.value));
+					html_string.push(...ve.Radio.generateHTMLRecursively(this.value, this));
 				} else {
-					html_string.push(...ve.Radio.generateHTMLRecursively({ value: this.value }));
+					html_string.push(...ve.Radio.generateHTMLRecursively({ value: this.value }, this));
 				}
 			html_string.push(`</ul>`);
-		html_string.push(`</fieldset>`);
+		html_string.push(`</fieldset></form>`);
 		
 		//Populate element and initialise handlers
 		this.element.innerHTML = html_string.join("");
@@ -37,13 +49,15 @@ ve.Radio = class veRadio extends ve.Component {
 		all_radio_els.forEach((el) => el.addEventListener("change", (e) => {
 			this.value = this.v;
 		}));
+		ve.Radio.instances.push(this);
 		
 		this.v = this.value;
 	}
 	
-	static generateHTMLRecursively (arg0_value) {
+	static generateHTMLRecursively (arg0_value, arg1_this) {
 		//Convert from parameters
 		let value = arg0_value;
+		let local_this = arg1_this;
 		
 		//Declare local instance variables
 		let html_string = [];
@@ -51,10 +65,10 @@ ve.Radio = class veRadio extends ve.Component {
 		//Iterate over all keys in value
 		Object.iterate(value, (local_key, local_value) => {
 			if (typeof local_value === "boolean") {
-				html_string.push(`<li><input id = "${local_key}" type = "radio"${(local_value) ? " checked" : ""}>${(local_key) ? `<label for = "${local_key}">${local_key}</label>` : ""}</li>`);
+				html_string.push(`<li><input id = "${local_key}" name = "radio-${local_this.id}" type = "radio"${(local_value) ? " checked" : ""}>${(local_key) ? `<label for = "${local_key}">${local_key}</label>` : ""}</li>`);
 			} else if (typeof local_value === "object") {
 				html_string.push(`<ul id = "${local_key}">`);
-					html_string.push(...ve.Radio.generateHTMLRecursively(local_value));
+					html_string.push(...ve.Radio.generateHTMLRecursively(local_value, local_this));
 				html_string.push(`</ul>`);
 			}
 		});
@@ -101,5 +115,7 @@ ve.Radio = class veRadio extends ve.Component {
 	
 	remove () {
 		this.element.remove();
+		for (let i = 0; i < ve.Radio.instances.length; i++)
+			ve.Radio.instances.splice(i, 1);
 	}
 };
