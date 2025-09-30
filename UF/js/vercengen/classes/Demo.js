@@ -17,6 +17,18 @@ ve.Demo = class veDemo extends ve.Class { //[WIP] - Make sure .name is always po
 		});
 		
 		this.ve_interface = new ve.Interface(this.ve_fields);
-		super.open("instance", { name: "Test" });
+		super.open("instance", { 
+			name: "Test",
+			x: 50,
+			y: 50,
+			draggable: true,
+			resizeable: true,
+			headless: false,
+			is_static: false
+		});
 	}
 };
+
+setTimeout(() => {
+	if (ve.debug_mode) new ve.Demo();
+}, 100);

@@ -5,6 +5,7 @@ global.path = require("path");
 //Initialise functions
 {
 	if (!global.ve) global.ve = {};
+	ve.debug_mode = true;
 	
 	/**
 	 * Returns all non-evaluated files in a folder, so long as an evaluated set is provided.

@@ -183,6 +183,7 @@ ve.Window = class {
 		let y = parseInt(arg1_y);
 		
 		//Set element X, Y position
+		this.element.style.position = "absolute";
 		this.element.style.bottom = "";
 		this.element.style.left = "";
 		this.element.style.right = "";

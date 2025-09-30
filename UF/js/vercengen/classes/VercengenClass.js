@@ -53,6 +53,7 @@ ve.Class = class {
 	 * @param {string} [arg0_mode="instance"] - Whether the UI is bound to 'class'/'instance'. If 'class', it displays all static Vercengen fields.
 	 * @param {Object} [arg1_options]
 	 *  @param {boolean} [arg1_options.do_not_close_if_open=false] - Whether to close the Window already bound to class_window or instance_window
+	 *  @param {string} [arg1_options.name]
 	 *  @param {string} [arg1_options.type="window"] - Either 'static'/'window'. 'static' by default if `.anchor`/`.x`/`.y` are specified.
 	 *
 	 *  @param {string} [arg1_options.anchor="top_left"] - Either 'bottom_left'/'bottom_right'/'top_left'/'top_right'. If neither this nor .x/.y are defined, the UI is spawned at the cursor position.
