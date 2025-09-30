@@ -110,6 +110,8 @@ setTimeout(() => {
 				traverse(root_ul, value);
 				this.value = value;
 			}
+			
+			if (this.options.onchange) this.options.onchange(this.value);
 		}
 		
 		remove () {

@@ -47,6 +47,7 @@ setTimeout(() => {
 			//Set this.components_obj; invoke this.redraw()
 			this.components_obj = components_obj;
 			this.redraw();
+			if (this.options.onchange) this.options.onchange(this.value);
 		}
 		
 		/**

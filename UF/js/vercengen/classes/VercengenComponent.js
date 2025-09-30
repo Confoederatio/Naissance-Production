@@ -12,6 +12,8 @@ ve.Component = class {
 		this.width = options.width;
 		this.x = options.x;
 		this.y = options.y;
+		
+		this.options = options;
 	}
 	
 	bind (arg0_container_el) {

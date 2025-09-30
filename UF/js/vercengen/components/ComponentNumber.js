@@ -53,6 +53,7 @@ setTimeout(() => {
 			//Set value and update UI
 			this.value = value;
 			this.element.querySelector("input").value = this.value;
+			if (this.options.onchange) this.options.onchange(this.value);
 		}
 		
 		remove () {

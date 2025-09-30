@@ -61,6 +61,7 @@ setTimeout(() => {
 			this.element.querySelector(`#days`).value = Math.returnSafeNumber(value.day);
 			this.element.querySelector(`#hours`).value = Math.returnSafeNumber(value.hour);
 			this.element.querySelector(`#minutes`).value = Math.returnSafeNumber(value.minute);
+			if (this.options.onchange) this.options.onchange(this.value);
 		}
 		
 		remove () {

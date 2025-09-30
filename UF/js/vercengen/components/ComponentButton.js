@@ -45,6 +45,7 @@ ve.Button = class veButton extends ve.Component {
 		
 		//Set value and update UI
 		this.value = value;
+		if (this.options.onchange) this.options.onchange(value);
 	}
 	
 	remove () {

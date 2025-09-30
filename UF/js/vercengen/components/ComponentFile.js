@@ -56,6 +56,7 @@ setTimeout(() => {
 			} else if (save_file_el) {
 				save_file_el.setAttribute("value", value);
 			}
+			if (this.options.onchange) this.options.onchange(this.value);
 		}
 		
 		remove () {
