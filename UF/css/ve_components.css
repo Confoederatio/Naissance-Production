@@ -6,10 +6,47 @@
     color: var(--body-colour);
     field-sizing: content;
     font-family: var(--body-font-family);
+}
+[component] input[type="number"] {
     min-width: calc(var(--default-width)/4);
+}
+[component] > ul { 
+    padding-inline-start: 0; 
+}
+ul {
+    padding-inline-start: 0.5rem;
+}
+
+/* -- ve.Checkbox -- */
+[component="ve-checkbox"] {
+    input {
+        min-width: auto;
+    }
+    ul {
+        list-style: none;
+    }
 }
 
 /* -- ve.Colour -- */
+[component="ve-colour"] {
+    input {
+        border: 1px solid var(--body-colour);
+        outline: none;
+
+        height: 1rem;
+        padding: 0;
+        margin-left: 0.2rem;
+        vertical-align: middle;
+        width: 1rem;
+    }
+    input::-webkit-color-swatch {
+        border: none;
+        padding-bottom: 0;
+    }
+    input::-webkit-color-swatch-wrapper {
+        padding: 0;
+    }
+}
 
 /* -- ve.Interface -- */
 td:has([component="ve-interface"]) {
