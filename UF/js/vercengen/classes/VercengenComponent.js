@@ -45,6 +45,10 @@ ve.Component = class {
 					if (!local_description || typeof local_description.set !== "function")
 						console.error(`${local_prefix} does not have a valid set v() function.`);
 					
+					//Check if name() method exists
+					if (!local_description || typeof local_description.name !== "function")
+						console.error(`${local_prefix} does not have a valid get name() function. This is used to populate an inspector-like view with the key name if options.name is otherwise missing.`);
+					
 					//Check if remove() method exists
 					if (typeof local_value.prototype.remove !== "function")
 						console.error(`${local_prefix} does not have a valid remove() function to remove its corresponding DOM element upon being cleared.`);
