@@ -1,4 +1,8 @@
 ve.Interface = class Interface extends ve.Component {
+	static demo_value = {
+		submenu_html: new ve.HTML("This is hidden HTML.")
+	};
+	
 	constructor (arg0_components_obj, arg1_options) {
 		//Convert from parameters
 		let components_obj = (arg0_components_obj) ? arg0_components_obj : {};

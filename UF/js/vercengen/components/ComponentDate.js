@@ -1,5 +1,5 @@
 ve.Date = class veDate extends ve.Component {
-	constructor(arg0_value, arg1_options) {
+	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
 		let value = (arg0_value) ? arg0_value : Date.getCurrentDate();
 		let options = (arg1_options) ? arg1_options : {};
@@ -20,7 +20,7 @@ ve.Date = class veDate extends ve.Component {
 		
 		this.value = Date.convertTimestampToDate(value);
 		
-		//Format HTML string
+		//Format html_string
 		let attributes_string = HTML.objectToAttributes(attributes);
 		let html_string = [];
 		
@@ -102,7 +102,7 @@ ve.Date = class veDate extends ve.Component {
 			let actual_month = -1;
 			
 			if (!isNaN(parseInt(e.target.value))) {
-				let local_month = Date.months[Date.all_months[parseInt(e.target.value) - 1]];
+				let local_month = Date.months[Date.all_months[parseInt(e.target.value)]];
 				
 				if (local_month)
 					actual_month = local_month.month;

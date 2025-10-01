@@ -51,6 +51,11 @@ ul {
     }
 }
 
+/* -- ve.Datalist -- */
+[component="ve-datalist"] input {
+    min-width: calc(var(--default-width)/2);
+}
+
 /* -- ve.Date -- */
 [component="ve-date"] {
     input#day {
