@@ -1,25 +1,24 @@
-ve.Number = class veNumber extends ve.Component {
-	static demo_value = 1;
-	
+//Initialise functions
+ve.ComponentRange = class veRange extends ve.Component {
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
-		let value = arg0_value;
+		let value = Math.returnSafeNumber(arg0_value);
 		let options = (arg1_options) ? arg1_options : {};
 			super(options);
-		
+			
 		//Initialise options
-		options.attributes = (options.attributes) ? options.attributes : {};
+		options.atributes = (options.attributes) ? options.attributes : {};
 		
 		//Declare local instance variables
 		let attributes = {
 			readonly: options.disabled,
-			max: options.max,
-			min: options.min,
-			step: options.step,
+			max: (options.max !== undefined) ? options.max : 1,
+			min: (options.min !== undefined) ? options.min : 0,
+			step: (options.step !== undefined) ? options.step : 0.01,
 			...options.attributes
 		};
 		this.element = document.createElement("div");
-			this.element.setAttribute("component", "ve-number");
+			this.element.setAttribute("component", "ve-range");
 			this.element.instance = this;
 		HTML.applyCSSStyle(this.element, options.style);
 		
@@ -27,8 +26,10 @@ ve.Number = class veNumber extends ve.Component {
 		
 		//Format HTML string
 		let html_string = [];
-		if (options.name) html_string.push(`<span>${options.name}</span> `);
-		html_string.push(`<input type = "number"${HTML.objectToAttributes(attributes)}>`);
+		if (options.name) 
+			html_string.push(`<span>${(options.name) ? `${options.name} ` : ""}</span>`);
+		html_string.push(`<input type = "range"${HTML.objectToAttributes(attributes)}>`);
+		html_string.push(`<span id = "value-label"></span>`);
 		
 		//Populate element and initialise handlers
 		this.element.innerHTML = html_string.join("");
@@ -52,6 +53,7 @@ ve.Number = class veNumber extends ve.Component {
 		//Set value and update UI
 		this.value = value;
 		this.element.querySelector("input").value = this.value;
+		this.element.querySelector("#value-label").innerHTML = `${this.value}`;
 		if (this.options.onchange) this.options.onchange(this.value);
 	}
 	

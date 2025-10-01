@@ -32,7 +32,7 @@ ve.Password = class vePassword extends ve.Component {
 		
 		let input_el = this.element.querySelector("input");
 		input_el.addEventListener("input", (e) => {
-			this.value = global.String(e.target.value);
+			this.v = global.String(e.target.value);
 		});
 		this.v = this.value;
 	}
