@@ -34,8 +34,9 @@ ve.Interface = class Interface extends ve.Component {
 		
 		this.element.innerHTML = html_string.join("");
 		
-		//Iterate over all keys in components_obj that .is_vercengen_component to find max dimensions needed for the table before invoking this.resize()
-		this.redraw();
+		//KEEP AT BOTTOM!
+		this.reserved_keys = Object.keys(this).concat(["reserved_keys", "v"]);
+		this.v = components_obj;
 	}
 	
 	get v () {
@@ -43,12 +44,24 @@ ve.Interface = class Interface extends ve.Component {
 		return this.components_obj;
 	}
 	
-	set v (arg0_components_obj) {
+	set v (arg0_components_obj) { //[WIP] - Work on destructuring bindings
 		//Convert from parameters
 		let components_obj = arg0_components_obj;
 		
 		//Set this.components_obj; invoke this.redraw()
+		//1. Reset old destructured bindings for components_obj by deleting their addresses
+		Object.iterate(components_obj, (local_key, local_value) => {
+			if (!this.reserved_keys.includes(local_key)) delete this[local_key];
+		});
 		this.components_obj = components_obj;
+		//2. Set new destructured bindings for components_obj by deleting their addresses
+		Object.iterate(components_obj, (local_key, local_value) => {
+			if (!this.reserved_keys.includes(local_key)) {
+				this[local_key] = local_value;
+			} else {
+				console.warn(`ve.Interface: ${local_key} is a reserved key. It can therefore not be set to:`, local_value);
+			}
+		})
 		this.redraw();
 		if (this.options.onchange) this.options.onchange(this.value);
 	}

@@ -30,7 +30,7 @@ global.Test = class Test extends ve.Class {
 		super.open("instance", { name: "Help" });
 		
 		setInterval(() => {
-			console.log(this.interface.v.test.v);
+			console.log(this.interface.test.v);
 		}, 3000);
 	}
 }

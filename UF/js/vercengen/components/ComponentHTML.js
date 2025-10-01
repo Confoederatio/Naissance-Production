@@ -1,6 +1,6 @@
 ve.HTML = class veHTML extends ve.Component {
 	static demo_value = (e) => {
-		return `<b>Test HTML.</b> This is mock text. <kbd>Date.now():</kbd>${Date.now()}`;
+		return `<b>Test HTML.</b> This is mock text. <kbd>Date:</kbd>${new Date()}`;
 	};
 	
 	constructor (arg0_value, arg1_options) {
