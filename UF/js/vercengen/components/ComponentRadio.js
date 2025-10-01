@@ -29,18 +29,16 @@ ve.Radio = class veRadio extends ve.Component {
 		this.value = value;
 		
 		//Format html_string
-		let html_string = [];
-		html_string.push(`<form><fieldset>`);
-			if (options.name)
-				html_string.push(`<legend>${options.name}</legend>`);
-			html_string.push(`<ul>`);
-				if (typeof this.value === "object") {
-					html_string.push(...ve.Radio.generateHTMLRecursively(this.value, this));
-				} else {
-					html_string.push(...ve.Radio.generateHTMLRecursively({ value: this.value }, this));
-				}
-			html_string.push(`</ul>`);
-		html_string.push(`</fieldset></form>`);
+		let html_string = []
+		if (options.name)
+			html_string.push(`<legend>${options.name}</legend>`);
+		html_string.push(`<ul>`);
+			if (typeof this.value === "object") {
+				html_string.push(...ve.Radio.generateHTMLRecursively(this.value, this));
+			} else {
+				html_string.push(...ve.Radio.generateHTMLRecursively({ value: this.value }, this));
+			}
+		html_string.push(`</ul>`);
 		
 		//Populate element and initialise handlers
 		this.element.innerHTML = html_string.join("");

@@ -7,6 +7,7 @@ ve.Colour = class veColour extends ve.Component {
 		
 		//Initialise options
 		options.attributes = options.attributes ? options.attributes : {};
+		if (options.name === undefined) options.name = "Colour";
 		
 		//Declare local instance variables
 		this.element = document.createElement("div");

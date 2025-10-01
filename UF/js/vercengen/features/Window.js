@@ -14,15 +14,15 @@
  *   - `x=HTML.mouse_x`: {@link number}
  *   - `y=HTML.mouse_y`: {@link number}
  *   -
+ *   - `mode="window"`: {@link string} - Either 'static_ui'/'static_window'/'window'.
  *   - `name=""`: {@link string} - Auto-resolves to 'Window' instead if `.can_rename=true`.
  *   - `theme`: {@link string} - The CSS theme to apply to the Feature.
  *   -
- *   - `can_close`: {@link boolean} - Auto-resolves to `false` if `.x`/`.y` are well-defined.
- *   - `can_rename`: {@link boolean} - Auto-resolves to `false` if `.x`/`.y` are well-defined.
- *   - `draggable`: {@link boolean} - Auto-resolves to `false` if `.x`/`.y` are well-defined.
- *   - `headless`: {@link boolean} - Auto-resolves to `true` if `.x`/`.y` are well-defined.
- *   - `is_static`: {@link boolean} - Auto-resolves to `true` if `.x`/`.y` are well-defined.
- *   - `resizeable`: {@link boolean} - Auto-resolves to `false` if `.x`/`.y` are well-defined.
+ *   - `can_close`: {@link boolean}
+ *   - `can_rename`: {@link boolean}
+ *   - `draggable`: {@link boolean}
+ *   - `headless`: {@link boolean}
+ *   - `resizeable`: {@link boolean}
  */
 ve.Window = class {
 	//Declare local static variables
@@ -35,6 +35,8 @@ ve.Window = class {
 		
 		//Initialise options
 		let is_coords_well_defined = (typeof options.x === "number" && typeof options.y === "number");
+		if (options.mode === undefined)
+			options.mode = (is_coords_well_defined) ? "static_ui" : "window";
 		
 		options.anchor = (options.anchor) ? options.anchor : "top_left";
 		options.height = (options.height !== undefined) ? options.height : "12rem";
@@ -42,18 +44,37 @@ ve.Window = class {
 		options.x = (options.x !== undefined) ? options.x : HTML.mouse_x;
 		options.y = (options.y !== undefined) ? options.y : HTML.mouse_y;
 		
-		if (options.can_close === undefined)
-			options.can_close = (!is_coords_well_defined);
-		if (options.can_rename === undefined)
-			options.can_rename = (!is_coords_well_defined);
-		if (options.draggable === undefined)
-			options.draggable = (!is_coords_well_defined);
-		if (options.headless === undefined)
-			options.headless = (is_coords_well_defined);
-		if (options.is_static === undefined)
-			options.is_static = (is_coords_well_defined);
-		if (options.resizeable === undefined)
-			options.resizeable = (!is_coords_well_defined);
+		//Parse options
+		let mode_behaviour = {
+			static_ui: {
+				can_close: false,
+				can_rename: false,
+				draggable: false,
+				resizeable: false,
+				headless: true,
+				is_static: true
+			},
+			static_window: {
+				can_close: false,
+				can_rename: false,
+				draggable: false,
+				resizeable: false,
+				headless: false,
+				is_static: true
+			},
+			window: {
+				can_close: true,
+				can_rename: true,
+				draggable: true,
+				resizeable: true,
+				headless: false,
+				is_static: false
+			}
+		};
+		options = {
+			...mode_behaviour[options.mode],
+			...options
+		};
 		
 		options.name = (options.name) ? options.name : "";
 			if (options.can_rename && options.name === "") options.name = `Window`;
@@ -89,7 +110,7 @@ ve.Window = class {
 		this.element.style.zIndex = ve.Window.instances.length.toString();
 		
 		//Instantiate element handlers
-		if (this.options.can_close && !this.options.headless && !this.options.is_static) {
+		if (this.options.can_close && !this.options.headless) {
 			let close_button = document.createElement("img");
 				close_button.id = "close-button";
 				close_button.src = `./UF/gfx/close_icon_dark.png`;
@@ -99,14 +120,14 @@ ve.Window = class {
 				this.remove();
 			};
 		}
-		if (!this.options.headless && !this.options.is_static)
+		if (!this.options.headless)
 			HTML.createSection({
 				selector: `.ve.window[id="${this.id}"] #feature-header, .ve.window[id="${this.id}"] #feature-body`
 			});
-		if (this.options.draggable && !this.options.is_static) {
+		if (this.options.draggable) {
 			this.element.classList.add("draggable");
 			HTML.elementDragHandler(this.element, {
-				is_resizable: (this.options.resizeable && !this.options.is_static)
+				is_resizable: (this.options.resizeable)
 			});
 		}
 		

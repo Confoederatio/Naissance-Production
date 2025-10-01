@@ -1,4 +1,15 @@
 ve.Checkbox = class veCheckbox extends ve.Component {
+	static demo_value = {
+		checkbox_one: true,
+		checkbox_two: false,
+		checkbox_three: false,
+		checkbox_four: {
+			name: "Nested Checkboxes:",
+			checkbox_five: true,
+			checkbox_six: false
+		}
+	};
+	
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
 		let value = arg0_value;
@@ -52,6 +63,8 @@ ve.Checkbox = class veCheckbox extends ve.Component {
 				html_string.push(`<ul id = "${local_key}">`);
 					html_string.push(...ve.Checkbox.generateHTMLRecursively(local_value));
 				html_string.push(`</ul>`);
+			} else if (typeof local_value === "string") {
+				html_string.push(`<li><b>${local_value}</b></li>`);
 			}
 		});
 		

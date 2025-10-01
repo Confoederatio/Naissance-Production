@@ -20,10 +20,7 @@ ve.Demo = class veDemo extends ve.Class { //[WIP] - Make sure .name is always po
 			name: "Test",
 			x: 50,
 			y: 50,
-			draggable: true,
-			resizeable: true,
-			headless: false,
-			is_static: false
+			mode: "window"
 		});
 	}
 };
