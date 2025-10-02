@@ -27,7 +27,7 @@ ve.Interface = class Interface extends ve.Component {
 		let html_string = [];
 		if (options.is_folder) {
 			html_string.push(`<details class = "ve interface-folder"${HTML.objectToAttributes(attributes)}>`);
-				html_string.push(`<summary>${(options.name) ? options.name : "Folder"}</summary>`);
+				html_string.push(`<summary id = "name"></summary>`);
 		}
 				html_string.push(`<table></table>`);
 			html_string.push(`</details>`);
@@ -35,8 +35,22 @@ ve.Interface = class Interface extends ve.Component {
 		this.element.innerHTML = html_string.join("");
 		
 		//KEEP AT BOTTOM!
+		this.name = options.name;
 		this.reserved_keys = Object.keys(this).concat(["reserved_keys", "v"]);
 		this.v = components_obj;
+	}
+	
+	get name () {
+		//Return statement
+		return this.element.querySelector(`summary#name`).innerHTML;
+	}
+	
+	set name (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Set name
+		this.element.querySelector(`summary#name`).innerHTML = (value) ? value : "Folder";
 	}
 	
 	get v () {

@@ -21,7 +21,7 @@ ve.Button = class veButton extends ve.Component {
 		let html_string = [];
 		html_string.push(`<button>`);
 			if (options.icon) html_string.push(`<img src = "${options.icon}">`);
-			if (options.name) html_string.push(`<span id = "name">${(options.icon) ? ` ${options.name}` : options.name}</span>`);
+			html_string.push(` <span id = "name"></span>`)
 		html_string.push(`</button>`);
 		
 		//Poulate element and initialise handlers
@@ -31,7 +31,21 @@ ve.Button = class veButton extends ve.Component {
 		button_el.addEventListener("onclick", (e) => {
 			if (this.value) this.value(e);
 		});
+		this.name = options.name;
 		this.v = this.value;
+	}
+	
+	get name () {
+		//Return statement
+		return this.element.querySelector(`#name`).innerHTML;
+	}
+	
+	set name (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Set name
+		this.element.querySelector(`#name`).innerHTML = (value) ? value : "";
 	}
 	
 	get v () {

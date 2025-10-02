@@ -29,7 +29,9 @@ ve.Component = class {
 		Object.iterate(global.ve, (local_key, local_value) => {
 			try {
 				if (Object.getPrototypeOf(local_value) === ve.Component) {
-					let local_description = Object.getOwnPropertyDescriptor(local_value.prototype, "v");
+					let local_name = Object.getOwnPropertyDescriptor(local_value.prototype, "name");
+					let local_v = Object.getOwnPropertyDescriptor(local_value.prototype, "v");
+					
 					let local_prefix = `ve.Component: ve.${local_key}`;
 					
 					if (ve.debug_mode) {
@@ -40,14 +42,16 @@ ve.Component = class {
 					}
 					
 					//Check if get()/set() methods exist
-					if (!local_description || typeof local_description.get !== "function")
+					if (!local_v || typeof local_v.get !== "function")
 						console.error(`${local_prefix} does not have a valid get v() function.`);
-					if (!local_description || typeof local_description.set !== "function")
+					if (!local_v || typeof local_v.set !== "function")
 						console.error(`${local_prefix} does not have a valid set v() function.`);
 					
 					//Check if name() method exists
-					if (!local_description || typeof local_description.name !== "function")
+					if (!local_name || typeof local_name.get !== "function")
 						console.error(`${local_prefix} does not have a valid get name() function. This is used to populate an inspector-like view with the key name if options.name is otherwise missing.`);
+					if (!local_name || typeof local_name.set !== "function")
+						console.error(`${local_prefix} does not have a valid set name() function. This is used to populate an inspector-like view with the key name if options.name is otherwise missing.`);
 					
 					//Check if remove() method exists
 					if (typeof local_value.prototype.remove !== "function")
