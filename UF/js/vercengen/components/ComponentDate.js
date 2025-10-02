@@ -1,4 +1,6 @@
 ve.Date = class veDate extends ve.Component {
+	static demo_value = Date.getCurrentDate();
+	
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
 		let value = (arg0_value) ? arg0_value : Date.getCurrentDate();

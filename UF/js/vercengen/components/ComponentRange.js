@@ -1,5 +1,7 @@
 //Initialise functions
 ve.ComponentRange = class veRange extends ve.Component {
+	static demo_value = 0.50;
+	
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
 		let value = Math.returnSafeNumber(arg0_value);

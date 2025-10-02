@@ -1,4 +1,6 @@
 ve.Telephone = class veTelephone extends ve.Component {
+	static demo_value = "+1-800-800-8000";
+	
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
 		let value = (arg0_value !== undefined) ? arg0_value : "";

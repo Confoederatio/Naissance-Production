@@ -1,4 +1,6 @@
 ve.Button = class veButton extends ve.Component {
+	static demo_value = () => { window.alert("This is an alert from ve.Button."); };
+	
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
 		let value = arg0_value;
@@ -28,7 +30,7 @@ ve.Button = class veButton extends ve.Component {
 		this.element.innerHTML = html_string.join("");
 		
 		let button_el = this.element.querySelector("button");
-		button_el.addEventListener("onclick", (e) => {
+		button_el.addEventListener("click", (e) => {
 			if (this.value) this.value(e);
 		});
 		this.name = options.name;

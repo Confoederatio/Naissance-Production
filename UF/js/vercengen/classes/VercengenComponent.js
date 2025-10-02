@@ -36,9 +36,9 @@ ve.Component = class {
 					
 					if (ve.debug_mode) {
 						if (local_value.demo_value === undefined)
-							console.warn(`${local_prefix} does not have a set .demo_value.`);
+							console.warn(`${local_prefix} does not have a set static .demo_value.`);
 						if (local_value.demo_options === undefined)
-							console.warn(`${local_prefix} does not have set .demo_options.`);
+							console.warn(`${local_prefix} does not have set static .demo_options.`);
 					}
 					
 					//Check if get()/set() methods exist

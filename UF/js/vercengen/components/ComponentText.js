@@ -1,4 +1,6 @@
 ve.Text = class veText extends ve.Component {
+	static demo_value = "Lorem ipsum dolor text amet";
+	
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
 		let value = (arg0_value !== undefined) ? arg0_value : "";

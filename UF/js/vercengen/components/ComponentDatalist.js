@@ -1,4 +1,10 @@
 ve.Datalist = class veDatalist extends ve.Component {
+	static demo_value = {
+		"Polygon": "polygon",
+		"Line": "line",
+		"Point": "point"
+	};
+	
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
 		let value = arg0_value;

@@ -1,5 +1,7 @@
 ve.DateLength = class veDateLength extends ve.Component {
-	constructor(arg0_value, arg1_options) {
+	static demo_value = { year: 1000, month: 12, day: 31 };
+	
+	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
 		let value = arg0_value;
 		let options = (arg1_options) ? arg1_options : {};
@@ -38,6 +40,7 @@ ve.DateLength = class veDateLength extends ve.Component {
 		
 		//Populate element and initialise handlers
 		this.element.innerHTML = html_string.join("");
+		this.v = value;
 	}
 	
 	get name () {

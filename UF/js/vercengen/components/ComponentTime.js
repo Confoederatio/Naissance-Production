@@ -1,4 +1,6 @@
 ve.Time = class veTime extends ve.Component {
+	static demo_value = { hour: 10, minute: 10 };
+	
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
 		let value = (arg0_value !== undefined) ? arg0_value : {

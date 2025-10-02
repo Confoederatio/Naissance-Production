@@ -1,4 +1,6 @@
 ve.Colour = class veColour extends ve.Component {
+	static demo_value =  [220, 160, 60];
+	
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
 		let value = (arg0_value) ? arg0_value : [255, 255, 255];
