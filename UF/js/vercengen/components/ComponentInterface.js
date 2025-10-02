@@ -71,6 +71,8 @@ ve.Interface = class Interface extends ve.Component {
 		//2. Set new destructured bindings for components_obj by deleting their addresses
 		Object.iterate(components_obj, (local_key, local_value) => {
 			if (!this.reserved_keys.includes(local_key)) {
+				if (local_value.name === undefined || local_value.name === "") 
+					local_value.name = local_key;
 				this[local_key] = local_value;
 			} else {
 				console.warn(`ve.Interface: ${local_key} is a reserved key. It can therefore not be set to:`, local_value);

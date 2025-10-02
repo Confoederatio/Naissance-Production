@@ -24,7 +24,7 @@ ve.Date = class veDate extends ve.Component {
 		let attributes_string = HTML.objectToAttributes(attributes);
 		let html_string = [];
 		
-		if (options.name) html_string.push(`<span>${options.name}</span> `);
+		html_string.push(`<span id = "name"></span> `);
 		html_string.push(`<input id = "day" class = "day-input" placeholder = "DD" size = "4"${attributes_string}>`);
 		html_string.push(`<input id = "month" class = "month-input" list = "months" placeholder = "Month"${attributes_string}>`);
 		html_string.push(`<datalist id = "months">`);
@@ -42,7 +42,21 @@ ve.Date = class veDate extends ve.Component {
 		
 		//Handle inputs
 		this.handleEvents();
+		this.name = options.name;
 		this.v = this.value;
+	}
+	
+	get name () {
+		//Return statement
+		return this.element.querySelector(`#name`).innerHTML;
+	}
+	
+	set name (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Set name
+		this.element.querySelector(`#name`).innerHTML = (value) ? value : "";
 	}
 	
 	get v () {

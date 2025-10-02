@@ -237,6 +237,8 @@ ve.Window = class {
 				local_value.element.id = local_key;
 				feature_body_el.appendChild(local_value.element);
 			}
+			if (local_value.name === undefined || local_value.name === "")
+				local_value.name = local_key;
 		});
 	}
 	

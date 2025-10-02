@@ -30,8 +30,7 @@ ve.Radio = class veRadio extends ve.Component {
 		
 		//Format html_string
 		let html_string = []
-		if (options.name)
-			html_string.push(`<legend>${options.name}</legend>`);
+		html_string.push(`<legend id = "name"></legend>`);
 		html_string.push(`<ul>`);
 			if (typeof this.value === "object") {
 				html_string.push(...ve.Radio.generateHTMLRecursively(this.value, this));
@@ -49,6 +48,7 @@ ve.Radio = class veRadio extends ve.Component {
 		}));
 		ve.Radio.instances.push(this);
 		
+		this.name = options.name;
 		this.v = this.value;
 	}
 	
@@ -73,6 +73,19 @@ ve.Radio = class veRadio extends ve.Component {
 		
 		//Return statement
 		return html_string;
+	}
+	
+	get name () {
+		//Return statement
+		return this.element.querySelector(`legend#name`).innerHTML;
+	}
+	
+	set name (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Set name
+		this.element.querySelector(`legend#name`).innerHTML = (value) ? value : "";
 	}
 	
 	get v () {

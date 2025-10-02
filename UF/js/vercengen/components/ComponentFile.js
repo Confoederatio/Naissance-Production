@@ -21,7 +21,7 @@ ve.File = class veFile extends ve.Component {
 		let multifile_string = (options.is_multifile) ? `multiple ` : "";
 		
 		let html_string = [];
-		if (options.name) html_string.ush(`<span>${options.name}</span> `);
+		html_string.push(`<span id = "name"></span> `);
 		if (!options.is_save) {
 			html_string.push(`<input type = "file" ${HTML.objectToAttributes(options.attributes)} ${folder_string}${multifile_string}>`);
 		} else {
@@ -31,6 +31,19 @@ ve.File = class veFile extends ve.Component {
 		//Populate element and initialise handlers
 		this.element.innerHTML = html_string.join("");
 		this.v = this.value;
+	}
+	
+	get name () {
+		//Return statement
+		return this.element.querySelector(`#name`).innerHTML;
+	}
+	
+	set name (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Set name
+		this.element.querySelector(`#name`).innerHTML = (value) ? value : "";
 	}
 	
 	get v () {

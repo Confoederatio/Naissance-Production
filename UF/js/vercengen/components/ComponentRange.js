@@ -26,8 +26,7 @@ ve.ComponentRange = class veRange extends ve.Component {
 		
 		//Format HTML string
 		let html_string = [];
-		if (options.name) 
-			html_string.push(`<span>${(options.name) ? `${options.name} ` : ""}</span>`);
+		html_string.push(`<span id = "name"></span>`);
 		html_string.push(`<input type = "range"${HTML.objectToAttributes(attributes)}>`);
 		html_string.push(`<span id = "value-label"></span>`);
 		
@@ -38,7 +37,21 @@ ve.ComponentRange = class veRange extends ve.Component {
 		input_el.addEventListener("input", (e) => {
 			this.v = global.Number(e.target.value);
 		});
+		this.name = options.name;
 		this.v = this.value;
+	}
+	
+	get name () {
+		//Return statement
+		return this.element.querySelector(`#name`).innerHTML;
+	}
+	
+	set name (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Set name
+		this.element.querySelector(`#name`).innerHTML = (value) ? `${value} ` : "";
 	}
 	
 	get v () {

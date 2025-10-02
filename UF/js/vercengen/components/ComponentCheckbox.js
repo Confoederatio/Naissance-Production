@@ -29,6 +29,7 @@ ve.Checkbox = class veCheckbox extends ve.Component {
 		
 		//Format html_string
 		let html_string = [];
+		html_string.push(`<div id = "name"></div>`);
 		html_string.push(`<ul>`);
 		if (typeof this.value === "object") {
 			html_string.push(...ve.Checkbox.generateHTMLRecursively(this.value));
@@ -45,6 +46,7 @@ ve.Checkbox = class veCheckbox extends ve.Component {
 			this.value = this.v;
 		}));
 		
+		this.name = options.name;
 		this.v = this.value;
 	}
 	
@@ -70,6 +72,19 @@ ve.Checkbox = class veCheckbox extends ve.Component {
 		
 		//Return statement
 		return html_string;
+	}
+	
+	get name () {
+		//Return statement
+		return this.element.querySelector(`#name`).innerHTML;
+	}
+	
+	set name (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Set name
+		this.element.querySelector(`#name`).innerHTML = (value) ? value : "";
 	}
 	
 	get v () {

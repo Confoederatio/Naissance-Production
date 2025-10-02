@@ -19,7 +19,7 @@ ve.Colour = class veColour extends ve.Component {
 		
 		//Format HTML string
 		let html_string = [];
-		if (options.name) html_string.push(`<span>${options.name}</span> `);
+		html_string.push(`<span id = "name"></span> `);
 		html_string.push(`<input type = "color"${HTML.objectToAttributes(options.attributes)}>`);
 		
 		//Populate element and initialise handlers; set .instance
@@ -29,7 +29,21 @@ ve.Colour = class veColour extends ve.Component {
 		input_el.addEventListener("input", (e) => {
 			this.value = e.target.value;
 		});
+		this.name = options.name;
 		this.v = this.value;
+	}
+	
+	get name () {
+		//Return statement
+		return this.element.querySelector(`#name`).innerHTML;
+	}
+	
+	set name (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Set name
+		this.element.querySelector(`#name`).innerHTML = (value) ? value : "";
 	}
 	
 	get v () {

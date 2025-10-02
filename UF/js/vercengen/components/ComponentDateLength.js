@@ -23,7 +23,7 @@ ve.DateLength = class veDateLength extends ve.Component {
 		//Format HTML string
 		let attributes_string = HTML.objectToAttributes(attributes);
 		let html_string = [];
-		if (options.name) html_string.push(`<span>${options.name}</span> `);
+		html_string.push(`<span id = "name"></span> `);
 		html_string.push(`
 			<div class = "date-container">
 				<input id = "years" size = "6" type = "number" placeholder = "Years"${attributes_string}>
@@ -38,6 +38,19 @@ ve.DateLength = class veDateLength extends ve.Component {
 		
 		//Populate element and initialise handlers
 		this.element.innerHTML = html_string.join("");
+	}
+	
+	get name () {
+		//Return statement
+		return this.element.querySelector(`#name`).innerHTML;
+	}
+	
+	set name (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Set name
+		this.element.querySelector(`#name`).innerHTML = (value) ? value : "";
 	}
 	
 	get v () {

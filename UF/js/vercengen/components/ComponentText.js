@@ -25,7 +25,7 @@ ve.Text = class veText extends ve.Component {
 		
 		//Format html_string
 		let html_string = [];
-		if (options.name) html_string.push(`<span>${options.name}</span> `);
+		html_string.push(`<span id = "name"></span> `);
 		html_string.push(`<input type = "text"${HTML.objectToAttributes(attributes)}>`);
 		
 		//Populate element and initialise handlers
@@ -36,6 +36,19 @@ ve.Text = class veText extends ve.Component {
 			this.v = global.String(e.target.value);
 		});
 		this.v = this.value;
+	}
+	
+	get name () {
+		//Return statement
+		return this.element.querySelector(`#name`).innerHTML;
+	}
+	
+	set name (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Set name
+		this.element.querySelector(`#name`).innerHTML = (value) ? value : "";
 	}
 	
 	get v () {

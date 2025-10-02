@@ -49,7 +49,7 @@ ve.Select = class veSelect extends ve.Component {
 		
 		//Format HTML string
 		let html_string = [];
-		if (options.name) html_string.push(`<span>${options.name}</span>`);
+		html_string.push(`<span id = "name"></span>`);
 		html_string.push(`<select>`);
 			html_string.concat(this.generateHTML());
 		html_string.push(`</select>`);
@@ -63,6 +63,19 @@ ve.Select = class veSelect extends ve.Component {
 			this.v = global.String(selected_id);
 		});
 		this.v = this.value;
+	}
+	
+	get name () {
+		//Return statement
+		return this.element.querySelector(`#name`).innerHTML;
+	}
+	
+	set name (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Set name
+		this.element.querySelector(`#name`).innerHTML = (value) ? value : "";
 	}
 	
 	get v () {
