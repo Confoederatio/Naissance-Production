@@ -75,7 +75,7 @@ ve.Select = class veSelect extends ve.Component {
 		let value = arg0_value;
 		
 		//Set name
-		this.element.querySelector(`#name`).innerHTML = (value) ? value : "";
+		this.element.querySelector(`#name`).innerHTML = (value) ? `${value} ` : "";
 	}
 	
 	get v () {
