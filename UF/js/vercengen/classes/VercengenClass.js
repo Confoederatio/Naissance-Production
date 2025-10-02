@@ -93,7 +93,6 @@ ve.Class = class {
 		//Open ve.Window if either 'static'/'window'
 		let components_obj = (mode === "class") ? class_components_obj : instance_components_obj;
 		
-		console.log(state_obj, components_obj)
 		if (options.type === "static") {
 			this[`${mode}_window`] = new ve.Window(components_obj, { is_static: true, ...options });
 		} else {
