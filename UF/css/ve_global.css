@@ -33,6 +33,7 @@ html, head, body {
     --body-font-size: 0.85rem;
     --body-font-weight: 300;
 
+    --cell-padding: 0.25rem;
     --default-width: 12rem;
     --padding: 0.5rem;
 }
