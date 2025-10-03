@@ -277,13 +277,8 @@
 		
 		function internalMouseDownHandler (e) {
 			//Declare local instance variables
-			var e = (e || window.event);
+			let e = (e || window.event);
 			
-			console.log(document.querySelectorAll(`
-				input:focus, 
-				.wysiwyg-editor-container:hover,
-				.ve-drag-disabled:hover
-			`))
 			if (document.querySelectorAll(`
 				input:focus, 
 				.wysiwyg-editor-container:hover,
