@@ -23,7 +23,7 @@ global.Test = class Test extends ve.Class {
 						<li data-id="1" data-foo="bar" class="item">Item 1</li>
 						<li data-id="2" class="item nst-collapsed">Item 2
 							<ol>
-								<li data-id="3" class="item">Item 3</li>
+								<li class="item">Item 3</li>
 								<li data-id="4" class="item nst-collapsed">Item 4
 									<ol>
 										<li data-id="5" class="item">Item 5</li>
@@ -34,7 +34,7 @@ global.Test = class Test extends ve.Class {
 						</li>
 						<li data-id="7" class="item">Item 7</li>
 						<li data-id="8" class="item">Item 8</li>
-						<li data-id="9" class="item">Item 9</li>
+						<li data-id="9" class="item" data-nestable-disabled="nesting">Cannot be nested</li>
 						<li data-id="10" class="item">Item 10</li>
 						<li data-id="11" class="item nst-collapsed">
 							Item 11
