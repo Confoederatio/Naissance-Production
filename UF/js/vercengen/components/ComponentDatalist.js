@@ -1,8 +1,39 @@
+/**
+ * <span color = "yellow">{@link ve.Datalist}</san>:ve.Datalist
+ * 
+ * ##### Constructor:
+ * - `arg0_value`: {@link Object}
+ * - `arg1_options`: {@link Object}
+ *   - `.attributes`: {@link Object}
+ *     - `<attribute_key>`: {@link string}
+ *   - `.name`: {@link string}
+ *   - `.onchange`: {@link function}(this:{@link ve.Datalist})
+ *   - `.style`: {@link Object}
+ *     - `<style_key>`: {@link string}
+ * 
+ * ##### DOM:
+ * - `.instance`: this:{@link ve.Datalist}
+ * 
+ * ##### Instance:
+ * - `.element`: {@link HTMLElement}
+ * - `.name`: {@link string}
+ * - `.v`: {@link string}
+ * 
+ * ##### Methods:
+ * - <span color=00ffff>{@link ve.Button.remove|remove}</span>()
+ * 
+ * @type {ve.Datalist}
+ */
 ve.Datalist = class veDatalist extends ve.Component {
 	static demo_value = {
-		"Polygon": "polygon",
-		"Line": "line",
-		"Point": "point"
+		"polygon": "Polygon",
+		"line": "Line",
+		"point": "Point"
+	};
+	static demo_options = {
+		onchange: (e) => {
+			console.log(`ve.Datalist:`, e);
+		}
 	};
 	
 	constructor (arg0_value, arg1_options) {
@@ -39,7 +70,7 @@ ve.Datalist = class veDatalist extends ve.Component {
 		
 		let input_el = this.element.querySelector("input");
 		input_el.addEventListener("change", (e) => {
-			this.value = e.target.value.toString();
+			this.v = e.target.value.toString();
 		});
 		this.name = options.name;
 		this.v = this.value;
@@ -59,8 +90,13 @@ ve.Datalist = class veDatalist extends ve.Component {
 	}
 	
 	get v () {
+		//Declare local instance variables
+		let local_value = this.element.querySelector(`input[list="datalist"]`).value;
+		
+		let local_option = this.element.querySelector(`option[value="${local_value}"`);
+		
 		//Return statement
-		return this.value;
+		return (local_option) ? local_option.innerHTML : local_value;
 	}
 	
 	set v (arg0_value) {
@@ -76,7 +112,7 @@ ve.Datalist = class veDatalist extends ve.Component {
 				if (local_key === "selected") {
 					this.element.querySelector(`input[type="text"]`).value = local_value;
 				} else {
-					html_string.push(`<option value = "${local_key}">${local_value}</option>`);
+					html_string.push(`<option value = "${local_value}">${local_key}</option>`);
 				}
 			});
 			this.element.querySelector("datalist").innerHTML = html_string.join("");
@@ -85,9 +121,14 @@ ve.Datalist = class veDatalist extends ve.Component {
 		}
 		
 		this.value = value;
-		if (this.options.onchange) this.options.onchange(this.value);
+		if (this.options.onchange) this.options.onchange(this);
 	}
 	
+	/**
+	 * Removes the component/element from the DOM.
+	 *
+	 * @typedef ve.Checkbox.remove
+	 */
 	remove () {
 		this.element.remove();
 	}

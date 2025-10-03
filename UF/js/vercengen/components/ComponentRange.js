@@ -1,4 +1,3 @@
-//Initialise functions
 ve.ComponentRange = class veRange extends ve.Component {
 	static demo_value = 0.50;
 	

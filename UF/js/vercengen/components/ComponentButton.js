@@ -1,3 +1,29 @@
+/**
+ * <span color = "yellow">{@link ve.Component}</span>:ve.Button
+ *
+ * ##### Constructor:
+ * - `arg0_value`: {@link function}(e:{@link MouseEvent})
+ * - `arg1_options`: {@link Object}
+ *   - `.attributes`: {@link Object}
+ *     - `<attribute_key>`: {@link string}
+ *   - `.name`: {@link string}
+ *   - `.onchange`: {@link function}(this:{@link ve.Button})
+ *   - `.style`: {@link Object}
+ *     - `<style_key>`: {@link string}
+ *     
+ * ##### DOM:
+ * - `.instance`: this:{@link ve.Button}
+ * 
+ * ##### Instance:
+ * - `.element`: {@link HTMLElement}
+ * - `.name`: {@link string}
+ * - `.v`: {@link function}
+ * 
+ * ##### Methods:
+ * - <span color=00ffff>{@link ve.Button.remove|remove}</span>()
+ *
+ * @type {ve.Button}
+ */
 ve.Button = class veButton extends ve.Component {
 	static demo_value = () => { window.alert("This is an alert from ve.Button."); };
 	
@@ -61,9 +87,14 @@ ve.Button = class veButton extends ve.Component {
 		
 		//Set value and update UI
 		this.value = value;
-		if (this.options.onchange) this.options.onchange(value);
+		if (this.options.onchange) this.options.onchange(this);
 	}
 	
+	/**
+	 * Removes the component/element from the DOM.
+	 * 
+	 * @typedef ve.Button.remove
+	 */
 	remove () {
 		this.element.remove();
 	}

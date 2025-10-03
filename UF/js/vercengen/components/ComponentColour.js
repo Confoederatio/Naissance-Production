@@ -1,3 +1,31 @@
+/**
+ * <span color = "yellow">{@link ve.Component}</span>:ve.Colour
+ * 
+ * ##### Constructor:
+ * - `arg0_value`: {@link Array}<{@link number}, {@link number}, {@link number}>
+ * - `arg1_options`: {@link Object}
+ *   - `.attributes`: {@link Object}
+ *     - `<attribute_key>`: {@link string}
+ *   - `.name`: {@link string}
+ *   - `.onchange`: this:{@link ve.Colour}
+ *   - `.style`: {@link Object}
+ *     - `<style_key>`: {@link string}
+ *     
+ * ##### DOM:
+ * - `.instance`: this:{@link ve.Colour}
+ * 
+ * ##### Instance:
+ * - `.element`: {@link HTMLElement}
+ * - `.name`: {@link string}
+ * - `.v`: {@link Array}<{@link number}, {@link number}, {@link number}>
+ * 
+ * ##### Methods:
+ * - <span color=00ffff>{@link ve.Button.getHex|getHex}</span>() | {@link string} - '#hexhex'
+ * - <span color=00ffff>{@link ve.Button.remove|remove}</span>()
+ * - <span color=00ffff>{@link ve.Button.toString|toString}</span>() | {@link string} - 'R,G,B'
+ * 
+ * @type {ve.Colour}
+ */
 ve.Colour = class veColour extends ve.Component {
 	static demo_value =  [220, 160, 60];
 	
@@ -60,19 +88,35 @@ ve.Colour = class veColour extends ve.Component {
 		//Set value and update UI
 		this.value = value;
 		this.element.querySelector("input").value = this.value;
-		if (this.options.onchange) this.options.onchange(this.value);
+		if (this.options.onchange) this.options.onchange(this);
 	}
 	
+	//Class methods
+	
+	/**
+	 * Returns the hexadecimal value of {@link ve.Colour} as a string.
+	 * 
+	 * @returns {string}
+	 */
+	getHex () {
+		return this.value;
+	}
+	
+	/**
+	 * Removes the component/element from the DOM.
+	 *
+	 * @typedef ve.Checkbox.remove
+	 */
 	remove () {
 		this.element.remove();
 	}
 	
-	//Class methods
+	/**
+	 * Returns the 'R,G,B' value of {@link ve.Colour} as a string.
+	 * 
+	 * @returns {string}
+	 */
 	toString () {
-		return String(this.value);
-	}
-	
-	valueOf () {
-		return this.value;
+		return this.value.join(",");
 	}
 };

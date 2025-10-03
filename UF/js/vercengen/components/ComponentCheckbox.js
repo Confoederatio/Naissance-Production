@@ -1,3 +1,37 @@
+/**
+ * <span color = "yellow">{@link ve.Component}</span>:ve.Checkbox
+ * 
+ * ##### Constructor:
+ * - `arg0_value`: {@link Object}
+ *   - `<checkbox_key>`: {@link boolean}
+ *   - `<category_key>`: {@link Object}
+ *     - `.name`: {@link string}
+ *     - `<checkbox_key>`: {@link boolean}
+ * - `arg1_options`: {@link Object}
+ *   - `.attributes`: {@link Object}
+ *     - `<attribute_key>`: {@link string}
+ *   - `.name`: {@link string}
+ *   - `.onchange`: {@link function}(this:{@link ve.Checkbox})
+ *   - `.style`: {@link Object}
+ *     - `<style_key>`: {@link string}
+ * 
+ * ##### DOM:
+ * - `.instance`: this:{@link ve.Checkbox}
+ * 
+ * ##### Instance:
+ * - `.element`: {@link HTMLElement}
+ * - `.name`: {@link string}
+ * - `.v`: {@link Object}
+ *   - `<checkbox_key>`: {@link boolean}
+ *   - `<category_key>`: {@link Object}
+ *     - `.name`: {@link string}
+ *     - `<checkbox_key>`: {@link boolean}
+ *     
+ * ##### Methods:
+ * - <span color=00ffff>{@link ve.Button.remove|remove}</span>()
+ * 
+ * @type {ve.veCheckbox}
+ */
 ve.Checkbox = class veCheckbox extends ve.Component {
 	static demo_value = {
 		checkbox_one: true,
@@ -138,9 +172,14 @@ ve.Checkbox = class veCheckbox extends ve.Component {
 			this.value = value;
 		}
 		
-		if (this.options.onchange) this.options.onchange(this.value);
+		if (this.options.onchange) this.options.onchange(this);
 	}
 	
+	/**
+	 * Removes the component/element from the DOM.
+	 *
+	 * @typedef ve.Checkbox.remove
+	 */
 	remove () {
 		this.element.remove();
 	}
