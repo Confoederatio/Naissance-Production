@@ -28,6 +28,7 @@
  *     - `<checkbox_key>`: {@link boolean}
  *     
  * ##### Methods:
+ * - static:<span color=00ffff>{@link ve.Button.generateHTMLRecursively|generateHTMLRecursively}</span>(arg0_value)
  * - <span color=00ffff>{@link ve.Button.remove|remove}</span>()
  * 
  * @type {ve.veCheckbox}
@@ -84,6 +85,12 @@ ve.Checkbox = class veCheckbox extends ve.Component {
 		this.v = this.value;
 	}
 	
+	/**
+	 * Generates HTML recursively for a nested checkbox element.
+	 * 
+	 * @param {{"checkbox_key": boolean|{"name": string, "checkbox_key": boolean|Object|string}|string}} arg0_value
+	 * @returns {string[]}
+	 */
 	static generateHTMLRecursively (arg0_value) {
 		//Convert from parameters
 		let value = arg0_value;

@@ -127,7 +127,7 @@ ve.Datalist = class veDatalist extends ve.Component {
 	/**
 	 * Removes the component/element from the DOM.
 	 *
-	 * @typedef ve.Checkbox.remove
+	 * @typedef ve.Datalist.remove
 	 */
 	remove () {
 		this.element.remove();

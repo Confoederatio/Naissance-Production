@@ -105,7 +105,7 @@ ve.Colour = class veColour extends ve.Component {
 	/**
 	 * Removes the component/element from the DOM.
 	 *
-	 * @typedef ve.Checkbox.remove
+	 * @typedef ve.Colour.remove
 	 */
 	remove () {
 		this.element.remove();

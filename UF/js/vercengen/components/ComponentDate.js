@@ -1,3 +1,40 @@
+/**
+ * <span color = "yellow">{@link ve.Date}</span>:ve.Date
+ * 
+ * ##### Constructor:
+ * - `arg0_value`: {@link Object}
+ *   - `.year`: {@link number}
+ *   - `.month`: {@link number}
+ *   - `.day`: {@link number}
+ *   - `.hour`: {@link number}
+ *   - `.minute`: {@link number}
+ * - `arg1_options`: {@link Object}
+ *   - `.attributes`: {@link Object}
+ *     - `<attribute_key>`: {@link string}
+ *   - `.name`: {@link string}
+ *   - `.onchange`: {@link function}(this:{@link ve.Date})
+ *   - `.style`: {@link Object}
+ *     - `<style_key>`: {@link string}
+ * 
+ * ##### DOM:
+ * - `.instance`: this:{@link ve.Date}
+ * 
+ * ##### Instance:
+ * - `.element`: {@link HTMLElement}
+ * - `.name`: {@link string}
+ * - `.v`: {@link Object}
+ *   - `.year`: {@link number}
+ *   - `.month`: {@link number}
+ *   - `.day`: {@link number}
+ *   - `.hour`: {@link number}
+ *   - `.minute`: {@link number}
+ * 
+ * ##### Methods:
+ * - <span color=00ffff>{@link ve.Date.handleEvents|handleEvents}</span>()
+ * - <span color=00ffff>{@link ve.Date.remove|remove}</span>()
+ * 
+ * @type {ve.Date}
+ */
 ve.Date = class veDate extends ve.Component {
 	static demo_value = Date.getCurrentDate();
 	
@@ -91,9 +128,14 @@ ve.Date = class veDate extends ve.Component {
 		
 		//Set value
 		this.value = value;
-		if (this.options.onchange) this.options.onchange(this.value);
+		if (this.options.onchange) this.options.onchange(this);
 	}
 	
+	/**
+	 * Handles input events for {@link ve.Date}. Local helper function, since inputs need to be constrained to valid dates to remain fluid.
+	 * 
+	 * @typedef ve.Date.handleEvents
+	 */
 	handleEvents () {
 		this.element.querySelector(`#year`).addEventListener("change", (e) => {
 			let actual_value = parseInt(e.target.value);
@@ -178,6 +220,11 @@ ve.Date = class veDate extends ve.Component {
 		});
 	}
 	
+	/**
+	 * Removes the component/element from the DOM.
+	 *
+	 * @typedef ve.Date.remove
+	 */
 	remove () {
 		this.element.remove();
 	}
