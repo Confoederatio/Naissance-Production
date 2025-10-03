@@ -275,9 +275,9 @@
 			}
 		}
 		
-		function internalMouseDownHandler (e) {
+		function internalMouseDownHandler (arg0_e) {
 			//Declare local instance variables
-			let e = (e || window.event);
+			let e = (arg0_e || window.event);
 			
 			if (document.querySelectorAll(`
 				input:focus, 

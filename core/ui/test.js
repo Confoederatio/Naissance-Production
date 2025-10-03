@@ -65,7 +65,7 @@ global.Test = class Test extends ve.Class {
 						checkbox_six: false
 					}
 				})
-			}, { name: "More UI" })
+			}, { name: "More UI", open: true })
 		}, { open: true })
 		super.open("instance", { name: "Help" });
 		
@@ -74,3 +74,7 @@ global.Test = class Test extends ve.Class {
 		}, 3000);
 	}
 }
+
+setTimeout(() => {
+	global.test = new Test();
+}, 500);
