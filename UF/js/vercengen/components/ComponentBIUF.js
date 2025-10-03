@@ -1,5 +1,10 @@
 ve.BIUF = class veBIUF extends ve.Component {
 	static demo_value = `<b>Bold</b> <i>Italic</i>, <u>Underline</u>, and regular text formatting are supported by BIUF fields.`;
+	static demo_options = {
+		onchange: (e) => {
+			console.log(`ve.BIUF:`, e);
+		}
+	};
 	
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
@@ -18,6 +23,7 @@ ve.BIUF = class veBIUF extends ve.Component {
 		this.element = document.createElement("div");
 			this.element.setAttribute("component", "ve-biuf");
 			this.element.instance = this;
+		this.options = options;
 		HTML.applyCSSStyle(this.element, options.style);
 		
 		this.value = value;
@@ -37,6 +43,7 @@ ve.BIUF = class veBIUF extends ve.Component {
 		//Populate element and initialise handlers
 		this.element.innerHTML = html_string.join("");
 		this.element.querySelector(`#biuf-input`).addEventListener("input", (e) => {
+			this.sendOnchangeEvent();
 			this.handleBIUF(e.target);
 		});
 		this.initBIUFToolbar();
@@ -95,22 +102,27 @@ ve.BIUF = class veBIUF extends ve.Component {
 		});
 		
 		//Apply formatting when various toolbar buttons are clicked
-		bold_button.addEventListener("click", function () {
+		bold_button.addEventListener("click", () => {
 			document.execCommand("bold");
 		});
-		clear_button.addEventListener("click", function () {
+		clear_button.addEventListener("click", () => {
 			document.execCommand("removeFormat");
 		});
-		italic_button.addEventListener("click", function () {
+		italic_button.addEventListener("click", () => {
 			document.execCommand("italic");
 		});
-		underline_button.addEventListener("click", function () {
+		underline_button.addEventListener("click", () => {
 			document.execCommand("underline");
 		});
 	}
 	
 	remove () {
 		this.element.remove();
+	}
+	
+	sendOnchangeEvent () {
+		this.value = this.v;
+		if (this.options.onchange) this.options.onchange(this);
 	}
 	
 	get name () {
