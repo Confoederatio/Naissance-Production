@@ -7,14 +7,13 @@
 .wysiwyg-editor {
     border: 1px solid transparent;
     bottom: 1rem;
-    min-height: 18rem;
     position: relative;
     width: 100%;
 
     .toolbar {
         background-color: var(--bg-secondary-colour);
         border: 1px solid white;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        border-right: 2px solid white;
         position: sticky;
         top: 0;
         z-index: 1; /* Ensure toolbar stays on top when scrolling content */
@@ -22,14 +21,14 @@
         .line {
             display: flex;
 
-            border-bottom: 1px solid #e2e2e2;
+            border-bottom: 1px solid var(--body-colour);
         }
         &:last-child {
             border-bottom: none;
         }
 
         .box {
-            border-left: 1px solid #e2e2e2;
+            border-left: 1px solid var(--body-colour);
             display: flex;
 
             .editor-button {
@@ -115,10 +114,9 @@
     .content-area {
         height: 12rem;
         line-height: 1.5;
-        min-height: 12rem;
         overflow-x: hidden;
         overflow-y: auto;
-        resize: both;
+        resize: vertical;
         table-layout: fixed;
         width: 100%;
 

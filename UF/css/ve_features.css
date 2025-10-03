@@ -1,6 +1,8 @@
 .ve.window {
     background-color: var(--bg-primary-colour);
     color: var(--header-colour);
+    display: flex;
+    flex-direction: column;
     font-family: var(--header-font-family);
     font-size: var(--header-font-size);
     font-weight: var(--header-font-weight);

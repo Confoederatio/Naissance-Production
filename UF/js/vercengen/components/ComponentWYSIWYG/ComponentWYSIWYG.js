@@ -222,6 +222,10 @@ ve.WYSIWYG = class extends ve.Component {
 		}
 	}
 	
+	remove () {
+		this.element.remove();
+	}
+	
 	get name () {
 		//Return statement
 		return this.element.querySelector(`#name`).innerHTML;

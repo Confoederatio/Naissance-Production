@@ -195,7 +195,7 @@
 			var viewport_height = window.innerHeight;
 			var viewport_width = window.innerWidth;
 			
-			if (document.querySelector(`[contenteditable]:not(#window-name):focus, input:focus`)) return;
+			if (document.querySelector(`[contenteditable]:not(#window-name):focus, input:focus, .wysiwyg-editor-container:hover`)) return;
 			e.preventDefault();
 			
 			if (is_resizing && options.is_resizable) {
