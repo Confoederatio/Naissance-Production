@@ -195,7 +195,6 @@
 			var viewport_height = window.innerHeight;
 			var viewport_width = window.innerWidth;
 			
-			if (document.querySelector(`[contenteditable]:not(#window-name):focus, input:focus, .wysiwyg-editor-container:hover`)) return;
 			e.preventDefault();
 			
 			if (is_resizing && options.is_resizable) {
@@ -279,6 +278,17 @@
 		function internalMouseDownHandler (e) {
 			//Declare local instance variables
 			var e = (e || window.event);
+			
+			console.log(document.querySelectorAll(`
+				input:focus, 
+				.wysiwyg-editor-container:hover,
+				.ve-drag-disabled:hover
+			`))
+			if (document.querySelectorAll(`
+				input:focus, 
+				.wysiwyg-editor-container:hover,
+				.ve-drag-disabled:hover
+			`).length) return;
 			
 			position_three = e.clientX;
 			position_four = e.clientY;

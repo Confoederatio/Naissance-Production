@@ -17,7 +17,7 @@ ve.HTML = class veHTML extends ve.Component {
 			this.element.setAttribute("component", "ve-html");
 			this.element.instance = this;
 		HTML.applyCSSStyle(this.element, options.style);
-		
+		this.options = options;
 		this.value = value;
 		
 		//Set .v
@@ -62,9 +62,14 @@ ve.HTML = class veHTML extends ve.Component {
 				delete this.draw_loop;
 			}
 			this.draw_function = this.value;
-			this.draw_loop = setInterval(() => {
+			
+			if (this.options.do_not_refresh !== true) {
+				this.draw_loop = setInterval(() => {
+					this.v = this.draw_function(this);
+				}, 100);
+			} else {
 				this.v = this.draw_function(this);
-			}, 100);
+			}
 		} else if (typeof this.value === "object") {
 			this.element.innerHTML = "";
 			this.element.appendChild(this.value);

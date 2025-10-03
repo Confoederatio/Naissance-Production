@@ -1,12 +1,13 @@
+/* -- Default Nestable styling -- */
 .nst-container {
     position: absolute;
 }
-
 .nst-list li {
     list-style: none;
 }
-
 .nst-item {
+    color: var(--body-colour);
+    font-family: var(--body-font-family);
     position: relative;
 	
     .nst-content {
@@ -14,7 +15,7 @@
         border-radius: 3px;
         padding: 6px 12px 6px 30px;
         margin-bottom: 5px;
-        background-color: #fff;
+        background-color: var(--bg-secondary-colour);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -29,6 +30,8 @@
     }
 	
     .nst-button {
+        color: var(--body-colour);
+        
         position: absolute;
         width: 20px;
         height: 20px;
@@ -54,31 +57,59 @@
     background-color: #ffebee;
     position: relative;
 }
-
 .nst-active > .nst-content {
     background-color: #bbdefb;
 }
-
 .nst-handle {
     cursor: move;
 }
-
 .nst-placeholder {
     border: 1px dashed #999;
     border-radius: 3px;
+    color: var(--body-colour);
     margin-bottom: 5px;
     box-sizing: border-box;
     background-color: #e1f5fe;
 }
-
 .nst-list {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
 }
-
 li > .nst-list,
 li > .nst-list {
     padding-left: 20px;
     box-sizing: border-box;
+}
+
+/* -- Vercengen Nestable styling -- */
+.ve-hierarchy {
+    ol, ul {
+        box-sizing: border-box;
+        margin-left: 1rem;
+        padding: 0;
+        width: 100%;
+
+        li {
+            width: 100%;
+        }
+    }
+    
+    [data-nestable-disabled="disabled"], [data-nestable-disabled="dragging"] {
+        & .nst-content {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+    }
+    .nst-list {
+        li {
+            list-style: none;
+        }
+    }
+    .nst-parent.nst-disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+        
+        .nst-content, .nst-item .nst-button { cursor: not-allowed; }
+    }
 }
