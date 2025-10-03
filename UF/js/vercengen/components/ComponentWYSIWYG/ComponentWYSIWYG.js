@@ -1,5 +1,10 @@
 ve.WYSIWYG = class extends ve.Component {
 	static demo_value = `This is an immediate test for WYSIWYG editors being ported.`;
+	static demo_options = {
+		onchange: (e) => {
+			console.log(`ve.WYSIWYG:`, e);
+		}
+	};
 	
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
@@ -15,8 +20,9 @@ ve.WYSIWYG = class extends ve.Component {
 		let html_string = [];
 
 		//Div header
-		html_string.push(`<div class = "header" id = "name">${options.name}</div>`);
+		html_string.push(`<div class = "header" id = "name"></div>`);
 
+		html_string.push(`<div class = "wysiwyg-editor-container">`);
 		html_string.push(`<div id = "wysiwyg-editor" class = "wysiwyg-editor">`);
 			//Editor toolbar
 			{
@@ -97,7 +103,7 @@ ve.WYSIWYG = class extends ve.Component {
 
 			//Content area
 			html_string.push(`<div class = "content-area">`);
-				html_string.push(`<div class = "visual-view" contenteditable></div>`);
+				html_string.push(`<br><div class = "visual-view" contenteditable></div>`);
 				html_string.push(`<textarea class = "html-view"></textarea>`);
 			html_string.push(`</div>`);
 
@@ -118,12 +124,13 @@ ve.WYSIWYG = class extends ve.Component {
 				html_string.push(`</div>`);
 			html_string.push(`</div>`);
 		html_string.push(`</div>`);
+		html_string.push(`</div>`);
 
-		//Set .innerHTML
+		//Set .innerHTML; this.v
 		this.element.innerHTML = html_string.join("");
-		this.handleWYSIWYG();
-		
 		this.handleEvents();
+		this.initWYSIWYG();
+		this.v = value;
 	}
 	
 	/**
@@ -132,33 +139,23 @@ ve.WYSIWYG = class extends ve.Component {
 	handleEvents () {
 		//Declare local instance variables
 		if (this.options.onchange) {
-			var editor_el = this.element.querySelector(`.wysiwyg-editor`);
-			var html_view_el = this.element.querySelector(`.html-view`);
-			var visual_view_el = this.element.querySelector(`.visual-view`);
+			let editor_el = this.element.querySelector(`.wysiwyg-editor`);
+			let html_view_el = this.element.querySelector(`.html-view`);
+			let visual_view_el = this.element.querySelector(`.visual-view`);
 			
 			//Add change handlers
-			html_view_el.addEventListener("input", () => {
-				var event = new Event("change");
-				event.component = this;
-				event.target = html_view_el;
-				event.value = html_view_el.innerHTML;
-				
-				this.options.onchange(event);
+			html_view_el.addEventListener("input", (e) => {
+				this.options.onchange(this);
 			});
-			visual_view_el.addEventListener("input", () => {
-				var event = new Event("change");
-				event.component = this;
-				event.target = visual_view_el;
-				event.value = visual_view_el.innerHTML;
-				
-				this.options.onchange(event);
+			visual_view_el.addEventListener("input", (e) => {
+				this.options.onchange(this);
 			});
 		}
 	}
 	
 	//Internal helper functions
 	/**
-	 * Fetches the internal .innerHTML value, negotiating between the visual and code view.
+	 * Fetches the internal .innerHTML value, resolving any conflicts between the visual view and the code view.
 	 *
 	 * @param {HTMLElement} arg0_wysiwyg_el
 	 *
@@ -166,44 +163,15 @@ ve.WYSIWYG = class extends ve.Component {
 	 */
 	getWYSIWYGFromFields (arg0_wysiwyg_el) {
 		//Convert from parameters
-		var wysiwyg_el = arg0_wysiwyg_el;
+		let wysiwyg_el = arg0_wysiwyg_el;
 		
 		//Declare local instance variables
-		var html_content_el = wysiwyg_el.querySelector(`.html-view`);
-		var visual_content_el = wysiwyg_el.querySelector(`.visual-view`);
+		let html_content_el = wysiwyg_el.querySelector(`.html-view`);
+		let visual_content_el = wysiwyg_el.querySelector(`.visual-view`);
 		
 		//Return statement
 		return (html_content_el.innerHTML.length > visual_content_el.innerHTML.length) ?
 			html_content_el.innerHTML : visual_content_el.innerHTML;
-	}
-	
-	/**
-	 * Handles WYSIWYG functionality.
-	 */
-	handleWYSIWYG () {
-		this.initWYSIWYG();
-		
-		//Add .onchange handler if specified
-		if (this.options && this.options.onchange) {
-			var editor = this.element.querySelector('.wysiwyg-editor');
-			var html_view = editor.querySelector('.html-view');
-			var visual_view = editor.querySelector('.visual-view');
-			
-			//Add change handlers for both views
-			visual_view.addEventListener("input", () => {
-				var event = new Event("change");
-				event.target = visual_view;
-				event.value = visual_view.innerHTML;
-				this.options.onchange(event);
-			});
-			
-			html_view.addEventListener("input", () => {
-				var event = new Event("change");
-				event.target = html_view;
-				event.value = html_view.value;
-				this.options.onchange(event);
-			});
-		}
 	}
 	
 	/**
@@ -252,6 +220,19 @@ ve.WYSIWYG = class extends ve.Component {
 				}
 			});
 		}
+	}
+	
+	get name () {
+		//Return statement
+		return this.element.querySelector(`#name`).innerHTML;
+	}
+	
+	set name (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Set name
+		this.element.querySelector(`#name`).innerHTML = (value) ? value : "";
 	}
 	
 	/**

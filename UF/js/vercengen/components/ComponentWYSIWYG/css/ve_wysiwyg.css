@@ -1,5 +1,5 @@
 /* -- ve.WYSIWYG -- */
-[component="wysiwyg"] {
+.wysiwyg-editor-container {
     flex-grow: 1;
     overflow-x: hidden;
     overflow-y: auto;
@@ -7,13 +7,12 @@
 .wysiwyg-editor {
     border: 1px solid transparent;
     bottom: 1rem;
-    margin: 1rem 0;
     min-height: 18rem;
     position: relative;
     width: 100%;
 
     .toolbar {
-        background-color: var(--bg-primary-colour);
+        background-color: var(--bg-secondary-colour);
         border: 1px solid white;
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
         position: sticky;
@@ -30,9 +29,8 @@
         }
 
         .box {
-            display: flex;
-
             border-left: 1px solid #e2e2e2;
+            display: flex;
 
             .editor-button {
                 display: flex;
@@ -47,7 +45,7 @@
                     cursor: pointer;
                 }
                 &.icon:not(:hover) img {
-                    filter: var(--monochrome-dark-button-filter);
+                    filter: invert(1);
                     opacity: 0.83;
                 }
                 &.icon img {
@@ -64,7 +62,7 @@
                     width: 16px;
                 }
                 &.icon.smaller img:hover {
-                    background-color: var(--secondary-hover-colour);
+                    background-color: var(--accent-secondary-colour);
                     opacity: 1;
                 }
                 &.has-submenu {
@@ -73,7 +71,7 @@
                     width: 20px;
 
                     &::after {
-                        filter: var(--monochrome-dark-button-filter);
+                        filter:invert(1);
                         position: absolute;
                         right: 4px;
 
@@ -88,7 +86,7 @@
                     }
 
                     .submenu {
-                        background-color: var(--main-solid-colour);
+                        background-color: var(--bg-secondary-colour);
                         border: 1px solid #b5b5b5;
                         border-top: none;
                         display: block;
@@ -108,7 +106,7 @@
                     }
                 }
                 &.has-submenu:hover::after {
-                    filter: var(--monochrome-light-button-filter);
+                    filter: brightness(0);
                 }
             }
         }
@@ -161,7 +159,7 @@
             left: 50%;
             top: 50%;
 
-            background-color: var(--main-bg-colour);
+            background-color: var(--bg-primary-colour);
             min-height: 10rem;
             padding: 1rem;
             transform: translate(-50%, -50%);
@@ -216,7 +214,7 @@
         background-color: rgba(0, 0, 0, 0.3);
     }
     .modal-content {
-        color: var(--text-colour);
+        color: var(--body-colour);
     }
     .modal-wrapper {
         border-radius: 8px;
@@ -240,7 +238,7 @@
 
 /* -- Modal content fixes -- */
 .modal-content h3 {
-    margin-top: 0px;
+    margin-top: 0;
 }
 
 /* -- Toolbar fixes -- */
@@ -256,5 +254,5 @@
     visibility: visible;
 }
 .editor-button.icon[title="Show HTML Code"].active > img {
-    filter: var(--monochrome-light-button-filter);
+    filter: brightness(0);
 }
