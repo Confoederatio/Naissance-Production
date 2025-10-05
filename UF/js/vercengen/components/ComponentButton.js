@@ -22,6 +22,7 @@
  * ##### Methods:
  * - <span color=00ffff>{@link ve.Button.remove|remove}</span>()
  *
+ * @function veButton
  * @type {ve.Button}
  */
 ve.Button = class veButton extends ve.Component {
@@ -92,6 +93,7 @@ ve.Button = class veButton extends ve.Component {
 	
 	/**
 	 * Removes the component/element from the DOM.
+	 * - Method of: {@link ve.Button}
 	 * 
 	 * @typedef ve.Button.remove
 	 */

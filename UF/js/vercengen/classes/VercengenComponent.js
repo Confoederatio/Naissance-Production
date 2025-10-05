@@ -34,6 +34,15 @@ ve.Component = class {
 					
 					let local_prefix = `ve.Component: ve.${local_key}`;
 					
+					if (!global[`ve${local_key}`]) {
+						global[`ve${local_key}`] = function () {
+							//Return statement
+							return new ve[local_key](arguments);
+						};
+					} else {
+						console.error(`ve.${local_key} cannot have its functional binding registered, since it is already reserved elsewhere. Use Ctrl + F to find where it has been reserved in your codebase.`);
+					}
+					
 					if (ve.debug_mode)
 						if (local_value.demo_value === undefined)
 							console.warn(`${local_prefix} does not have a set static .demo_value.`);

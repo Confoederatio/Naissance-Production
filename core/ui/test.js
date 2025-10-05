@@ -3,10 +3,11 @@ global.Test = class Test extends ve.Class {
 		super();
 		
 		this.interface = new ve.Interface({
+			confirm: veButton(),
 			test: new ve.Number(5, { name: "Test Number" }),
 			date_test: new ve.Date(),
 			date_length: new ve.DateLength(),
-			datalist: new ve.Datalist({
+			datalist: veDatalist({
 				one: "1",
 				two: "2",
 				three: "3",

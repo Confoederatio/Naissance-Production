@@ -1,7 +1,37 @@
+/**
+ * <span color = "yellow">{@link ve.Component}</span>:ve.HierarchyDatatype
+ * 
+ * ##### Constructor:
+ * - `arg0_value`: {@link Object}<{@link ve.Component}>
+ * - `arg1_options`: {@link Object}
+ *   - `.attributes`: {@link Object}
+ *     - `<attribute_key>`: {@link string}
+ *   - `.id=Class.generateRandomID(ve.HierarchyDatatype)`: {@link string}
+ *   - `.name`: {@link string}
+ *   - `.onchange`: {@link function}(this:{@link ve.HierarchyDatatype})
+ *   - `.style`: {@link Object}
+ *     - `<style_key>`: {@link string}
+ *   - `.type="item"`: {@link string} - Either 'item'/'group'.
+ *     
+ * ##### DOM:
+ * - `.instance`: this:{@link ve.Button}
+ *
+ * ##### Instance:
+ * - `.element`: {@link HTMLElement}
+ * - `.name`: {@link string}
+ * - `.v`: {@link function}
+ * 
+ * ##### Methods:
+ * - <span color=00ffff>{@link ve.HierarchyDatatype.refresh|refresh}</span>()
+ * - <span color=00ffff>{@link ve.HierarchyDatatype.remove|remove}</span>()
+ * 
+ * @function veHierarchyDatatype
+ * @type {ve.veHierarchyDatatype}
+ */
 ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 	/*static demo_value = {
-		name: new ve.Text(`Entry #${Math.randomNumber(0, 1000000)}`),
-		context_menu_button: new ve.Button((e) => {
+		name: veText(`Entry #${Math.randomNumber(0, 1000000)}`),
+		context_menu_button: veButton((e) => {
 			console.log(e);
 		}, { name: "Options"})
 	};*/
@@ -18,7 +48,7 @@ ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 		options.type = (options.type) ? options.type : "item"; //Either 'item'/'group'
 		
 		//Declare local instance variables
-		this.id = Class.generateRandomID(ve.HierarchyDatatype);
+		this.id = (options.id) ? options.id : Class.generateRandomID(ve.HierarchyDatatype);
 		
 		this.element = document.createElement("li");
 			this.element.setAttribute("class", options.type);
@@ -73,6 +103,12 @@ ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 		this.refresh();
 	}
 	
+	/**
+	 * Refreshes the display of this.components_obj within the present instance.
+	 * - Method of: {@link ve.HierarchyDatatype}
+	 * 
+	 * @typedef ve.HierarchyDatatype.refresh
+	 */
 	refresh () {
 		//Declare local instance variables
 		let has_subitems = false;
@@ -100,6 +136,12 @@ ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 		}
 	}
 	
+	/**
+	 * Removes the component/element from the DOM.
+	 * - Method of: {@link ve.HierarchyDatatype}
+	 * 
+	 * @typedef ve.HierarchyDatatype.remove
+	 */
 	remove () {
 		//Iterate over all instances in ve.HierarchyDatatype.instances
 		for (let i = 0; i < ve.HierarchyDatatype.instances.length; i++) 
