@@ -1,4 +1,6 @@
 ve.Hierarchy = class veHierarchy extends ve.Component {
+	static reserved_keys = ["element", "id", "name"];
+	
 	constructor (arg0_components_obj, arg1_options) {
 		//Convert from parameters
 		let components_obj = (arg0_components_obj) ? arg0_components_obj : {};
@@ -15,9 +17,6 @@ ve.Hierarchy = class veHierarchy extends ve.Component {
 		
 		//Append components_obj to this.element
 		this.v = components_obj;
-		/*setInterval(() => {
-			console.log(this.nestable);
-		}, 3000);*/
 	}
 	
 	addItem (arg0_parent_el, arg1_hierarchy_datatype) {
@@ -44,23 +43,33 @@ ve.Hierarchy = class veHierarchy extends ve.Component {
 		let options = (arg0_options) ? arg0_options : {};
 		
 		//Declare local instance variables
-		let hierarchy_obj = {};
-		
-		//Iterate over all li elements in local_el
-		hierarchy_obj = HTML.traverseDOM(this.element.querySelector("ol"), (local_el, local_return_obj) => {
-			if (local_el.id && local_el.getAttribute("component") === "ve-hierarchy-datatype") 
-				if (options.flatten_object) {
-					local_return_obj[local_el.id] = local_el.instance.options;
-				} else {
-					local_return_obj[local_el.id] = local_el;
-				}
-			
-			//Return statement
-			return local_return_obj;
-		});
+		let ol_el = this.element.querySelector("ol");
 		
 		//Return statement
-		return hierarchy_obj;
+		return HTML.listToObject(ol_el, (local_el) => {
+			//Declare local instance variables
+			let local_name = (local_el && local_el.instance && local_el.instance.name) ? 
+				local_el.instance.name : "";
+			
+			//Return statement
+			if (local_el.tagName === "OL") {
+				try {
+					local_name = local_el.parentElement.instance.name;
+				} catch {}
+				
+				return {
+					id: local_el.id,
+					element: (!options.flatten_object) ? local_el : undefined,
+					name: (local_name) ? local_name : undefined
+				};
+			} else if (local_el.tagName === "LI") {
+				return {
+					id: local_el.id,
+					element: (!options.flatten_object) ? local_el : undefined,
+					name: (local_name) ? local_name : undefined
+				};
+			}
+		});
 	}
 	
 	get name () {
@@ -121,7 +130,6 @@ ve.Hierarchy = class veHierarchy extends ve.Component {
 				ol_el.appendChild(local_value.element);
 		});
 		this.element.appendChild(ol_el);
-		console.log(this.getHierarchyObject({ flatten_object: true }));
 		this.nestable = new Nestable(ol_el, { items: ".group, .item" });
 	}
 };

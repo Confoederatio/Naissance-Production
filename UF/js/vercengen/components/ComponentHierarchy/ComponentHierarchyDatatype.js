@@ -68,7 +68,7 @@ ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 		//Append components_obj elements to this.element
 		this.components_obj = components_obj;
 		this.refresh();
-		if (options.name) this.name = options.name;
+		this.name = (options.name) ? options.name : "";
 		ve.HierarchyDatatype.instances.push(this);
 	}
 	
@@ -129,6 +129,7 @@ ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 		//2. Append ol components if .is_group resolves to true
 		if (has_subitems && this.type === "group") {
 			let ol_el = document.createElement("ol");
+				ol_el.id = this.id;
 			
 			//Iterate over all this.components_obj and append the sublist at the end
 			Object.iterate(this.components_obj, (local_key, local_value) => {

@@ -79,6 +79,31 @@
 		};
 	};
 	
+	HTML.listToObject = function (arg0_ol_el, arg1_function, arg2_is_nested) {
+		//Convert from parameters
+		let ol_el = arg0_ol_el;
+		let local_function = arg1_function;
+		let is_nested = arg2_is_nested;
+		
+		//Declare local instance variables
+		let return_obj = {};
+			if (is_nested) return_obj = (local_function) ? local_function(ol_el) : {};
+		
+		//Iterate over all <li> children
+		ol_el.querySelectorAll(":scope > li").forEach((li_el) => {
+			let local_id = (li_el.id || null);
+			if (!local_id) return; //Skip <li> without ID
+			
+			//Look for nested <ol> inside the <li>
+			let nested_ol = li_el.querySelector(":scope > ol");
+			return_obj[local_id] = (nested_ol) ? 
+				HTML.listToObject(nested_ol, local_function, true) : local_function(li_el);
+		});
+		
+		//Return statement
+		return return_obj;
+	};
+	
 	HTML.objectToAttributes = function (arg0_object) {
 		//Convert from parameters
 		let object = (arg0_object) ? arg0_object : {};
