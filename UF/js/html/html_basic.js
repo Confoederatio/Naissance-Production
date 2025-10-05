@@ -98,4 +98,29 @@
 		//Return statement
 		return (attribute_string) ? ` ${attribute_string}` : "";
 	};
+	
+	/**
+	 * Traverses the DOM recursively from a given root element.
+	 * 
+	 * @param {HTMLElement} arg0_element
+	 * @param {function} arg1_function - Accepts (arg0_local_el, arg1_return_obj) as parameters.
+	 * @param {Object} [arg2_return_obj={}]
+	 */
+	HTML.traverseDOM = function (arg0_element, arg1_function, arg2_return_obj) {
+		//Convert from parameters
+		let element = arg0_element;
+		let local_function = arg1_function;
+		let return_obj = (arg2_return_obj) ? arg2_return_obj : {};
+		
+		//Declare local instance variables
+		let children = element.childNodes;
+		
+		//Iterate over all child elements in element
+		for (let i = 0; i < children.length; i++)
+			HTML.traverseDOM(children[i], local_function, return_obj);
+		return_obj = local_function(element, return_obj);
+		
+		//Return statement
+		return return_obj;
+	};
 }

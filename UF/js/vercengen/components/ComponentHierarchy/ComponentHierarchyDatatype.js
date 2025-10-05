@@ -1,10 +1,11 @@
 ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
-	static demo_value = {
+	/*static demo_value = {
 		name: new ve.Text(`Entry #${Math.randomNumber(0, 1000000)}`),
 		context_menu_button: new ve.Button((e) => {
 			console.log(e);
 		}, { name: "Options"})
-	};
+	};*/
+	static instances = [];
 	
 	constructor (arg0_components_obj, arg1_options) {
 		//Convert from parameters
@@ -17,6 +18,8 @@ ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 		options.type = (options.type) ? options.type : "item"; //Either 'item'/'group'
 		
 		//Declare local instance variables
+		this.id = Class.generateRandomID(ve.HierarchyDatatype);
+		
 		this.element = document.createElement("li");
 			this.element.setAttribute("class", options.type);
 			if (options.type === "item")
@@ -25,18 +28,39 @@ ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 			Object.iterate(options.attributes, (local_key, local_value) => {
 				this.element.setAttribute(local_key, local_value.toString());
 			});
+			this.element.id = this.id;
 			this.element.instance = this;
 		this.is_vercengen_hierarchy_datatype = true;
+		this.options = options;
 		this.type = options.type;
 		HTML.applyCSSStyle(this.element, options.style);
 		
 		//Append components_obj elements to this.element
 		this.components_obj = components_obj;
 		this.refresh();
+		ve.HierarchyDatatype.instances.push(this);
+	}
+	
+	get name () {
+		//Return statement
+		return (this.components_obj.name) ? this.components_obj.name.v : "";
+	}
+	
+	set name (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Set name
+		if (this.components_obj.name) {
+			this.components_obj.name.v = value;
+		} else {
+			this.components_obj.name = new ve.Text(value);
+			this.v = this.components_obj;
+		}
 	}
 	
 	get v () {
-		//Return statent
+		//Return statement
 		return this.components_obj;
 	}
 	
@@ -77,6 +101,13 @@ ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 	}
 	
 	remove () {
+		//Iterate over all instances in ve.HierarchyDatatype.instances
+		for (let i = 0; i < ve.HierarchyDatatype.instances.length; i++) 
+			if (ve.HierarchyDatatype.instances[i].id === this.id) {
+				ve.HierarchyDatatype.splice(i, 1);
+				break;
+			}
+		
 		this.element.remove();
 	}
 };
