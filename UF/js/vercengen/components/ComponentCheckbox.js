@@ -28,7 +28,7 @@
  *     - `<checkbox_key>`: {@link boolean}
  *     
  * ##### Methods:
- * - static:<span color=00ffff>{@link ve.Button.generateHTMLRecursively|generateHTMLRecursively}</span>(arg0_value)
+ * - static:<span color=00ffff>{@link ve.Button.generateHTMLRecursively|generateHTMLRecursively}</span>(arg0_value: {@link Object})
  * - <span color=00ffff>{@link ve.Button.remove|remove}</span>()
  * 
  * @type {ve.veCheckbox}

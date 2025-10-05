@@ -68,7 +68,7 @@ ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 		//Append components_obj elements to this.element
 		this.components_obj = components_obj;
 		this.refresh();
-		this.name = (options.name) ? options.name : "";
+		if (options.name) this.name = options.name;
 		ve.HierarchyDatatype.instances.push(this);
 	}
 	

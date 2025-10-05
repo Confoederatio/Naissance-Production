@@ -1,3 +1,32 @@
+/**
+ * <span color = "yellow">{@link ve.Component}</span>:ve.Hierarchy
+ * 
+ * ##### Constructor:
+ * - `arg0_components_obj`: {@link Object}<{@link ve.Component}>
+ * - `arg1_options`: {@link Object}
+ *   - `.attributes`: {@link Object}
+ *     - `<attribute_key>`: {@link string}
+ *   - `.name`: {@link string}
+ *   - `.onchange`: {@link function}(this:{@link ve.Hierarchy})
+ *   - `.style`: {@link Object}
+ *     - `<style_key>`: {@link string}
+ *     
+ * ##### DOM:
+ * - `.instance`: this:{@link ve.Hierarchy}
+ * 
+ * ##### Instance:
+ * - `.element`: {@link HTMLElement}
+ * - `.name`: {@link string}
+ * - `.v`: {@link Object}<{@link ve.Component}>
+ *   
+ * ##### Methods:
+ * - <span color=00ffff>{@link ve.Hierarchy.addItem|addItem}</span>(arg0_parent_el: {@link HTMLElement}|{@link string}, arg1_hierarchy_datatype: {@link ve.HierarchyDatatype})
+ * - <span color=00ffff>{@link ve.Hierarchy.remove|remove}</span>()
+ * - <span color=00ffff>{@link ve.Hierarchy.removeItem|removeItem}</span>(arg0_hierarchy_datatype: {@link ve.HierarchyDatatype})
+ * 
+ * @function veHierarchy
+ * @type {ve.veHierarchy}
+ */
 ve.Hierarchy = class veHierarchy extends ve.Component {
 	static reserved_keys = ["element", "id", "name"];
 	
@@ -10,9 +39,13 @@ ve.Hierarchy = class veHierarchy extends ve.Component {
 		//Initialise options
 		options.attributes = (options.attributes) ? options.attributes : {};
 		
+		//Declare local instance variables
 		this.element = document.createElement("div");
-		this.element.id = "test";
 		this.element.setAttribute("component", "ve-hierarchy");
+		Object.iterate(options.attributes, (local_key, local_value) => {
+			this.element.setAttribute(local_key, local_value.toString());
+		});
+		this.options = options;
 		HTML.applyCSSStyle(this.element, options.style);
 		
 		//Append components_obj to this.element
@@ -131,5 +164,8 @@ ve.Hierarchy = class veHierarchy extends ve.Component {
 		});
 		this.element.appendChild(ol_el);
 		this.nestable = new Nestable(ol_el, { items: ".group, .item" });
+			this.nestable.on("stop", () => {
+				if (this.options.onchange) this.options.onchange(this);
+			});
 	}
 };

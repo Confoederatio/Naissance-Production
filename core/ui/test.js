@@ -23,6 +23,10 @@ global.Test = class Test extends ve.Class {
 					subgroup: veHierarchyDatatype({
 						test_four: veHierarchyDatatype({}, { name: "Test 4" })
 					}, { name: "Subgroup", type: "group" } )
+				}, {
+					onchange: (e) => { 
+						console.log(e);
+					}
 				}),
 				
 				colour: new ve.Colour([230, 20, 20], { name: "Colour" }),
