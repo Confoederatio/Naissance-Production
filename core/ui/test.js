@@ -15,6 +15,7 @@ global.Test = class Test extends ve.Class {
 			}),
 			more_interface: new ve.Interface({
 				help: new ve.Number(1),
+				
 				html: new ve.HTML(() => {
 					//Declare local instance variables
 					let html_string = [];
@@ -55,6 +56,15 @@ global.Test = class Test extends ve.Class {
 					//Return statement
 					return nestable_test_list;
 				}, { do_not_refresh: true }),
+				 
+				hierarchy: veHierarchy({
+					test_one: veHierarchyDatatype({}, { name: "Test 1" }),
+					test_two: veHierarchyDatatype({}, { name: "Test 2" }),
+					test_three: veHierarchyDatatype({}, { name: "Test 3" }),
+					subgroup: veHierarchyDatatype({
+						test_four: veHierarchyDatatype({}, { name: "Test 4" })
+					}, { name: "Subgroup", type: "group" } )
+				}),
 				colour: new ve.Colour([230, 20, 20], { name: "Colour" }),
 				checkbox_land: new ve.Checkbox({
 					"Checkbox 1": true,

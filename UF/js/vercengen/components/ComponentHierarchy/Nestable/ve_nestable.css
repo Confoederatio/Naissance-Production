@@ -8,12 +8,14 @@
 .nst-item {
     color: var(--body-colour);
     font-family: var(--body-font-family);
+    padding: 0;
     position: relative;
 	
-    .nst-content {
+    > .nst-button { display: none; }
+    > .nst-content {
         border: 1px solid var(--bg-primary-colour);
         border-radius: 3px;
-        padding: 6px 12px 6px 30px;
+        padding: 0 0.5rem 0 0.5rem;
         background-color: var(--bg-secondary-colour);
         overflow: hidden;
         text-overflow: ellipsis;
@@ -27,11 +29,14 @@
         border-color: #b71c1c;
         background-color: #ffebee;
     }
+    > .nst-handle {
+        line-height: 0.5rem;
+        text-align: center;
+    }
 	
     .nst-button {
         color: var(--body-colour);
         
-        position: absolute;
         width: 20px;
         height: 20px;
         top: 5px;
@@ -40,7 +45,6 @@
         padding: 0;
         left: 7px;
         font-size: 16px;
-        display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;

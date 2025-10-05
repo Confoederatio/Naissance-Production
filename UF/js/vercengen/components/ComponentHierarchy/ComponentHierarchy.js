@@ -9,11 +9,15 @@ ve.Hierarchy = class veHierarchy extends ve.Component {
 		options.attributes = (options.attributes) ? options.attributes : {};
 		
 		this.element = document.createElement("div");
+		this.element.id = "test";
 		this.element.setAttribute("component", "ve-hierarchy");
 		HTML.applyCSSStyle(this.element, options.style);
 		
 		//Append components_obj to this.element
 		this.v = components_obj;
+		/*setInterval(() => {
+			console.log(this.nestable);
+		}, 3000);*/
 	}
 	
 	addItem (arg0_parent_el, arg1_hierarchy_datatype) {
@@ -44,9 +48,9 @@ ve.Hierarchy = class veHierarchy extends ve.Component {
 		
 		//Iterate over all li elements in local_el
 		hierarchy_obj = HTML.traverseDOM(this.element.querySelector("ol"), (local_el, local_return_obj) => {
-			if (local_el.id) 
+			if (local_el.id && local_el.getAttribute("component") === "ve-hierarchy-datatype") 
 				if (options.flatten_object) {
-					local_return_obj[local_el.id] = local_el.options;
+					local_return_obj[local_el.id] = local_el.instance.options;
 				} else {
 					local_return_obj[local_el.id] = local_el;
 				}
@@ -111,12 +115,13 @@ ve.Hierarchy = class veHierarchy extends ve.Component {
 		//2. Append all hierarchy datatype Vercengen components; iterate over all this.components_obj
 		let ol_el = document.createElement("ol");
 		ol_el.setAttribute("class", "list ve-drag-disabled ve-hierarchy");
-		this.nestable = new Nestable(ol_el, { items: ".group, .item" });
 		
 		Object.iterate(this.components_obj, (local_key, local_value) => {
 			if (local_value.is_vercengen_hierarchy_datatype)
 				ol_el.appendChild(local_value.element);
 		});
 		this.element.appendChild(ol_el);
+		console.log(this.getHierarchyObject({ flatten_object: true }));
+		this.nestable = new Nestable(ol_el, { items: ".group, .item" });
 	}
 };

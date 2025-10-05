@@ -51,7 +51,7 @@ ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 		this.id = (options.id) ? options.id : Class.generateRandomID(ve.HierarchyDatatype);
 		
 		this.element = document.createElement("li");
-			this.element.setAttribute("class", options.type);
+			this.element.classList.add(options.type, "nst-item");
 			if (options.type === "item")
 				this.element.setAttribute("data-nestable-disabled", "nesting");
 			this.element.setAttribute("component", "ve-hierarchy-datatype");
@@ -68,6 +68,7 @@ ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 		//Append components_obj elements to this.element
 		this.components_obj = components_obj;
 		this.refresh();
+		if (options.name) this.name = options.name;
 		ve.HierarchyDatatype.instances.push(this);
 	}
 	
@@ -113,8 +114,10 @@ ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 		//Declare local instance variables
 		let has_subitems = false;
 		
+		//0. Append .nst-handle el
+		this.element.innerHTML = `<div class = "nst-handle">⋯</div>`;
+		
 		//1. Append regular components first as group components
-		this.element.innerHTML = "";
 		Object.iterate(this.components_obj, (local_key, local_value) => {
 			if (!local_value.is_vercengen_hierarchy_datatype) {
 				this.element.appendChild(local_value.element);
@@ -146,7 +149,7 @@ ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 		//Iterate over all instances in ve.HierarchyDatatype.instances
 		for (let i = 0; i < ve.HierarchyDatatype.instances.length; i++) 
 			if (ve.HierarchyDatatype.instances[i].id === this.id) {
-				ve.HierarchyDatatype.splice(i, 1);
+				ve.HierarchyDatatype.instances.splice(i, 1);
 				break;
 			}
 		
