@@ -33,42 +33,42 @@ ve.WYSIWYG = class extends ve.Component {
 					//First box: Bold, Italic, Underline, Strikethrough
 					html_string.push(`<div class = "box">`);
 						//Bold
-						html_string.push(`<span class = "editor-button icon small" data-action = "bold" data-tag-name = "b" title = "Bold"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/bold.png"></span>`);
+						html_string.push(`<icon class = "editor-button icon small" data-action = "bold" data-tag-name = "b" title = "Bold"><icon>format_bold</icon></span>`);
 						//Italic
-						html_string.push(`<span class = "editor-button icon small" data-action = "italic" data-tag-name = "i" title = "Italic"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/italic.png"></span>`);
+						html_string.push(`<span class = "editor-button icon small" data-action = "italic" data-tag-name = "i" title = "Italic"><icon>format_italic</icon></span>`);
 						//Underline
-						html_string.push(`<span class = "editor-button icon small" data-action = "underline" data-tag-name = "u" title = "Underline"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/underline.png"></span>`);
+						html_string.push(`<span class = "editor-button icon small" data-action = "underline" data-tag-name = "u" title = "Underline"><icon>format_underlined</icon></span>`);
 						//Strikethrough
-						html_string.push(`<span class = "editor-button icon small" data-action = "strikeThrough" data-tag-name = "strike" title = "Strikethrough"><img src = "https://img.icons8.com/fluency-systems-filled/30/000000/strikethrough.png"></span>`);
+						html_string.push(`<span class = "editor-button icon small" data-action = "strikeThrough" data-tag-name = "strike" title = "Strikethrough"><icon>strikethrough_s</icon></span>`);
 					html_string.push(`</div>`);
 
 					//Second box: Alignment, Lists, Indents, Hr
 					html_string.push(`<div class = "box">`);
 						html_string.push(`<span class = "editor-button icon has-submenu">`);
 							//Menu icon
-							html_string.push(`<img src = "https://img.icons8.com/fluency-systems-filled/48/000000/align-left.png">`);
+							html_string.push(`<icon>format_align_left</icon>`);
 
 							//1. Submenu
 							html_string.push(`<div class = "submenu">`);
 								//Align left
-								html_string.push(`<span class = "editor-button icon" data-action = "justifyLeft" data-style = "textAlign:left" title = "Align Left"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/align-left.png"></span>`);
+								html_string.push(`<span class = "editor-button icon" data-action = "justifyLeft" data-style = "textAlign:left" title = "Align Left"><icon>format_align_left</icon></span>`);
 								//Align centre
-								html_string.push(`<span class = "editor-button icon" data-action = "justifyCenter" data-style = "textAlign:center" title = "Align Centre"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/align-center.png"></span>`);
+								html_string.push(`<span class = "editor-button icon" data-action = "justifyCenter" data-style = "textAlign:center" title = "Align Centre"><icon>format_align_center</icon></span>`);
 								//Align right
-								html_string.push(`<span class = "editor-button icon" data-action = "justifyRight" data-style = "textAlign:right" title = "Align Right"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/align-right.png"></span>`);
+								html_string.push(`<span class = "editor-button icon" data-action = "justifyRight" data-style = "textAlign:right" title = "Align Right"><icon>format_align_right</icon></span>`);
 								//Align justify
-								html_string.push(`<span class = "editor-button icon" data-action = "formatBlock" data-style = "textAlign:justify" title = "Justify"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/align-justify.png"></span>`);
+								html_string.push(`<span class = "editor-button icon" data-action = "formatBlock" data-style = "textAlign:justify" title = "Justify"><icon>format_align_justify</icon></span>`);
 							html_string.push(`</div>`);
 						html_string.push(`</span>`);
 
 						//Insert ordered list
-						html_string.push(`<span class = "editor-button icon" data-action = "insertOrderedList" data-tag-name = "ol" title = "Insert ordered list"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/numbered-list.png"></span>`);
+						html_string.push(`<span class = "editor-button icon" data-action = "insertOrderedList" data-tag-name = "ol" title = "Insert ordered list"><icon>format_list_numbered</icon></span>`);
 						//Insert unordered list
-						html_string.push(`<span class = "editor-button icon" data-action = "insertUnorderedList" data-tag-name = "ul" title = "Insert unordered list"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/bulleted-list.png"></span>`);
+						html_string.push(`<span class = "editor-button icon" data-action = "insertUnorderedList" data-tag-name = "ul" title = "Insert unordered list"><icon>format_list_bulleted</icon></span>`);
 						//Indent
-						html_string.push(`<span class = "editor-button icon" data-action = "indent" title = "Indent"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/indent.png"></span>`);
+						html_string.push(`<span class = "editor-button icon" data-action = "indent" title = "Indent"><icon>format_indent_increase</icon></span>`);
 						//Outdent
-						html_string.push(`<span class = "editor-button icon" data-action = "outdent" title = "Outdent" data-required-tag = "li"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/outdent.png"></span>`);
+						html_string.push(`<span class = "editor-button icon" data-action = "outdent" title = "Outdent" data-required-tag = "li"><icon>format_indent_decrease</icon></span>`);
 					html_string.push(`</div>`);
 
 				html_string.push(`</div>`);
@@ -79,23 +79,23 @@ ve.WYSIWYG = class extends ve.Component {
 					//Third box: Undo, clear formatting
 					html_string.push(`<div class = "box">`);
 						//Undo
-						html_string.push(`<span class = "editor-button icon small" data-action = "undo" title = "Undo"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/undo--v1.png"></span>`);
+						html_string.push(`<span class = "editor-button icon small" data-action = "undo" title = "Undo"><icon>undo</icon></span>`);
 						//Remove formatting
-						html_string.push(`<span class = "editor-button icon small" data-action = "removeFormat" title = "Remove format"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/remove-format.png"></span>`);
+						html_string.push(`<span class = "editor-button icon small" data-action = "removeFormat" title = "Remove format"><icon>format_clear</icon></span>`);
 					html_string.push(`</div>`);
 
 					//Fourth box: Add link, remove link
 					html_string.push(`<div class = "box">`);
 						//Insert Link
-						html_string.push(`<span class = "editor-button icon small" data-action = "createLink" title = "Insert Link"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/add-link.png"></span>`);
+						html_string.push(`<span class = "editor-button icon small" data-action = "createLink" title = "Insert Link"><icon>add_link</icon></span>`);
 						//Unlink
-						html_string.push(`<span class = "editor-button icon small" data-action = "unlink" data-tag-name = "a" title = "Unlink"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/delete-link.png"></span>`);
+						html_string.push(`<span class = "editor-button icon small" data-action = "unlink" data-tag-name = "a" title = "Unlink"><icon>link_off</icon></span>`);
 					html_string.push(`</div>`);
 
 					//Fifth box: Show HTML
 					html_string.push(`<div class = "box">`);
 						//Show HTML code
-						html_string.push(`<span class = "editor-button icon" data-action = "toggle-view" title = "Show HTML Code"><img src = "https://img.icons8.com/fluency-systems-filled/48/000000/source-code.png"></span>`);
+						html_string.push(`<icon class = "editor-button icon" data-action = "toggle-view" title = "Show HTML Code"><icon>code</icon></span>`);
 					html_string.push(`</div>`);
 				html_string.push(`</div>`);
 			html_string.push(`</div>`);
