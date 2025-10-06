@@ -33,10 +33,10 @@ ve.BIUF = class veBIUF extends ve.Component {
 		
 		html_string.push(`<span id = "name"></span>`);
 		html_string.push(`<div id = "biuf-toolbar" class = "biuf-toolbar">`);
-			html_string.push(`<button id = "bold-button" class = "bold-icon">B</button>`);
-			html_string.push(`<button id = "italic-button" class = "italic-icon">I</button>`);
-			html_string.push(`<button id = "underline-button" class = "underline-icon">U</button>`);
-			html_string.push(`<button id = "clear-button" class = "clear-icon">T</button>`);
+			html_string.push(`<button id = "bold-button" class = "bold-icon"><icon>format_bold</icon></button>`);
+			html_string.push(`<button id = "italic-button" class = "italic-icon"><icon>format_italic</icon></button>`);
+			html_string.push(`<button id = "underline-button" class = "underline-icon"><icon>format_underline</icon></button>`);
+			html_string.push(`<button id = "clear-button" class = "clear-icon"><icon>format_clear</icon></button>`);
 		html_string.push(`</div>`);
 		html_string.push(`<div id = "biuf-input" class = "biuf-input" contenteditable = "true" ${HTML.objectToAttributes(attributes)}></div>`);
 		

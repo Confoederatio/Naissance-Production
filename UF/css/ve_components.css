@@ -24,6 +24,13 @@
     }
 }
 
+/* -- ve.BIUF -- */
+[component="ve-biuf"] {
+    button {
+        padding: 0;
+    }
+}
+
 /* -- ve.Checkbox -- */
 [component="ve-checkbox"] {
     input {
