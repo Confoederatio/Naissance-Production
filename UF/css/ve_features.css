@@ -6,6 +6,8 @@
     font-family: var(--header-font-family);
     font-size: var(--header-font-size);
     font-weight: var(--header-font-weight);
+    max-height: 100dvh;
+    max-width: 100dvw;
     width: var(--default-width);
 
     /* -- Feature styling -- */

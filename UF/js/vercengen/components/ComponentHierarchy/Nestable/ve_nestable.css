@@ -22,7 +22,6 @@
         white-space: nowrap;
         display: flex;
         align-items: center;
-        justify-content: space-between;
     }	
 	
     &.nst-error > .nst-content {
@@ -97,22 +96,13 @@ li > .nst-list {
             width: 100%;
         }
     }
-    
-    [data-nestable-disabled="disabled"], [data-nestable-disabled="dragging"] {
-        & .nst-content {
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-    }
     .nst-list {
         li {
             list-style: none;
         }
     }
-    .nst-parent.nst-disabled {
-        cursor: not-allowed;
-        opacity: 0.6;
-        
-        .nst-content, .nst-item .nst-button { cursor: not-allowed; }
+    
+    [data-nestable-disabled="dragging"] .nst-handle { 
+        visibility: hidden; 
     }
 }

@@ -6,6 +6,7 @@
  * - `arg1_options`: {@link Object}
  *   - `.attributes`: {@link Object}
  *     - `<attribute_key>`: {@link string}
+ *   - `.disabled=false`: {@link boolean}
  *   - `.id=Class.generateRandomID(ve.HierarchyDatatype)`: {@link string}
  *   - `.name`: {@link string}
  *   - `.onchange`: {@link function}(this:{@link ve.HierarchyDatatype})
@@ -52,7 +53,9 @@ ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 		
 		this.element = document.createElement("li");
 			this.element.classList.add(options.type, "nst-item");
-			if (options.type === "item")
+			if (options.disabled === true)
+				this.element.setAttribute("data-nestable-disabled", "dragging");
+			if (options.type === "item" && !options.disabled)
 				this.element.setAttribute("data-nestable-disabled", "nesting");
 			this.element.setAttribute("component", "ve-hierarchy-datatype");
 			Object.iterate(options.attributes, (local_key, local_value) => {
