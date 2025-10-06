@@ -42,9 +42,10 @@ ve.FileExplorer = class extends ve.Component {
 		}, {
 			disabled: true
 		});
-		hierarchy_obj[previous_folder_path].element.onclick = (e) => {
-			this.value = previous_folder_path;
-			this.refresh();
+		
+		let previous_folder_obj = hierarchy_obj[previous_folder_path];
+		previous_folder_obj.element.onclick = (e) => {
+			this.v = previous_folder_path;
 		};
 		
 		//Iterate over all files and folders in the current directory
@@ -68,9 +69,13 @@ ve.FileExplorer = class extends ve.Component {
 						...this.options.folder_options 
 					}
 				);
-				console.log(hierarchy_obj[local_full_path].element);
 				
 				//Add onclick event handler to hierarchy_obj[local_full_path] since we need navigation to work into a folder
+				let local_folder_obj = hierarchy_obj[local_full_path];
+				local_folder_obj.element.onclick = (e) => {
+					if (!e.target.matches(`button, input`))
+						this.v = local_full_path;
+				};
 			}
 		}
 		for (let i = 0; i < all_files_in_directory.length; i++) {
