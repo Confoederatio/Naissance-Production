@@ -8,6 +8,7 @@
  * ##### Options:
  * - `arg0_components_obj`: {@link Object}<{@link ve.Component}>|{@link string}
  * - `arg1_options`: {@link Object}
+ *   - `attributes`: {@link Object}<{@link string}>
  *   - `element`: {@link HTMLElement}|{@link string}
  *   - `style`: {@linK Object}<{@link string}>
  */
