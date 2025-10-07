@@ -59,6 +59,13 @@ ve.FileExplorer = class extends ve.Component {
 						folder_icon: new ve.HTML(this.options.folder_icon, {
 							style: { padding: 0 }
 						}),
+						actions_menu: new ve.HTML("Actions Menu", {
+							onload: (e) => {
+								console.warn("This should be refactored to a ve.Tooltip instance later.", e.element);
+								tippy(e.element, { allowHTML: true, content: "<b>Test</b>", interactive: true });
+							},
+							style: { order: 99, marginLeft: "auto" }
+						}),
 						...this.options.folder_components_obj 
 					}, { 
 						attributes: {
@@ -73,7 +80,7 @@ ve.FileExplorer = class extends ve.Component {
 				//Add onclick event handler to hierarchy_obj[local_full_path] since we need navigation to work into a folder
 				let local_folder_obj = hierarchy_obj[local_full_path];
 				local_folder_obj.element.onclick = (e) => {
-					if (!e.target.matches(`button, input`))
+					if (!e.target.closest(`button, input, .tippy-arrow, .tippy-box, .tippy-content`))
 						this.v = local_full_path;
 				};
 			}
@@ -105,6 +112,11 @@ ve.FileExplorer = class extends ve.Component {
 		this.hierarchy = new ve.Hierarchy(hierarchy_obj);
 		this.element.innerHTML = "";
 		this.element.appendChild(this.hierarchy.element);
+	}
+	
+	get v () {
+		//Return statement
+		return this.value;
 	}
 	
 	set v (arg0_value) {

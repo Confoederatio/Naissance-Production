@@ -14,6 +14,12 @@ ve.Component = class {
 		this.y = options.y;
 		
 		this.options = options;
+		
+		//.onload handler
+		if (this.options.onload)
+			setTimeout(() => {
+				this.options.onload(this);
+			}, 100);
 	}
 	
 	bind (arg0_container_el) {

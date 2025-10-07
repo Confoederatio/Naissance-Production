@@ -1,3 +1,15 @@
+/* -- ve.Tooltip -- */
+.tippy-arrow {
+    display: none;
+}
+.tippy-content {
+    font-family: var(--body-font-family);
+    padding: var(--cell-padding);
+    padding-left: calc(var(--cell-padding)*2);
+    padding-right: calc(var(--cell-padding)*2);
+}
+
+/* -- ve.Window -- */
 .ve.window {
     background-color: var(--bg-primary-colour);
     color: var(--header-colour);

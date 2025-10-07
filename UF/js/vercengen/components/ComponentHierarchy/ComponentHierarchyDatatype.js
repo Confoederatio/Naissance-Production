@@ -20,7 +20,7 @@
  * ##### Instance:
  * - `.element`: {@link HTMLElement}
  * - `.name`: {@link string}
- * - `.v`: {@link function}
+ * - `.v`: {@link Object}<{@link ve.Component}>
  * 
  * ##### Methods:
  * - <span color=00ffff>{@link ve.HierarchyDatatype.refresh|refresh}</span>()

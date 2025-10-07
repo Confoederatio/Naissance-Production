@@ -124,6 +124,24 @@
 		return (attribute_string) ? ` ${attribute_string}` : "";
 	};
 	
+	HTML.setAttributesObject = function (arg0_element, arg1_attributes_obj) {
+		//Convert from parameters
+		let element = arg0_element;
+		let attributes_obj = arg1_attributes_obj;
+		
+		//Declare local instance variables
+		let local_el = (typeof element === "string") ? 
+			document.querySelector(element) : element;
+		
+		//Iterate over attributes_obj and apply it to local_el
+		Object.iterate(attributes_obj, (local_key, local_value) => {
+			local_el.setAttribute(local_key, local_value.toString());
+		});
+		
+		//Return statement
+		return element;
+	};
+	
 	/**
 	 * Traverses the DOM recursively from a given root element.
 	 * 
