@@ -6,7 +6,7 @@
  * - `.instance`: this:{@link ve.Tooltip}
  * 
  * ##### Options:
- * - `arg0_components_obj`: {@link Object}<{@link ve.Component}>|{@link string}
+ * - `arg0_components_obj`: {@link function}|{@link Object}<{@link ve.Component}>|{@link string}
  * - `arg1_options`: {@link Object}
  *   - `attributes`: {@link Object}<{@link string}>
  *   - `element`: {@link HTMLElement}|{@link string}
@@ -29,8 +29,34 @@ ve.Tooltip = class {
 			this.element.instance = this;
 		HTML.setAttributesObject(this.element, (options.attributes) ? options.attributes : {});
 		HTML.applyCSSStyle(this.element, options.value);
+		this.v = components_obj;
 		
 		//Set tippy tooltip based on element
+		tippy(this.anchor_element, { allowHTML: true, content: this.element, interactive: true });
+	}
+	
+	get v () {
+		//Return statement
+		return this.element;
+	}
+	
+	set v (arg0_value) {
+		//Convert from parameters
+		let components_obj = arg0_value;
 		
+		//Reset innerHTML
+		this.element.innerHTML = "";
+		
+		//Append components_obj if possible
+		if (typeof components_obj === "function")
+			components_obj = components_obj(this); //Fetch return value if possible
+		if (typeof components_obj === "object") {
+			//Iterate over all components in components_obj
+			Object.iterate(components_obj, (local_key, local_value) => {
+				this.element.appendChild(local_value.element);
+			});
+		} else if (typeof components_obj === "string") {
+			this.element.innerHTML = components_obj;
+		}
 	}
 };
