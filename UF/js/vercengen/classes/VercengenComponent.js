@@ -20,6 +20,12 @@ ve.Component = class {
 			setTimeout(() => {
 				this.options.onload(this);
 			}, 100);
+		
+		//.tooltip handler
+		if (this.options.tooltip)
+			setTimeout(() => {
+				this.tooltip = new ve.Tooltip(this.options.tooltip, { element: this.element });
+			});
 	}
 	
 	bind (arg0_container_el) {
