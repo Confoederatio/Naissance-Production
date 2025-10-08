@@ -1,3 +1,14 @@
+/* -- ve.ContextMenu -- */
+.ve.window {
+    .context-menu-close-button {
+        position: absolute;
+        right: 0;
+    }
+    .context-menu-close-button:hover {
+        cursor: pointer;
+    }
+}
+
 /* -- ve.Tooltip -- */
 .tippy-arrow {
     display: none;

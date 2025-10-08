@@ -3,7 +3,17 @@ global.Test = class Test extends ve.Class {
 		super();
 		
 		this.interface = new ve.Interface({
-			confirm: veButton(),
+			confirm: veButton(() => {
+				console.log("Pressed!");
+				let test_menu = new ve.ContextMenu({
+					blah_input: new ve.Number(10, { name: "Number" }),
+					subcontext_menu: new ve.Button(() => {
+						test_menu.addContextMenu({
+							second_number_input: new ve.Number(5, { name: "Number 2" })
+						});
+					}, { name: "Subcontext Menu" })
+				});
+			}),
 			test: new ve.Number(5, { name: "Test Number" }),
 			date_test: new ve.Date(),
 			date_length: new ve.DateLength(),
