@@ -9,7 +9,7 @@
  * - `arg0_components_obj`: {@link function}|{@link Object}<{@link ve.Component}>|{@link string}
  * - `arg1_options`: {@link Object}
  *   - `attributes`: {@link Object}<{@link string}>
- *   - `element`: {@link HTMLElement}|{@link string}
+ *   - `element`: {@link HTMLElement}|{@link string} - The anchor element that ve.Tooltip should be bound to.
  *   - `style`: {@linK Object}<{@link string}>
  */
 ve.Tooltip = class {

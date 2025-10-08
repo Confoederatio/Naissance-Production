@@ -1,4 +1,4 @@
-ve.Interface = class Interface extends ve.Component {
+ve.Interface = class veInterface extends ve.Component {
 	static demo_value = {
 		submenu_html: new ve.HTML("This is hidden HTML.")
 	};

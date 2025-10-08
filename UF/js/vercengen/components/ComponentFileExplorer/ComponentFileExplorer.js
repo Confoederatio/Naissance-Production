@@ -61,8 +61,7 @@ ve.FileExplorer = class extends ve.Component {
 						}),
 						actions_menu: new ve.HTML("Actions Menu", {
 							onload: (e) => {
-								console.warn("This should be refactored to a ve.Tooltip instance later.", e.element);
-								tippy(e.element, { allowHTML: true, content: "<b>Test</b>", interactive: true });
+								new ve.Tooltip("<b>Test</b>", { element: e.element });
 							},
 							style: { order: 99, marginLeft: "auto" }
 						}),
