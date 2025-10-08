@@ -52,16 +52,32 @@ ve.PageMenu = class vePageMenu extends ve.Component {
 				this.updateUnderline();
 			});
 		});
+		
+		//Initialise underline on load
+		this.updateUnderline();
 	}
 	
-	updateUnderline (arg0_animate_y) { //[WIP] - Finish function body
+	updateUnderline (arg0_animate_y) {
 		//Convert from parameters
 		let animate_y = arg0_animate_y;
 		
 		//Declare local instance variables
 		let active_tab = this.navbar_el.querySelector(`.tab.active`);
 			if (!active_tab) return;
+		let underline_computed_style = window.getComputedStyle(this.underline_el);
 		
 		let offset_left = active_tab.offsetLeft;
+		let tab_width = active_tab.offsetWidth;
+		let underline_y = active_tab.offsetTop + active_tab.offsetHeight - parseFloat(underline_computed_style.height);
+		
+		//Snap vertically, animate horizontally
+		this.underline_el.style.transition = "none";
+		this.underline_el.style.top = `${underline_y}px`;
+		
+		requestAnimationFrame(() => {
+			this.underline_el.style.left = `${offset_left}px`;
+			this.underline_el.style.transition = `left 0.5s ease, width 0.5s ease`;
+			this.underline_el.style.width = `${tab_width}px`;
+		});
 	}
 };

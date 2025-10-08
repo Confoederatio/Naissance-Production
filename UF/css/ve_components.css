@@ -88,6 +88,33 @@ td:has([component="ve-interface"]) {
     }
 }
 
+/* -- ve.PageMenu -- */
+[component="ve-page-menu"] {
+    .navbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--cell-padding);
+        position: relative;
+        padding-bottom:var(--padding);
+    }
+    .tab {
+        color: var(--header-colour);
+        transition: background-color 0.3s;
+    }
+    .tab:hover {
+        cursor: pointer;
+    }
+    .underline {
+        background-color: var(--accent-secondary-colour);
+        border-radius: calc(var(--cell-padding)/2);
+        height: var(--cell-padding);
+        position: absolute;
+        pointer-events: none;
+        
+        transition: left 0.5s ease, width 0.5s ease;
+    }
+}
+
 /* -- ve.Radio -- */
 [component="ve-radio"] {
     input {
