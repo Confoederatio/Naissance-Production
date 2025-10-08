@@ -1,4 +1,35 @@
-
+/**
+ * <span color = "yellow">{@link ve.Component}</span>:ve.PageMenu
+ * 
+ * ##### Constructor:
+ * - `arg0_page_obj`: {@link Object}
+ *   - `<page_key>`: {@link Object}
+ *     - `.name`: {@link string} - '<page_key>' by default.
+ *     - `.components_obj:` {@link Object}<{@link ve.Component}>
+ *     - `.options`: {@link Object} - Options for the {@link ve.Interface} .components_obj will be wrapped inside.
+ * - `arg1_options`: {@link Object}
+ *   - `.attributes`: {@link Object}
+ *     - `<attribute_key>`: {@link string}
+ *   - `.name`: {@link string} - Refers to the name of the current page.
+ *   - `.onchange`: {@link function}(this:{@link ve.PageMenu})
+ *   - `.style`: {@link Object}
+ *     - `<style_key>`: {@link string}
+ *     
+ * ##### DOM:
+ * - `.instance`: this:{@link ve.PageMenu}
+ * 
+ * ##### Instance:
+ * - `.element`: {@link HTMLElement}
+ * - `.name`: {@link string}
+ * - `.v`: {@link string} - Refers to the current page the {@link ve.PageMenu} should be set to.
+ * 
+ * ##### Methods:
+ * - <span color=00ffff>{@link ve.PageMenu.remove|remove}</span>()
+ * - <span color=00ffff>{@link ve.PageMenu.updateUnderline|updateUnderline}</span>() - Updates the underline to the correct active tab. Might also need to be called during resize events.
+ * 
+ * @function vePageMenu
+ * @type {ve.PageMenu}
+ */
 ve.PageMenu = class vePageMenu extends ve.Component {
 	static demo_value = {
 		page_one: {
@@ -30,6 +61,7 @@ ve.PageMenu = class vePageMenu extends ve.Component {
 			this.element.instance = this;
 			HTML.applyCSSStyle(this.element, options.style);
 		this.interfaces_obj = {};
+		this.options = options;
 		this.navbar_el = document.createElement("nav");
 			this.navbar_el.classList.add("navbar");
 		
@@ -75,7 +107,21 @@ ve.PageMenu = class vePageMenu extends ve.Component {
 		//2. Body handling; display starting interface
 		{
 			this.v = options.starting_page;
+			if (options.name) this.name = options.name;
 		}
+	}
+	
+	get name () {
+		//Return statement
+		return this.navbar_el.querySelector(`.tab.active`).innerHTML;
+	}
+	
+	set name (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Set name
+		this.navbar_el.querySelector(`.tab.active`).innerHTML = value;
 	}
 	
 	get v () {
@@ -102,9 +148,14 @@ ve.PageMenu = class vePageMenu extends ve.Component {
 		//Switch interface to selected page
 		this.interface_el.innerHTML = "";
 		this.interface_el.appendChild(this.interfaces_obj[page_key].element);
+		if (this.options.onchange) this.options.onchange(this);
 		setTimeout(() => {
 			this.updateUnderline();
 		}, 100);
+	}
+	
+	remove () {
+		this.element.remove();
 	}
 	
 	updateUnderline (arg0_animate_y) {

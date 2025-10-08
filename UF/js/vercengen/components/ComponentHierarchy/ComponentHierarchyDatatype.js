@@ -104,6 +104,7 @@ ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 		
 		//Reset this.components_obj
 		this.components_obj = components_obj;
+		if (this.options.onchange) this.options.onchange(this);
 		this.refresh();
 	}
 	
