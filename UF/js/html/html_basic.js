@@ -127,7 +127,7 @@
 	HTML.setAttributesObject = function (arg0_element, arg1_attributes_obj) {
 		//Convert from parameters
 		let element = arg0_element;
-		let attributes_obj = arg1_attributes_obj;
+		let attributes_obj = (arg1_attributes_obj) ? arg1_attributes_obj : {};
 		
 		//Declare local instance variables
 		let local_el = (typeof element === "string") ? 

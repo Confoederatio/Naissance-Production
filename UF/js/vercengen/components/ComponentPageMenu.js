@@ -30,7 +30,7 @@
  * @function vePageMenu
  * @type {ve.PageMenu}
  */
-ve.PageMenu = class vePageMenu extends ve.Component {
+ve.PageMenu = class vePageMenu extends ve.Component { //[WIP] - This should be updated later to allow arg0_page_obj to take in Array<components_obj> instead, which would create a conventional paginated menu instead of a tabbed one.
 	static demo_value = {
 		page_one: {
 			name: "Home",
@@ -154,14 +154,23 @@ ve.PageMenu = class vePageMenu extends ve.Component {
 		}, 100);
 	}
 	
+	/**
+	 * Removes the surface component/element from the DOM.
+	 * - Method of: {@link ve.PageMenu}
+	 * 
+	 * @typedef ve.PageMenu.remove
+	 */
 	remove () {
 		this.element.remove();
 	}
 	
-	updateUnderline (arg0_animate_y) {
-		//Convert from parameters
-		let animate_y = arg0_animate_y;
-		
+	/**
+	 * Updates the underline underneath the active tab and animates it.
+	 * - Method of: {@link ve.PageMenu}
+	 * 
+	 * @typedef ve.PageMenu.updateUnderline
+	 */
+	updateUnderline () {
 		//Declare local instance variables
 		let active_tab = this.navbar_el.querySelector(`.tab.active`);
 			if (!active_tab) return;
