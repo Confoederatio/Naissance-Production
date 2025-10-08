@@ -99,6 +99,7 @@ td:has([component="ve-interface"]) {
     }
     .tab {
         color: var(--header-colour);
+        padding: var(--padding);
         transition: background-color 0.3s;
     }
     .tab:hover {
