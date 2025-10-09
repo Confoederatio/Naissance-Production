@@ -14,6 +14,12 @@ global.Test = class Test extends ve.Class {
 					}, { name: "Subcontext Menu" })
 				});
 			}),
+			modal_popup: veButton(() => {
+				let modal = new ve.Modal({
+					confirm: veButton(),
+					string: veText("This is a test")
+				});
+			}, { name: "View Modal" }),
 			test: new ve.Number(5, { name: "Test Number" }),
 			date_test: new ve.Date(),
 			date_length: new ve.DateLength(),

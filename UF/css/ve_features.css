@@ -9,6 +9,19 @@
     }
 }
 
+/* -- ve.Modal -- */
+.ve.overlay.modal-disabled {
+    background-color: var(--bg-primary-colour);
+    pointer-events: none;
+    
+    .ve.window:not(.modal) {
+        opacity: 0.5;
+    }
+    .ve.window.modal {
+        pointer-events: auto;
+    }
+}
+
 /* -- ve.Tooltip -- */
 .tippy-arrow {
     display: none;
@@ -50,6 +63,7 @@
     }
     #close-button:hover {
         background-color: var(--hover-colour);
+        cursor: pointer;
     }
     .feature-header {
         padding: var(--padding);
