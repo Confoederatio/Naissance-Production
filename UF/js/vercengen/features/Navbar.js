@@ -24,8 +24,11 @@
  *   - `.name`: {@link string}
  *   - `.style`: {@link Object}
  *     - `<style_key>`: {@link string}
+ *     
+ * ##### Methods:
+ * - <span color=00ffff>{@link ve.Navbar.generateHTMLRecursively|generateHTMLRecursively}</span>(arg0_navbar_obj: {@link Object}) | {@link HTMLUListElement}
  */
-ve.Navbar = class { //[WIP] - Finish Class body
+ve.Navbar = class {
 	constructor (arg0_navbar_obj, arg1_options) {
 		//Convert from parameters
 		let navbar_obj = (arg0_navbar_obj) ? arg0_navbar_obj : {};
@@ -38,9 +41,13 @@ ve.Navbar = class { //[WIP] - Finish Class body
 			HTML.setAttributesObject(this.element, options.attributes);
 			HTML.applyCSSStyle(this.element, options.style);
 		
-		//Format html_string
-		let html_string = this.generateHTMLRecursively(navbar_obj);
-		this.element.innerHTML = html_string.join("");
+		//Format this.element
+		this.element.appendChild(this.generateHTMLRecursively(navbar_obj));
+		if (options.name) {
+			let name_el = document.createElement("div");
+			name_el.innerHTML = options.name;
+			this.element.querySelector("ul").prepend(name_el);
+		}
 		
 		//Append child to body unless an anchor_element is defined
 		if (options.anchor_element) {
@@ -53,49 +60,74 @@ ve.Navbar = class { //[WIP] - Finish Class body
 		}
 	}
 	
-	generateHTMLRecursively (arg0_navbar_obj) {
+	/**
+	 * Generates HTML recursively for ve.Navbar.
+	 * - Method of: {@link ve.Navbar}
+	 * 
+	 * @param {Object} arg0_navbar_obj
+	 * 
+	 * @returns {HTMLUListElement}
+	 */
+	generateHTMLRecursively(arg0_navbar_obj) {
 		//Convert from parameters
-		let navbar_obj = (arg0_navbar_obj) ? arg0_navbar_obj : {};
+		let navbar_obj = arg0_navbar_obj;
 		
 		//Declare local instance variables
-		let html_string = [];
-		let reserved_keys = ["name", "active"];
+		let reserved_keys = ["name", "active", "onclick", "keybind"];
+		let ul_el = document.createElement("ul");
 		
-		html_string.push(`<ul>`);
-			html_string.push(`<li>`);
-			if (navbar_obj.name === undefined)
-				console.warn(`ve.Navbar: generateHTMLRecursively - .name is undefined for the following object:`, navbar_obj);
-			html_string.push((navbar_obj.name) ? navbar_obj.name : "Button");
-		
-			//Iterate over all entries in navbar_obj and recursively populate them
-			Object.iterate(navbar_obj, (local_key, local_value) => {
-				if (!reserved_keys.includes(local_key))
-					if (typeof local_value === "object") {
-						let all_local_keys = Object.keys(local_value);
-						let has_non_reserved_key = false;
-						
-						//Iterate over all_local_keys to see if it has a non-reserved key
-						for (let i = 0; i < all_local_keys.length; i++)
-							if (!reserved_keys.includes(all_local_keys[i])) {
-								has_non_reserved_key = true;
-								break;
-							}
-						
-						//If a non-reserved key exists, this is a dropdown menu, otherwise it is a dropdown item
-						if (has_non_reserved_key) {
-							html_string.concat(this.generateHTMLRecursively(local_value));
-						} else {
-							html_string.push(`<li class = "link">`);
-								html_string.push(`<a>${(local_value.name) ? local_value.name : local_key}</a>`);
-							html_string.push(`</li>`);
-						}
-					}
-			});
+		//Iterate over all keys in navbar_obj and parse them recursively
+		Object.iterate(navbar_obj, (key, value) => {
+			if (reserved_keys.includes(key) || typeof value !== "object") return;
 			
-			html_string.push(`</li>`);
-		html_string.push(`</ul>`);
+			let li_el = document.createElement("li");
+			
+			let all_keys = Object.keys(value);
+			let has_dropdowns = all_keys.some(
+				(k) => !reserved_keys.includes(k) && typeof value[k] === "object"
+			);
+			
+			// If the entry has nested structure, it's a dropdown group
+			if (has_dropdowns) {
+				// Set label
+				li_el.appendChild(
+					document.createTextNode(value.name || key.replace(/_/g, " "))
+				);
+				
+				// Recursively build its children
+				let child_ul = this.generateHTMLRecursively(value);
+				li_el.appendChild(child_ul);
+			} else {
+				// Otherwise, it's a simple link
+				li_el.classList.add("link");
+				let a_el = document.createElement("a");
+				a_el.textContent = value.name || key.replace(/_/g, " ");
+				li_el.appendChild(a_el);
+				
+				// Active state
+				if (value.active) a_el.classList.add("active");
+				
+				// Onclick
+				if (typeof value.onclick === "function") {
+					a_el.addEventListener("click", (e) => {
+						e.preventDefault();
+						value.onclick(a_el);
+					});
+				}
+				
+				// Keybind
+				if (typeof value.keybind === "string" && typeof Mousetrap !== "undefined") {
+					Mousetrap.bind(value.keybind, (e) => {
+						if (typeof value.onclick === "function") value.onclick(a_el);
+						e.preventDefault();
+						return false;
+					});
+				}
+			}
+			
+			ul_el.appendChild(li_el);
+		});
 		
-		//Return statement
-		return html_string;
+		return ul_el;
 	}
 };

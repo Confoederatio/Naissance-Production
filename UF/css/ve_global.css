@@ -4,6 +4,7 @@ html, head, body {
     width: 100%;
 }
 .ve.overlay {
+    pointer-events: none;
     position: fixed;
     bottom: 0px;
     left: 0px;
@@ -12,6 +13,10 @@ html, head, body {
 
     height: 100dvh;
     width: 100dvw;
+    
+    > div {
+        pointer-events: auto;
+    }
 }
 
 /* -- Vercengen themes -- */

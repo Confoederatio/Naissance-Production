@@ -22,6 +22,114 @@
     }
 }
 
+/* -- ve.Navbar -- */
+.ve.navbar {
+    --menu-height: 40px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    ul {
+        list-style: none;
+        padding: 16px;
+        margin: 0;
+        li, li a {
+            opacity: .8;
+            color: #ffffff;
+            cursor: pointer;
+            transition: 200ms;
+            text-decoration: none;
+            white-space: nowrap;
+            font-weight: 700;
+            &:hover {
+                opacity: 1;
+            }
+            a {
+                display: flex;
+                align-items: center;
+                height: 100%;
+                width: 100%;
+            }
+        }
+        li {
+            padding-right: 36px;
+            &::before {
+                content: '';
+                width: 0;
+                height: 0;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-top: 5px solid #FFA500;
+                position: absolute;
+                right: 8px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+        .link {
+            &::before {
+                padding-right: 0;
+                display: none;
+            }
+        }
+    }
+    > ul {
+        display: flex;
+        height: var(--menu-height);
+        align-items: center;
+        background-color: #000000;
+        li {
+            position: relative;
+            margin: 0 8px;
+            ul {
+                visibility: hidden;
+                opacity: 0;
+                padding: 0;
+                min-width: 160px;
+                background-color: #333;
+                position: absolute;
+                top: calc(var(--menu-height) + 5px);
+                left: 100%;
+                transform: translateX(-50%);
+                transition: 200ms;
+                transition-delay: 200ms;
+                li {
+                    margin: 0;
+                    padding: 8px 16px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    height: 30px;
+                    padding-right: 40px;
+                    &::before {
+                        width: 0;
+                        height: 0;
+                        border-top: 5px solid transparent;
+                        border-bottom: 5px solid transparent;
+                        border-left: 5px solid #FFA500;
+                    }
+                    ul {
+                        top: -2%;
+                        left: 100%;
+                        transform: translate(0)
+                    }
+                    &:hover {
+                        background-color: #000000;
+                    }
+                }
+            }
+            &:hover {
+                > ul {
+                    opacity: 1;
+                    visibility: visible;
+                    transition-delay: 0ms;
+                }
+            }
+        }
+    }
+}
+
 /* -- ve.Tooltip -- */
 .tippy-arrow {
     display: none;
