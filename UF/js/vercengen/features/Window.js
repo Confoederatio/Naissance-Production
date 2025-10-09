@@ -1,6 +1,8 @@
 /**
  * Represents a Window Feature that contains a set of components which are wrapped inside an Interface.
  * @type {ve.Window}
+ * 
+ * - Inherited by: {@link ve.ContextMenu}, {@link ve.Modal}
  *
  * ##### DOM:
  * - `.instance`: this:{@link ve.Window}

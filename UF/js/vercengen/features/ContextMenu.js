@@ -12,13 +12,14 @@
  * - `arg1_options`: {@link Object}
  *   - `.anchor="left"/"right"` - Either 'left'/'right'. Position defaults to the side that has the most space.
  *   - `.button_options`: {@link ve.Button|ve.Button.options}
+ *   - `.id`: {@link string}
  *   - `.mode="static_ui"` - Either 'static_ui'/'static_window'/'window'.
  *   - `.x=HTML.mouse_x`: {@link number}
  *   - `.y=HTML.mouse_y`: {@link number}
  *   
  * ##### Methods:
- * - <span color=00ffff>{@link ve.ContextMenu.addContextMenu|addContextMenu}</span>(arg0_components_obj: {@link Object}<{@link ve.Component}>, arg1_options: {@link Object}) | this:{@link ve.ContextMenu}
- *   - `arg1_options`: {@link Object}
+ * - <span color=00ffff>{@link ve.ContextMenu.addContextMenu|addContextMenu}</span>(arg0_components_obj: {@link Object}<{@link ve.Component}>, arg1_options: {@link ve.Window|ve.Window.options}) | this:{@link ve.ContextMenu}
+ *   - `arg1_options`: {@link ve.Window|ve.Window.options}
  *     - `.id`: {@link string} - The ID to prevent duplicate context menus from being opened.
  * - <span color=00ffff>{@link ve.ContextMenu.close|close}</span>() | this:{@link ve.ContextMenu}
  * - <span color=00ffff>{@link ve.ContextMenu.getCurrentOffset|getCurrentOffset}</span>() | {@link number}

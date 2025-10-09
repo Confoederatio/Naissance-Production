@@ -18,6 +18,11 @@
  *       - `.keybind`: {@link string} - Mousetrap key combo which triggers the bound `.onclick` event if possible.
  *       - `.name`: {@link string}
  * - `arg1_options`: {@link Object}
+ *   - `.attributes`: {@link Object}
+ *     - `<attribute_key>`: {@link string}
+ *   - `.name`: {@link string}
+ *   - `.style`: {@link Object}
+ *     - `<style_key>`: {@link string}
  */
 ve.Navbar = class { //[WIP] - Finish Class body
 	constructor (arg0_navbar_obj, arg1_options) {
