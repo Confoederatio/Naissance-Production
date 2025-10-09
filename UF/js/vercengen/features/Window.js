@@ -93,7 +93,7 @@ ve.Window = class {
 		{
 			setTimeout(() => {
 				this.setCoords(this.x, this.y);
-				this.setSize(this.width, this.height);
+				this.setSize(options.width, options.height);
 			});
 		}
 		

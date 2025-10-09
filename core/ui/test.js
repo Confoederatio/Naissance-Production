@@ -10,10 +10,10 @@ global.Test = class Test extends ve.Class {
 					subcontext_menu: new ve.Button(() => {
 						test_menu.addContextMenu({
 							second_number_input: new ve.Number(5, { name: "Number 2" })
-						});
+						}, { id: "context_two" });
 					}, { name: "Subcontext Menu" })
-				});
-			}),
+				}, { id: "context_one" });
+			}, { name: "Open Context Menu" }),
 			modal_popup: veButton(() => {
 				let modal = new ve.Modal({
 					confirm: veButton(),

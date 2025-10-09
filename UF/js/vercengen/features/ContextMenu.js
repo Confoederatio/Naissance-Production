@@ -18,6 +18,8 @@
  *   
  * ##### Methods:
  * - <span color=00ffff>{@link ve.ContextMenu.addContextMenu|addContextMenu}</span>(arg0_components_obj: {@link Object}<{@link ve.Component}>, arg1_options: {@link Object}) | this:{@link ve.ContextMenu}
+ *   - `arg1_options`: {@link Object}
+ *     - `.id`: {@link string} - The ID to prevent duplicate context menus from being opened.
  * - <span color=00ffff>{@link ve.ContextMenu.close|close}</span>() | this:{@link ve.ContextMenu}
  * - <span color=00ffff>{@link ve.ContextMenu.getCurrentOffset|getCurrentOffset}</span>() | {@link number}
  * - <span color=00ffff>{@link ve.ContextMenu.open|open}</span>() | this:{@link ve.ContextMenu}
@@ -47,13 +49,36 @@ ve.ContextMenu = class { //[WIP] - Finish class body
 		this.options = options;
 		this.windows = [];
 		
-		this.addContextMenu(this.components_obj);
+		this.addContextMenu(this.components_obj, { 
+			id: options.id
+		});
 	}
 	
 	addContextMenu (arg0_components_obj, arg1_options) {
 		//Convert from parameters
 		let components_obj = arg0_components_obj;
 		let options = (arg1_options) ? arg1_options : {};
+		
+		//Initialise options
+		if (options.id !== undefined) {
+			//Iterate over all extant this.windows; internal guard clause if ID already exists
+			let all_window_els = document.querySelectorAll("div.ve.window");
+			let break_function = false;
+			
+			all_window_els.forEach((local_el) => {
+				if (local_el.context_menu_instance)
+					if (local_el.context_menu_instance.options.id === options.id)
+						break_function = true;
+			});
+			this.windows.forEach((local_window) => {
+				if (local_window.id === options.id)
+					break_function = true;
+			});
+			
+			if (break_function) return;
+		} else {
+			console.warn(`ve.ContextMenu: addContextMenu - options.id is not defined! options.id should be defined to prevent duplicate context menus from opening up.`);
+		}
 		
 		//Declare local instance variables
 		let actual_x;
@@ -97,8 +122,20 @@ ve.ContextMenu = class { //[WIP] - Finish class body
 			close_window_button.setAttribute("data-index", this.windows.length.toString());
 			
 			window_obj.element.appendChild(close_window_button);
+			window_obj.element.context_menu_instance = this;
+			if (options.id)
+				window_obj.id = options.id;
 		
 		this.windows.push(window_obj);
+		
+		//Post-processing
+		//Right-align handling
+		if (this.windows.length === 1 && this.options.anchor === "right") {
+			actual_x -= this.windows[0].element.offsetWidth;
+			setTimeout(() => {
+				this.windows[0].element.style.left = `${actual_x}px`;
+			}, 100);
+		}
 		
 		//Return statement
 		return this;
