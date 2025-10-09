@@ -24,47 +24,53 @@
 
 /* -- ve.Navbar -- */
 .ve.navbar {
-    --menu-height: 40px;
     box-sizing: border-box;
+    color: var(--body-colour);
+    font-family: var(--body-font-family);
+    font-size: var(--header-font-size);
+    font-weight: var(--body-font-weight);
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
+    
     ul {
         list-style: none;
-        padding: 16px;
         margin: 0;
-        li, li a {
-            opacity: .8;
-            color: #ffffff;
-            cursor: pointer;
-            transition: 200ms;
-            text-decoration: none;
-            white-space: nowrap;
-            font-weight: 700;
-            &:hover {
-                opacity: 1;
-            }
-            a {
-                display: flex;
-                align-items: center;
-                height: 100%;
-                width: 100%;
-            }
-        }
+
         li {
-            padding-right: 36px;
+            padding-left: 0.5rem;
+            padding-right: 2rem;
+            
             &::before {
-                content: '';
+                content: "";
                 width: 0;
                 height: 0;
                 border-left: 5px solid transparent;
                 border-right: 5px solid transparent;
-                border-top: 5px solid #FFA500;
+                border-top: 5px solid var(--body-colour);
                 position: absolute;
                 right: 8px;
                 top: 50%;
                 transform: translateY(-50%);
+            }
+        }
+        li, li a {
+            opacity: .8;
+            color: var(--body-colour);
+            cursor: pointer;
+            transition: all 0.5s ease;
+            text-decoration: none;
+            white-space: nowrap;
+            
+            &:hover {
+                opacity: 1;
+            }
+            a {
+                align-items: center;
+                display: flex;
+                height: 100%;
+                width: 100%;
             }
         }
         .link {
@@ -76,27 +82,35 @@
     }
     > ul {
         display: flex;
-        height: var(--menu-height);
+        height: var(--navbar-height);
         align-items: center;
-        background-color: #000000;
+        background-color: var(--bg-secondary-colour);
+        padding-inline-start: calc(var(--padding)*2);
+        
+        > div {
+            padding-right: calc(var(--padding)*2);
+        }
         li {
             position: relative;
             margin: 0 8px;
+            
             ul {
+                border: 3px solid var(--bg-secondary-colour);
+                border-radius: 4px;
                 visibility: hidden;
                 opacity: 0;
                 padding: 0;
                 min-width: 160px;
-                background-color: #333;
+                background-color: var(--bg-secondary-colour);
                 position: absolute;
-                top: calc(var(--menu-height) + 5px);
+                top: calc(var(--navbar-height) - 8px);
                 left: 100%;
                 transform: translateX(-50%);
                 transition: 200ms;
                 transition-delay: 200ms;
+            
                 li {
                     margin: 0;
-                    padding: 8px 16px;
                     display: flex;
                     align-items: center;
                     justify-content: flex-start;
@@ -107,7 +121,7 @@
                         height: 0;
                         border-top: 5px solid transparent;
                         border-bottom: 5px solid transparent;
-                        border-left: 5px solid #FFA500;
+                        border-left: 5px solid var(--body-colour);
                     }
                     ul {
                         top: -2%;
@@ -115,7 +129,7 @@
                         transform: translate(0)
                     }
                     &:hover {
-                        background-color: #000000;
+                        background-color: var(--accent-primary-colour);
                     }
                 }
             }
