@@ -293,6 +293,41 @@
 			document.onmousemove = internalElementDrag;
 		}
 		
+		//[WIP] - Tidy up dimensional constraints later on
+		setTimeout(() => {
+			const vw = window.innerWidth;
+			const vh = window.innerHeight;
+			
+			const rect = el.getBoundingClientRect(); // includes left/top offsets
+			const el_left = rect.left;
+			const el_top = rect.top;
+			let el_width = rect.width;
+			let el_height = rect.height;
+			
+			// Determine remaining visible space from current offset
+			const available_w = vw - el_left;
+			const available_h = vh - el_top;
+			
+			// Clamp width/height so element never exceeds remaining viewport
+			if (el_width > available_w) {
+				el_width = available_w;
+				el.style.width = el_width + "px";
+			}
+			
+			if (el_height > available_h) {
+				el_height = available_h;
+				el.style.height = el_height + "px";
+			}
+			
+			// (optional) allow scroll if internally larger content
+			if (el.scrollHeight > el_height) {
+				el.style.overflowY = "auto";
+			}
+			if (el.scrollWidth > el_width) {
+				el.style.overflowX = "auto";
+			}
+		}, 50);
+		
 		//Return statement
 		return el;
 	};
