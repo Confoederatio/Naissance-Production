@@ -100,8 +100,8 @@
             padding-right: calc(var(--padding)*2);
         }
         li {
+            margin: 0 4px;
             position: relative;
-            margin: 0 8px;
             
             ul {
                 border: 3px solid var(--bg-secondary-colour);
@@ -113,8 +113,8 @@
                 background-color: var(--bg-secondary-colour);
                 position: absolute;
                 top: calc(var(--navbar-height) - 8px);
-                left: 100%;
-                transform: translateX(-50%);
+                left: calc(100%);
+                transform: translateX(calc(-50% + 20px));
                 transition: 200ms;
                 transition-delay: 200ms;
             
