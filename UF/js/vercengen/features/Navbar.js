@@ -68,7 +68,7 @@ ve.Navbar = class {
 	 * 
 	 * @returns {HTMLUListElement}
 	 */
-	generateHTMLRecursively(arg0_navbar_obj) {
+	generateHTMLRecursively (arg0_navbar_obj) {
 		//Convert from parameters
 		let navbar_obj = arg0_navbar_obj;
 		
@@ -101,7 +101,7 @@ ve.Navbar = class {
 				// Otherwise, it's a simple link
 				li_el.classList.add("link");
 				let a_el = document.createElement("a");
-				a_el.textContent = value.name || key.replace(/_/g, " ");
+					a_el.textContent = value.name || key.replace(/_/g, " ");
 				li_el.appendChild(a_el);
 				
 				// Active state
@@ -117,6 +117,10 @@ ve.Navbar = class {
 				
 				// Keybind
 				if (typeof value.keybind === "string" && typeof Mousetrap !== "undefined") {
+					let kbd_el = document.createElement("kbd");
+						kbd_el.innerText = value.keybind;
+						a_el.appendChild(kbd_el);
+					
 					Mousetrap.bind(value.keybind, (e) => {
 						if (typeof value.onclick === "function") value.onclick(a_el);
 						e.preventDefault();

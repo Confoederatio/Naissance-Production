@@ -40,7 +40,7 @@
 
         li {
             padding-left: 0.5rem;
-            padding-right: 2rem;
+            padding-right: 1.5rem;
             
             &::before {
                 content: "";
@@ -71,6 +71,15 @@
                 display: flex;
                 height: 100%;
                 width: 100%;
+                
+                kbd::before {
+                    content: "\00a0\00a0";
+                }
+                kbd {
+                    font-size: calc(var(--body-font-size)*1);
+                    margin-left: auto;
+                    order: 99;
+                }
             }
         }
         .link {
@@ -115,7 +124,7 @@
                     align-items: center;
                     justify-content: flex-start;
                     height: 30px;
-                    padding-right: 40px;
+                    
                     &::before {
                         width: 0;
                         height: 0;
