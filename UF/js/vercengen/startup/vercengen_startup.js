@@ -163,6 +163,11 @@ global.path = require("path");
 		new DALS.Timeline(); //Initialise starting timeline
 		HTML.initialise();
 		
+		ve.scene_el = document.createElement("div");
+		ve.scene_el.id = "ve-scene";
+		ve.scene_el.setAttribute("class", "ve scene");
+		document.body.appendChild(ve.scene_el);
+		
 		ve.window_overlay_el = document.createElement("div");
 		ve.window_overlay_el.id = "ve-overlay";
 		ve.window_overlay_el.setAttribute("class", "ve overlay");
