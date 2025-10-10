@@ -20,6 +20,7 @@ ve.Toast = class {
 			this.refresh(components_obj);
 		}
 		
+		//Append ve.window_overlay_el and immediately delay a frame to calculate centre positions and start animation
 		ve.window_overlay_el.appendChild(this.element);
 		requestAnimationFrame(() => {
 			let rect = this.element.getBoundingClientRect();
