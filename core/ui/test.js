@@ -4,7 +4,8 @@ global.Test = class Test extends ve.Class {
 		
 		this.interface = new ve.Interface({
 			confirm: veButton(() => {
-				console.log("Pressed!");
+				new ve.Toast("Pressed!");
+				
 				let test_menu = new ve.ContextMenu({
 					blah_input: new ve.Number(10, { name: "Number" }),
 					subcontext_menu: new ve.Button(() => {

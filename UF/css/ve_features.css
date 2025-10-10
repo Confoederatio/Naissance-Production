@@ -153,6 +153,30 @@
     }
 }
 
+/* -- ve.Toast -- */
+@keyframes toast-fade-up {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+}
+.ve.toast {
+    background-color: var(--bg-primary-colour);
+    color: var(--body-colour);
+    font-family: var(--body-font-family);
+    font-size: var(--body-font-size);
+    padding: var(--padding);
+    position: fixed;
+    z-index: 99;
+}
+
 /* -- ve.Tooltip -- */
 .tippy-arrow {
     display: none;
