@@ -68,7 +68,7 @@ ve.Navbar = class {
 	 * 
 	 * @returns {HTMLUListElement}
 	 */
-	generateHTMLRecursively (arg0_navbar_obj) {
+	generateHTMLRecursively (arg0_navbar_obj) { //[WIP] - Refactor at a later date
 		//Convert from parameters
 		let navbar_obj = arg0_navbar_obj;
 		
