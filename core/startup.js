@@ -50,7 +50,11 @@ global.path = require("path");
       "core"
     ],
     special_function: function () {
-      initialiseVercengenWindowsDemo();
+			//Initialise global.scene, global.map
+			global.scene = new ve.Scene({
+				map_component: new ve.Map()
+			});
+			global.map = scene.map_component.map;
     }
   });
 

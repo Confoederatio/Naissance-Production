@@ -43,8 +43,8 @@ let navbar = new ve.Navbar(
 			}
 		},
 		
-		Edit: {
-			name: "Edit",
+		undo_redo: {
+			name: "Undo/Redo",
 			Undo: {
 				name: "Undo",
 				keybind: "ctrl+z",
@@ -55,15 +55,13 @@ let navbar = new ve.Navbar(
 				keybind: "ctrl+y",
 				onclick: (el) => alert("Redo")
 			},
-			Find: {
-				name: "Find/Replace",
-				onclick: (el) => alert("Search dialog opened")
+			switch_timeline: {
+				name: "Switch/Timeline"
 			}
 		},
 		
 		View: {
 			name: "View",
-			active: true,
 			Zoom: {
 				name: "Zoom",
 				In: {
@@ -89,6 +87,11 @@ let navbar = new ve.Navbar(
 					alert("Theme toggled!");
 				}
 			}
+		},
+		
+		settings: {
+			name: "Settings",
+			active: true
 		}
 	},
 	{
