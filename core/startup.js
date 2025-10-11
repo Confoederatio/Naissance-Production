@@ -43,6 +43,7 @@ global.path = require("path");
 
 //Startup process
 {
+	global.is_naissance = true;
   ve.start({
     //Accepts wildcards (*), exclusionary patterns (!), and folders/file paths
     load_files: [
