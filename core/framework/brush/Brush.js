@@ -13,7 +13,7 @@ global.Brush = class extends ve.Class {
 		this.interface = new ve.Interface({
 			colour: new ve.Colour([255, 255, 255], { x: 0, y: 0 }),
 			disabled: new ve.Checkbox({ value: false }, { x: 1, y: 0 }),
-			opacity: new ve.Range(0.70)
+			opacity: new ve.Range(0.70, { name: "Opacity" })
 		}, { name: "Brush Options", open: true });
 		
 		//Declare local interface variables
