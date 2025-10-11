@@ -1,4 +1,4 @@
-let navbar = new ve.Navbar(
+global.topbar = new ve.Navbar(
 	{
 		File: {
 			name: "File",

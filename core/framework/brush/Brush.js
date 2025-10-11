@@ -10,7 +10,11 @@ global.Brush = class extends ve.Class {
 		this.type = "none"; //Either 'none'/'polygon'/'line'/'point'
 		
 		//Declare local symbol variables
-		this.colour = new ve.Colour([255, 255, 255]);
+		this.interface = new ve.Interface({
+			colour: new ve.Colour([255, 255, 255], { x: 0, y: 0 }),
+			disabled: new ve.Checkbox({ value: false }, { x: 1, y: 0 }),
+			opacity: new ve.Range(0.70)
+		}, { name: "Brush Options", open: true });
 		
 		//Declare local interface variables
 		this.information_display = new ve.HTML((e) => {
@@ -18,7 +22,7 @@ global.Brush = class extends ve.Class {
 			let cursor_coordinates = this.cursor.getCoordinates();
 			
 			//Return HTML
-			return `${cursor_coordinates.x}, ${cursor_coordinates.y} | Size: ${this.radius}`;
+			return `X: ${cursor_coordinates.x}; Y: ${cursor_coordinates.y} | Size: ${this.radius}`;
 		});
 		
 		//Set brush event handlers
@@ -34,7 +38,7 @@ global.Brush = class extends ve.Class {
 		
 		//Map event handlers
 		map.on("mousemove", (e) => {
-			if (this.disabled) return;
+			if (this.interface.disabled.v.value) return;
 			this.mouse_dragged = true;
 			
 			//Set coordinates for this.cursor
@@ -42,7 +46,7 @@ global.Brush = class extends ve.Class {
 		});
 		
 		map.getContainer().addEventListener("wheel", (e) => {
-			if (this.disabled) return; //Internal guard clause if brush is disabled
+			if (this.interface.disabled.v.value) return; //Internal guard clause if brush is disabled
 			
 			//Normalise the wheel delta across different browsers
 			let delta_y = e.deltaY*-1;
@@ -95,6 +99,7 @@ global.Brush = class extends ve.Class {
 			anchor: "bottom_right",
 			mode: "static_window",
 			name: "Brush",
+			width: "24rem",
 			x: 8,
 			y: 8,
 		});

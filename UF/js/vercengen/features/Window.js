@@ -218,12 +218,12 @@ ve.Window = class {
 	
 	setSize (arg0_width, arg1_height) {
 		//Convert from parameters
-		let width = parseInt(arg0_width);
-		let height = parseInt(arg1_height);
+		let width = arg0_width;
+		let height = arg1_height;
 		
 		//Apply style
-		HTML.applyCSSStyleObject({
-			...HTML.getCSSSize(this.options.height, this.options.width)
+		HTML.applyCSSStyleObject(this.element, {
+			...HTML.getCSSSize(width, height)
 		});
 	}
 	
