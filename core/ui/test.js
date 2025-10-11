@@ -1,3 +1,4 @@
+/*
 global.Test = class Test extends ve.Class {
 	constructor () {
 		super();
@@ -70,3 +71,4 @@ global.Test = class Test extends ve.Class {
 setTimeout(() => {
 	global.test = new Test();
 }, 500);
+ */

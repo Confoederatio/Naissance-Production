@@ -6,11 +6,22 @@ global.path = require("path");
 
 //Initialise functions
 {
-  function initialiseGlobal () {
+  global.initialiseGlobal = function () {
+		//Initialise global.scene
+		global.scene = new ve.Scene({
+			map_component: new ve.Map()
+		});
+			global.map = scene.map_component.map;
+		
     //Declare global variables
-    window.main = {
-      hierarchies: {}
+    global.main = {
+			brush: new Brush(),
+			hierarchy: {},
+			map: map
     };
+		
+		Map.initialiseKeyboardHandlers();
+		Map.initialiseMouseHandlers();
   }
 
   function trackPerformance () {
@@ -51,15 +62,13 @@ global.path = require("path");
       "core"
     ],
     special_function: function () {
-			//Initialise global.scene, global.map
-			global.scene = new ve.Scene({
-				map_component: new ve.Map()
-			});
-			global.map = scene.map_component.map;
-				global.brush = new Brush();
+			try {
+				initialiseGlobal();	
+			} catch (e) {
+				console.error(e);
+			}
     }
   });
 
-  initialiseGlobal();
   trackPerformance();
 }
