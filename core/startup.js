@@ -55,6 +55,7 @@ global.path = require("path");
 				map_component: new ve.Map()
 			});
 			global.map = scene.map_component.map;
+				global.brush = new Brush();
     }
   });
 
