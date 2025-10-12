@@ -62,11 +62,7 @@ global.path = require("path");
       "core"
     ],
     special_function: function () {
-			try {
-				initialiseGlobal();	
-			} catch (e) {
-				console.error(e);
-			}
+			initialiseGlobal();	
     }
   });
 

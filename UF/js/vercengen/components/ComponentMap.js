@@ -1,4 +1,6 @@
 ve.Map = class veMap extends ve.Component {
+	static instances = [];
+	
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
 		let value = arg0_value;
@@ -12,7 +14,7 @@ ve.Map = class veMap extends ve.Component {
 				spatialReference: {
 					projection:'EPSG:3857'
 				},
-				urlTemplate: "https://tile.tracestrack.com/en/{z}/{x}/{y}.webp?key=28ea24747e9fda45b57a2b0b9338f488", //"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+				urlTemplate: /*"https://tile.tracestrack.com/en/{z}/{x}/{y}.webp?key=28ea24747e9fda45b57a2b0b9338f488", */"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
 				subdomains: ["a", "b", "c"],
 				repeatWorld: false
 			}),
