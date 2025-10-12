@@ -11,7 +11,7 @@
  * - `arg0_components_obj`: {@link Object}<{@link ve.Component}>
  * - `arg1_options`: {@link Object}
  *   - `anchor="top_left"` - Either 'bottom_left'/'bottom_right'/'top_left'/'top_right'.
- *   - `height="12rem"`: {@link number}
+ *   - `height="auto"`: {@link number}
  *   - `width="12rem"`: {@link number}
  *   - `x=HTML.mouse_x`: {@link number}
  *   - `y=HTML.mouse_y`: {@link number}
@@ -41,7 +41,7 @@ ve.Window = class {
 			options.mode = (is_coords_well_defined) ? "static_ui" : "window";
 		
 		options.anchor = (options.anchor) ? options.anchor : "top_left";
-		options.height = (options.height !== undefined) ? options.height : "12rem";
+		options.height = (options.height !== undefined) ? options.height : "auto";
 		options.width = (options.width !== undefined) ? options.width : "12rem";
 		options.x = (options.x !== undefined) ? options.x : HTML.mouse_x;
 		options.y = (options.y !== undefined) ? options.y : HTML.mouse_y;

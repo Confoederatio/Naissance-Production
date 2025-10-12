@@ -7,7 +7,7 @@ global.MapContextMenu = class MapContextMenu extends ve.Class {
 			new_polygon: veButton(() => {
 				let new_polygon_interface = this.interface.addContextMenu({
 					name: veText("New Polygon", { name: "Name" }),
-					colour: veColour(Colour.convertHexToRGBA(main.brush.colour.v), {
+					colour: veColour(Colour.convertHexToRGBA(main.brush.interface.colour.v), {
 						attributes: { "data-brush-colour": true },
 						name: "Colour" 
 					}),
