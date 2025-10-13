@@ -70,10 +70,31 @@ global.Polygon = class extends ve.Class {
 	
 	removeFromPolygon (arg0_geometry) {
 		//Convert from parameters
+		let geometry = arg0_geometry;
 		
-		//1. Remove feature if this.geometry is already undefined
+		if (this.geometry === undefined) return; //Internal guard clause if geometry is already undefined
 		
 		//2. Difference with existing geometry if defined
+		try {
+			let ot_turf_geometry = Geospatiale.convertMaptalksToTurf(geometry);
+			let turf_geometry = Geospatiale.convertMaptalksToTurf(this.geometry);
+			
+			let turf_difference = turf.difference(turf.featureCollection([turf_geometry, ot_turf_geometry]));
+				if (turf_difference === null) { //Internal guard clause if turf_difference is null
+					this.geometry.remove();
+					this.geometry = undefined;
+					return;
+				}
+			let maptalks_difference = Geospatiale.convertTurfToMaptalks(turf_difference);
+			
+			//Replace this.geometry since we might be jumping between Polygon and MultiPolygon
+			this.layer.removeGeometry(this.geometry);
+			this.geometry = maptalks_difference;
+			this.layer.addGeometry(this.geometry);
+			this.update();
+		} catch (e) {
+			console.error("Difference failed:", e);
+		}
 	}
 	
 	update () {

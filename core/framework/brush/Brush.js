@@ -7,23 +7,33 @@ global.Brush = class extends ve.Class {
 			interactive: true
 		}).addTo(map);
 		this.radius = 50000;
-		setTimeout(() => {
-			this.selected_polygon = new Polygon();
-		});
-		this.type = "none"; //Either 'none'/'polygon'/'line'/'point'
+		this.selected_geometry = undefined;
+		this.type = "polygon"; //Either 'none'/'polygon'/'line'/'point'
 		
 		//Declare local symbol variables
 		this.interface = new ve.Interface({
-			colour: new ve.Colour([255, 255, 255], { x: 0, y: 0 }),
+			//Row 0: Enable/Disable
 			disabled: new ve.Checkbox(false, { 
 				onchange: (e) => {
 					if (this.cursor)
 						(e.v) ? this.cursor.hide() : this.cursor.show();
 				}, 
-				name: "Disabled", 
-				x: 1, y: 0 
+				name: "Disable Brush", x: 0, y: 0
 			}),
-			opacity: new ve.Range(0.70, { name: "Opacity" })
+			
+			//Row 1: Colour
+			colour: new ve.Colour([255, 255, 255], { x: 0, y: 1 }),
+			opacity: new ve.Range(0.70, {
+				name: "Opacity", x: 1, y: 1
+			}),
+			
+			//Row 2: Simplification
+			simplify: new ve.Range(0.5, { 
+				name: "Simplify", x: 0, y: 2
+			}),
+			simplify_applies_to_polygon: new ve.Checkbox(false, {
+				name: "Applies to Polygon", x: 1, y: 2
+			})
 		}, { name: "Brush Options", open: true });
 		
 		//Declare local interface variables
@@ -44,16 +54,62 @@ global.Brush = class extends ve.Class {
 				lineWidth: 2
 			}
 		});
-		//this.cursor_layer.addGeometry(this.cursor);
+		this.cursor_layer.addGeometry(this.cursor);
+		this.handleEvents();
 		
+		//[WIP] - Remove placeholder
+		setTimeout(() => {
+			this.selectPolygon();
+		});
+		
+		//Open UI
+		this.openUI();
+	}
+	
+	//Backend functions
+	disableNodeEditing () {
+		
+	}
+	
+	enableNodeEditing () {
+		
+	}
+	
+	handleEvents () {
 		//Map event handlers
+		map.on("mousedown", (e) => {
+			if (e.domEvent.which === 1) {
+				delete this.right_click;
+				this.left_click = true;
+			} else if (e.domEvent.which === 3) {
+				delete this.left_click;
+				this.right_click = true;
+			} else {
+				delete this.left_click;
+				delete this.right_click;
+			}
+		});
+		map.on("mouseup", (e) => {
+			delete this.left_click;
+			delete this.right_click;
+			map.config("draggable", true);
+		});
+		
 		map.on("mousemove", (e) => {
 			if (this.interface.disabled.v) return;
-			this.mouse_dragged = true;
 			
 			//Set coordinates for this.cursor
 			this.cursor.setCoordinates(e.coordinate);
-			this.selected_polygon.addToPolygon(this.cursor);
+			
+			if (this.type === "polygon" && (this.left_click || this.right_click)) {
+				map.config("draggable", false);
+				
+				if (this.left_click) {
+					this.selected_geometry.addToPolygon(this.cursor);
+				} else if (this.right_click) {
+					this.selected_geometry.removeFromPolygon(this.cursor);
+				}
+			}
 		});
 		
 		map.getContainer().addEventListener("wheel", (e) => {
@@ -70,22 +126,6 @@ global.Brush = class extends ve.Class {
 				this.cursor.setRadius(this.radius);
 			}
 		});
-		
-		//Open UI
-		this.openUI();
-	}
-	
-	//Backend functions
-	addToBrush () {
-		
-	}
-	
-	disableNodeEditing () {
-		
-	}
-	
-	enableNodeEditing () {
-		
 	}
 	
 	selectLine () {
@@ -96,9 +136,16 @@ global.Brush = class extends ve.Class {
 		
 	}
 	
-	selectPolygon () {
+	selectPolygon (arg0_polygon) {
+		//Convert from parameters
+		let polygon = (arg0_polygon) ? arg0_polygon : new Polygon();
 		
+		//Set this.selected_geometry
+		this.type = "polygon";
+		this.selected_geometry = polygon;
 	}
+	
+	//Tracker functions
 	
 	//Frontend functions
 	closeUI () {
@@ -123,5 +170,9 @@ global.Brush = class extends ve.Class {
 		
 		//Declare local instance variables
 		this.colour.v = rgb;
+	}
+	
+	setSimplify (arg0_tolerance, arg1_options) {
+		
 	}
 };
