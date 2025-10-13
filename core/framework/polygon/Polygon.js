@@ -9,7 +9,7 @@ global.Polygon = class extends ve.Class {
 		this.options = options;
 		
 		//Declare local instance variables
-		this.layer = main.brush.selected_layer; //Reference - [WIP] - Move all geometries to a singular geometry_layer
+		this.layer = main.layers.geometry; //Reference - [WIP] - Move all geometries to a singular geometry_layer
 		
 		this.geometry = undefined;
 		this.symbol = {
@@ -39,7 +39,7 @@ global.Polygon = class extends ve.Class {
 			
 			if (coords) {
 				this.geometry = new maptalks.Polygon(coords);
-				main.brush.selected_layer.addGeometry(this.geometry);
+				this.layer.addGeometry(this.geometry);
 				this.update();
 			} else {
 				console.error(`Polygon: coords has an invalid define:`, coords);
@@ -77,6 +77,9 @@ global.Polygon = class extends ve.Class {
 	}
 	
 	update () {
+		//Update bindings
+		
+		//Update symbol
 		this.geometry.setSymbol(this.symbol);
 	}
 };

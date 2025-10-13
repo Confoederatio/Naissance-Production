@@ -237,7 +237,7 @@ global.path = require("path");
 			// per HTML parser rules.
 			//
 			// This must run during document loading (not after DOM is complete).
-			document.write(html_concat);
+			injectConcatenatedHTML(html_concat);
 		}
 		
 		//2. Handle eval/Node.js require tags
@@ -278,4 +278,29 @@ global.path = require("path");
 		//Return statement
 		return load_files;
 	};
+}
+
+//[WIP] - Refactor later
+function injectConcatenatedHTML(htmlMarkup) {
+	const tempContainer = document.createElement("div");
+	tempContainer.innerHTML = htmlMarkup;
+	
+	const head = document.head || document.getElementsByTagName("head")[0];
+	const body = document.body || document.getElementsByTagName("body")[0];
+	
+	const fragment = document.createDocumentFragment();
+	
+	[...tempContainer.children].forEach((el) => {
+		if (el.tagName === "SCRIPT") {
+			const script = document.createElement("script");
+			script.src = el.getAttribute("src");
+			script.type = el.type || "text/javascript";
+			script.async = false; // preserves order!
+			fragment.appendChild(script);
+		} else if (el.tagName === "LINK") {
+			fragment.appendChild(el);
+		}
+	});
+	
+	body.appendChild(fragment);
 }

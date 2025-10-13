@@ -7,11 +7,9 @@ global.Brush = class extends ve.Class {
 			interactive: true
 		}).addTo(map);
 		this.radius = 50000;
-		this.selected_layer = new maptalks.VectorLayer("polygon_layer", [], {
-			hitDetect: true,
-			interactive: true
-		}).addTo(map);
-		this.selected_polygon = new Polygon(); //undefined;
+		setTimeout(() => {
+			this.selected_polygon = new Polygon();
+		});
 		this.type = "none"; //Either 'none'/'polygon'/'line'/'point'
 		
 		//Declare local symbol variables

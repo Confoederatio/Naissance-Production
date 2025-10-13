@@ -17,11 +17,11 @@ global.path = require("path");
     global.main = {
 			brush: new Brush(),
 			hierarchy: {},
+			layers: {},
 			map: map
     };
 		
-		Map.initialiseKeyboardHandlers();
-		Map.initialiseMouseHandlers();
+		Map.initialise();
   }
 
   function trackPerformance () {
@@ -62,7 +62,11 @@ global.path = require("path");
       "core"
     ],
     special_function: function () {
-			initialiseGlobal();	
+			try {
+				initialiseGlobal();	
+			} catch (e) {
+				console.error(e);
+			}	
     }
   });
 
