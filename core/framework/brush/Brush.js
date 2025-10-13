@@ -7,6 +7,11 @@ global.Brush = class extends ve.Class {
 			interactive: true
 		}).addTo(map);
 		this.radius = 50000;
+		this.selected_layer = new maptalks.VectorLayer("polygon_layer", [], {
+			hitDetect: true,
+			interactive: true
+		}).addTo(map);
+		this.selected_polygon = new Polygon(); //undefined;
 		this.type = "none"; //Either 'none'/'polygon'/'line'/'point'
 		
 		//Declare local symbol variables
@@ -41,7 +46,7 @@ global.Brush = class extends ve.Class {
 				lineWidth: 2
 			}
 		});
-		this.cursor_layer.addGeometry(this.cursor);
+		//this.cursor_layer.addGeometry(this.cursor);
 		
 		//Map event handlers
 		map.on("mousemove", (e) => {
@@ -50,6 +55,7 @@ global.Brush = class extends ve.Class {
 			
 			//Set coordinates for this.cursor
 			this.cursor.setCoordinates(e.coordinate);
+			this.selected_polygon.addToPolygon(this.cursor);
 		});
 		
 		map.getContainer().addEventListener("wheel", (e) => {
