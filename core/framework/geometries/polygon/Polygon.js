@@ -10,10 +10,22 @@ global.Polygon = class extends ve.Class {
 		if (options.name === undefined) options.name = "New Polygon";
 		this.options = options;
 		
+		//Declare local interface variables
+		this.interface = new ve.Interface({
+			information: new ve.HTML((e) => `ID: ${this.id}`),
+			selected: new ve.Checkbox(false, { 
+				name: "Select Symbol",
+				onchange: (e) => {
+					this.selected = e.v;
+					if (this.is_geometry_selected && e.v === false)
+						main.brush.selectPolygon();
+				}
+			})
+		}, { name: "Polygon Settings", open: true })
+		
 		//Declare local instance variables
 		this.id = Class.generateRandomID(Polygon);
 		this.is_editing_nodes = false;
-		this.is_selected = false;
 		this.history = {};
 		this.layer = main.layers.geometry; //Reference - [WIP] - Move all geometries to a singular geometry_layer
 		this.selected_geometry = undefined;
@@ -38,9 +50,13 @@ global.Polygon = class extends ve.Class {
 		
 	}
 	
-	get selected () {
+	get is_geometry_selected () {
 		//Return statement
-		return this.is_selected;
+		return (
+			main.brush.selected_geometry &&
+			main.brush.selected_geometry.id === this.id &&
+			main.brush.selected_geometry instanceof Polygon
+		);
 	}
 	
 	set selected (arg0_value) {
@@ -48,12 +64,8 @@ global.Polygon = class extends ve.Class {
 		let value = arg0_value;
 		
 		//Declare local instance variables
-		if (value === true) {
-			this.is_selected = value;
-		} else {
-			this.is_selected = undefined;
-		}
-		this.setGeometry(this.geometry);
+		this.is_selected = value;
+		this.updateSelection();
 	}
 	
 	//Coords/symbol; keyframe functions
@@ -186,39 +198,13 @@ global.Polygon = class extends ve.Class {
 				this.geometry = geometry;
 				this.layer.addGeometry(this.geometry);
 			}
-			
-			if (this.is_selected === true) {
-				//Refresh this.selected_geometry
-				main.brush.caret_layer.removeGeometry(this.selected_geometry);
-				this.selected_geometry = geometry.copy();
-				main.brush.caret_layer.addGeometry(this.selected_geometry);
-				
-				//Add this.selected_geometry
-				let is_geometry_selected = (
-					main.brush.selected_geometry && 
-					main.brush.selected_geometry.id === this.id &&
-					main.brush.selected_geometry instanceof Polygon
-				);
-				if (options.remove_geometry_selection)
-					is_geometry_selected = false;
-				
-				this.selected_geometry.setSymbol({
-					lineColor: `rgb(255, 255, 0)`,
-					lineDasharray : (!is_geometry_selected) ? [10, 10, 10] : undefined,
-					lineWidth: 4,
-					polygonOpacity: 1
-				});
-			}
 		} else {
 			if (this.geometry) {
 				this.geometry.remove();
 				this.geometry = undefined;
 			}
-			if (this.selected_geometry) {
-				this.selected_geometry.remove();
-				this.selected_geometry = undefined;
-			}
 		}
+		this.updateSelection();
 	}
 	
 	/**
@@ -252,6 +238,39 @@ global.Polygon = class extends ve.Class {
 		this.geometry.addEventListener("click", (e) => {
 			super.open("instance", { name: "Test" });
 		});
+	}
+	
+	updateSelection () {
+		//Declare local instance variables
+		let remove_selection = false;
+		
+		//Handle this.is_selected
+		if (this.is_selected === false) {
+			remove_selection = true;
+		} else {
+			if (this.geometry) {
+				main.brush.caret_layer.removeGeometry(this.selected_geometry);
+				this.selected_geometry = this.geometry.copy();
+				this.selected_geometry.setSymbol({
+					lineColor: `rgb(255, 255, 0)`,
+					lineDasharray : (!this.is_geometry_selected) ? [10, 10, 10] : undefined,
+					lineWidth: 4,
+					polygonOpacity: 1
+				});
+				main.brush.caret_layer.addGeometry(this.selected_geometry);
+			} else {
+				remove_selection = true;
+			}
+		}
+		
+		//Remove selection if applicable
+		if (remove_selection)
+			if (this.selected_geometry) {
+				this.selected_geometry.remove();
+				this.selected_geometry = undefined;
+			}
+		if (this.interface && this.interface.selected.v !== this.is_selected)
+			this.interface.selected.v = this.is_selected;
 	}
 	
 	//Class methods

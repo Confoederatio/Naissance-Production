@@ -182,13 +182,13 @@ global.Brush = class extends ve.Class {
 		//Deal with any extant selected geometry first
 		if (this.selected_geometry)
 			if (this.selected_geometry instanceof Polygon)
-				this.selected_geometry.update({ remove_geometry_selection: true });
+				this.selected_geometry.selected = false;
 		
 		//Set this.selected_geometry
 		this.type = "polygon";
 		this.selected_geometry = polygon;
 		setTimeout(() => {
-			polygon.selected = true;
+			polygon.interface.selected.v = true;
 		});
 	}
 	
