@@ -1,0 +1,145 @@
+global.History = class extends ve.Class { //[WIP] - Finish class body
+	constructor (arg0_keyframes_obj, arg1_options) {
+		//Convert from parameters
+		super();
+		this.keyframes = (arg0_keyframes_obj) ? arg0_keyframes_obj : {};
+		this.options = {
+			components_obj: {},
+			...arg1_options
+		};
+		
+		//Declare local instance variables
+		this.interface = new ve.Interface({}, { name: "Keyframes", width: 99 });
+	}
+	
+	/**
+	 * Adds a keyframe at the given date.
+	 *
+	 * @param arg0_geometry
+	 * @param {Object} [arg1_options]
+	 *  @param {Date} [arg1_options.date=main.date]
+	 *  @param {Object} [arg1_options.geometry]
+	 *  @param {Object} [arg1_options.properties]
+	 *  @param {Object} [arg1_options.symbol]
+	 *
+	 * @returns {HistoryKeyframe}
+	 */
+	addKeyframe (arg0_geometry, arg1_options) {
+		//Convert from parameters
+		let geometry = arg0_geometry;
+		let options = (arg1_options) ? arg1_options : {};
+		
+		//Initialise options
+		if (options.date === undefined) options.date = main.date;
+		
+		//Declare local instance variables
+		let timestamp = Date.getTimestamp(options.date);
+		
+		//Create a new keyframe, otherwise concatenate with existing options if history is already defined
+		if (this.keyframes[timestamp] === undefined) {
+			this.keyframes[timestamp] = new HistoryKeyframe(options.date, {
+				geometry: geometry,
+				...options
+			});
+		} else {
+			this.keyframes[timestamp].setOptions(options);
+		}
+		
+		//Return statement
+		return this.keyframes[timestamp];
+	}
+	
+	cleanKeyframes () { //[WIP] - Finish function body, cleans un-necessary/duplicate keyframes
+		
+	}
+	
+	/**
+	 * Fetches the keyframe at the selected date.
+	 *
+	 * @param {Object} [arg0_options]
+	 *  @param {boolean} [arg0_options.absolute_keyframe=false] - Whether to fetch the absolute keyframe instead of the relative keyframe as concatenated.
+	 *  @param {Object} [arg0_options.date=main.date] - The date at which to fetch the keyframe. User-selected date by default.
+	 *
+	 * @returns {{geometry: Object, properties: Object, symbol: Object}}
+	 */
+	getKeyframe (arg0_options) {
+		//Convert from parameters
+		let options = (arg0_options) ? arg0_options : {};
+		
+		//Initialise options
+		if (options.date === undefined) options.date = main.date;
+		
+		//Declare local instance variables
+		let current_keyframe = {
+			geometry: {},
+			properties: {},
+			symbol: {}
+		};
+		let timestamp = Date.getTimestamp(options.date);
+		
+		//Iterate over all keyframes in this.keyframes
+		Object.iterate(this.keyframes, (local_key, local_value) => {
+			local_value = local_value.options;
+			
+			if (Math.numerise(local_key) <= Math.numerise(timestamp))
+				if (!options.absolute_keyframe) {
+					if (local_value.geometry)
+						current_keyframe.geometry = local_value.geometry;
+					if (local_value.properties)
+						current_keyframe.properties = {
+							...current_keyframe.properties,
+							...local_value.properties
+						};
+					if (local_value.symbol)
+						current_keyframe.symbol = {
+							...current_keyframe.symbol,
+							...local_value.symbol
+						};
+				} else {
+					current_keyframe = local_value;
+				}
+		});
+		
+		//Return statement
+		return current_keyframe;
+	}
+	
+	/**
+	 * Deletes a keyframe at the given date.
+	 *
+	 * @param {Object} [arg0_options]
+	 *  @param {Date} [arg0_options.date=main.date]
+	 */
+	removeKeyframe (arg0_options) {
+		//Convert from parameters
+		let options = (arg0_options) ? arg0_options : {};
+		
+		//Initialise options
+		if (options.date === undefined) options.date = main.date;
+		
+		//Declare local instance variables
+		let timestamp = Date.getTimestamp(options.date);
+		
+		//Remove keyframe if defined
+		delete this.keyframes[timestamp];
+	}
+	
+	//Deserialisation/Serialisation
+	
+	fromJSON (arg0_json) {
+		
+	}
+	
+	toJSON () {
+		
+	}
+	
+	//UI
+	
+	refresh () {
+		//Declare local instance variables
+		let components_obj = {};
+		
+		//Iterate over all this.keyframes
+	}
+};

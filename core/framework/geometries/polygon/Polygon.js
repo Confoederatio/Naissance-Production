@@ -39,9 +39,9 @@ global.Polygon = class extends ve.Class {
 		}, { name: "Polygon", open: true })
 		
 		//Declare local instance variables
+		this.history = new History();
 		this.id = Class.generateRandomID(Polygon);
 		this.is_editing_nodes = false;
-		this.history = {};
 		this.layer = main.layers.geometry; //Reference - [WIP] - Move all geometries to a singular geometry_layer
 		this.selected_geometry = undefined;
 		
@@ -88,44 +88,7 @@ global.Polygon = class extends ve.Class {
 		this.updateSelection();
 	}
 	
-	//Coords/symbol; keyframe functions
-	
-	/**
-	 * Adds a keyframe at the given date.
-	 * 
-	 * @param arg0_geometry
-	 * @param {Object} [arg1_options]
-	 *  @param {Date} [arg1_options.date=main.date]
-	 *  @param {Object} [arg1_options.geometry]
-	 *  @param {Object} [arg1_options.properties]
-	 *  @param {Object} [arg1_options.symbol]
-	 *  
-	 * @returns {PolygonKeyframe}
-	 */
-	addKeyframe (arg0_geometry, arg1_options) { 
-		//Convert from parameters
-		let geometry = arg0_geometry;
-		let options = (arg1_options) ? arg1_options : {};
-		
-		//Initialise options
-		if (options.date === undefined) options.date = main.date;
-		
-		//Declare local instance variables
-		let timestamp = Date.getTimestamp(options.date);
-		
-		//Create a new keyframe, otherwise concatenate with existing options if history is already defined
-		if (this.history[timestamp] === undefined) {
-			this.history[timestamp] = new PolygonKeyframe(options.date, {
-				geometry: geometry,
-				...options
-			});
-		} else {
-			this.history[timestamp].setOptions(options);
-		}
-		
-		//Return statement
-		return this.history[timestamp];
-	}
+	//Coords/symbol
 	
 	addToPolygon (arg0_geometry) {
 		//Convert from parameters
@@ -170,57 +133,6 @@ global.Polygon = class extends ve.Class {
 		}
 	}
 	
-	/**
-	 * Fetches the keyframe at the selected date.
-	 * 
-	 * @param {Object} [arg0_options]
-	 *  @param {boolean} [arg0_options.absolute_keyframe=false] - Whether to fetch the absolute keyframe instead of the relative keyframe as concatenated.
-	 *  @param {Object} [arg0_options.date=main.date] - The date at which to fetch the keyframe. User-selected date by default.
-	 *  
-	 * @returns {{geometry: Object, properties: Object, symbol: Object}}
-	 */
-	getKeyframe (arg0_options) { //[WIP] - Finish function body
-		//Convert from parameters
-		let options = (arg0_options) ? arg0_options : {};
-		
-		//Initialise options
-		if (options.date === undefined) options.date = main.date;
-		
-		//Declare local instance variables
-		let current_keyframe = {
-			geometry: {},
-			properties: {},
-			symbol: {}
-		};
-		let timestamp = Date.getTimestamp(options.date);
-		
-		//Iterate over all keyframes in this.history
-		Object.iterate(this.history, (local_key, local_value) => {
-			local_value = local_value.options;
-			
-			if (Math.numerise(local_key) <= Math.numerise(timestamp))
-				if (!options.absolute_keyframe) {
-					if (local_value.geometry)
-						current_keyframe.geometry = local_value.geometry;
-					if (local_value.properties)
-						current_keyframe.properties = {
-							...current_keyframe.properties,
-							...local_value.properties
-						};
-					if (local_value.symbol)
-						current_keyframe.symbol = {
-							...current_keyframe.symbol,
-							...local_value.symbol
-						};
-				} else {
-					current_keyframe = local_value;
-				}
-		});
-		
-		//Return statement
-		return current_keyframe;
-	}
-	
 	removeFromPolygon (arg0_geometry) {
 		//Convert from parameters
 		let geometry = arg0_geometry;
@@ -256,26 +168,6 @@ global.Polygon = class extends ve.Class {
 			}
 	}
 	
-	/**
-	 * Deletes a keyframe at the given date.
-	 *
-	 * @param {Object} [arg0_options]
-	 *  @param {Date} [arg0_options.date=main.date]
-	 */
-	removeKeyframe (arg0_options) {
-		//Convert from parameters
-		let options = (arg0_options) ? arg0_options : {};
-		
-		//Initialise options
-		if (options.date === undefined) options.date = main.date;
-		
-		//Declare local instance variables
-		let timestamp = Date.getTimestamp(options.date);
-		
-		//Remove keyframe if defined
-		delete this.history[timestamp];
-	}
-	
 	updateKeyframesUI () { //[WIP] - Finish function body
 		//Declare local instance variables
 	}
@@ -301,9 +193,9 @@ global.Polygon = class extends ve.Class {
 		}
 		
 		if (this.geometry) {
-			this.addKeyframe(this.geometry.copy(), { date: options.date });
+			this.history.addKeyframe(this.geometry.copy(), { date: options.date });
 		} else {
-			this.addKeyframe(undefined, { date: options.date });
+			this.history.addKeyframe(undefined, { date: options.date });
 		}
 		this.updateSelection();
 	}

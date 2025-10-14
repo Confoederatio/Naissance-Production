@@ -1,4 +1,4 @@
-global.Keyframe = class extends ve.Class {
+global.HistoryKeyframe = class extends ve.Class {
 	constructor (arg0_date, arg1_options) {
 		//Convert from parameters
 		super();
