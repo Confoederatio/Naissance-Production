@@ -22,18 +22,31 @@ global.Brush = class extends ve.Class {
 			}),
 			
 			//Row 1: Colour
-			colour: new ve.Colour([255, 255, 255], { x: 0, y: 1 }),
+			colour: new ve.Colour("#1bbc9b", {
+				onchange: (e) => {
+					try { this.selected_geometry.update(); } catch (e) {}
+				},
+				x: 0, y: 1 
+			}),
 			opacity: new ve.Range(0.70, {
-				name: "Opacity", x: 1, y: 1
+				name: "Opacity",
+				onchange: (e) => { 
+					try { this.selected_geometry.update(); } catch (e) {} 
+				},
+				x: 1, y: 1
 			}),
 			
-			//Row 2: Simplification
-			simplify: new ve.Range(0.5, { 
-				name: "Simplify", x: 0, y: 2
-			}),
-			simplify_applies_to_polygon: new ve.Checkbox(false, {
-				name: "Applies to Polygon", x: 1, y: 2
-			})
+			//Row 2: Optimisation
+			optimisation: new ve.Interface({
+				simplify: new ve.Range(0.05, {
+					name: "Simplify", x: 0, y: 0
+				}),
+				simplify_applies_to_brush: new ve.Checkbox(false, {
+					name: "Applies to Brush",
+					tooltip: "Whether the simplification should apply to the brush only instead of the selected polygon.",
+					x: 1, y: 0
+				})
+			}, { name: "Optimisation", open: true, width: 99 })
 		}, { name: "Brush Options", open: true });
 		
 		//Declare local interface variables
@@ -104,10 +117,25 @@ global.Brush = class extends ve.Class {
 			if (this.type === "polygon" && (this.left_click || this.right_click)) {
 				map.config("draggable", false);
 				
+				//Process cursor based on this.interface.optimisation
+				let optimisation_obj = this.interface.optimisation;
+				let processed_geometry = this.cursor;
+				
+				{
+					if (optimisation_obj.simplify_applies_to_brush.v) {
+						let turf_cursor_geometry = Geospatiale.convertMaptalksToTurf(this.cursor);
+						let turf_simplified_geometry = turf.simplify(turf_cursor_geometry, {
+							tolerance: optimisation_obj.simplify.v,
+							highQuality: true
+						});
+							processed_geometry = Geospatiale.convertTurfToMaptalks(turf_simplified_geometry);
+					}
+				}
+				
 				if (this.left_click) {
-					this.selected_geometry.addToPolygon(this.cursor);
+					this.selected_geometry.addToPolygon(processed_geometry);
 				} else if (this.right_click) {
-					this.selected_geometry.removeFromPolygon(this.cursor);
+					this.selected_geometry.removeFromPolygon(processed_geometry);
 				}
 			}
 		});

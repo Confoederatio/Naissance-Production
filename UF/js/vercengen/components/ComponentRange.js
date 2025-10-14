@@ -22,7 +22,7 @@ ve.Range = class veRange extends ve.Component {
 			this.element.setAttribute("component", "ve-range");
 			this.element.instance = this;
 		HTML.applyCSSStyle(this.element, options.style);
-		
+		this.options = options;
 		this.value = value;
 		
 		//Format HTML string
@@ -68,7 +68,10 @@ ve.Range = class veRange extends ve.Component {
 		this.value = value;
 		this.element.querySelector("input").value = this.value;
 		this.element.querySelector("#value-label").innerHTML = `${this.value}`;
-		if (this.options.onchange) this.options.onchange(this.value);
+		if (this.options.onchange)
+			try {
+				this.options.onchange(this.value);
+			} catch (e) { console.warn(e); }
 	}
 	
 	remove () {

@@ -86,6 +86,9 @@ td:has([component="ve-interface"]) {
     summary:hover {
         cursor: pointer;
     }
+    tr td {
+        vertical-align: top;
+    }
 }
 
 /* -- ve.PageMenu -- */

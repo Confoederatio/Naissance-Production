@@ -54,14 +54,11 @@ global.Polygon = class extends ve.Class {
 			let ot_turf_geometry = Geospatiale.convertMaptalksToTurf(geometry);
 			let turf_geometry = Geospatiale.convertMaptalksToTurf(this.geometry);
 			
-			let maptalks_union = Geospatiale.convertTurfToMaptalks(
-				turf.union(turf.featureCollection([turf_geometry, ot_turf_geometry]))
-			);
-			
 			//Replace this.geometry since we might be jumping between Polygon and MultiPolygon
 			this.layer.removeGeometry(this.geometry);
-			this.geometry = maptalks_union;
-			this.layer.addGeometry(this.geometry);
+			this.geometry = Geospatiale.convertTurfToMaptalks(
+				turf.union(turf.featureCollection([turf_geometry, ot_turf_geometry]))
+			);
 			this.update();
 		} catch (e) {
 			console.error("Union failed:", e);
@@ -74,7 +71,7 @@ global.Polygon = class extends ve.Class {
 		
 		if (this.geometry === undefined) return; //Internal guard clause if geometry is already undefined
 		
-		//2. Difference with existing geometry if defined
+		//Difference with existing geometry if defined
 		try {
 			let ot_turf_geometry = Geospatiale.convertMaptalksToTurf(geometry);
 			let turf_geometry = Geospatiale.convertMaptalksToTurf(this.geometry);
@@ -85,12 +82,10 @@ global.Polygon = class extends ve.Class {
 					this.geometry = undefined;
 					return;
 				}
-			let maptalks_difference = Geospatiale.convertTurfToMaptalks(turf_difference);
 			
 			//Replace this.geometry since we might be jumping between Polygon and MultiPolygon
 			this.layer.removeGeometry(this.geometry);
-			this.geometry = maptalks_difference;
-			this.layer.addGeometry(this.geometry);
+			this.geometry = Geospatiale.convertTurfToMaptalks(turf_difference);
 			this.update();
 		} catch (e) {
 			console.error("Difference failed:", e);
@@ -98,9 +93,29 @@ global.Polygon = class extends ve.Class {
 	}
 	
 	update () {
+		//Declare local instance variables
+		let brush_interface_obj = main.brush.interface;
+		let optimisation_obj = brush_interface_obj.optimisation;
+		
+		//Refresh geometry
+		this.layer.removeGeometry(this.geometry);
+		
+		if (!optimisation_obj.simplify_applies_to_brush.v) {
+			let turf_geometry = Geospatiale.convertMaptalksToTurf(this.geometry);
+			let turf_simplified_geometry = turf.simplify(turf_geometry, {
+				tolerance: optimisation_obj.simplify.v,
+				highQuality: true
+			});
+			this.geometry = Geospatiale.convertTurfToMaptalks(turf_simplified_geometry);
+		}
+		
+		this.layer.addGeometry(this.geometry);
+		
 		//Update bindings
 		
 		//Update symbol
+		this.symbol.polygonFill = Colour.convertRGBToHex(brush_interface_obj.colour.v);
+		this.symbol.polygonOpacity = brush_interface_obj.opacity.v;
 		this.geometry.setSymbol(this.symbol);
 	}
 };
