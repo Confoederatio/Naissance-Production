@@ -13,6 +13,8 @@ global.MapContextMenu = class MapContextMenu extends ve.Class {
 					}),
 					create_polygon: veButton(() => {
 						new ve.Toast(`Created ${new_polygon_interface.components_obj.name.v}`);
+						main.brush.selectPolygon();
+						this.interface.close();
 					}, { name: "Create Polygon" })
 				}, { id: "brush_map_context_menu_new_polygon" })
 			}, {

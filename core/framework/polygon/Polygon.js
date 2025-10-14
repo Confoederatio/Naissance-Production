@@ -25,6 +25,12 @@ global.Polygon = class extends ve.Class {
 				Colour.convertRGBToHex(this.options.colour) : "#1bbc9b",
 			polygonOpacity: Math.returnSafeNumber(this.options.opacity, 0.4)
 		};
+		Polygon.instances.push(this);	
+	}
+	
+	get selected () {
+		//Return statement
+		return this.is_selected;
 	}
 	
 	set selected (arg0_value) {
@@ -40,6 +46,7 @@ global.Polygon = class extends ve.Class {
 		this.setGeometry(this.geometry);
 	}
 	
+	//Coords/symbol; keyframe functions
 	addKeyframe (arg0_geometry, arg1_options) {
 		//Convert from parameters
 	}
@@ -113,13 +120,24 @@ global.Polygon = class extends ve.Class {
 		}
 	}
 	
+	remove () {
+		//Iterate over all instances
+		for (let i = 0; i < Polygon.instances.length; i++)
+			if (Polygon.instances[i].id === this.id) {
+				this.setGeometry(undefined);
+				Polygon.instances.splice(i, 1);
+			}
+	}
+	
 	removeKeyframe (arg0_options) {
 		//Convert from parameters
 	}
 	
-	setGeometry (arg0_geometry) {
+	//Present keyframe functions
+	setGeometry (arg0_geometry, arg1_options) {
 		//Convert from parameters
 		let geometry = arg0_geometry;
+		let options = (arg1_options) ? arg1_options : {};
 		
 		//Set this.geometry, update .selected_geometry if applicable
 		if (geometry !== undefined) {
@@ -136,25 +154,40 @@ global.Polygon = class extends ve.Class {
 				main.brush.caret_layer.addGeometry(this.selected_geometry);
 				
 				//Add this.selected_geometry
+				let is_geometry_selected = (
+					main.brush.selected_geometry && 
+					main.brush.selected_geometry.id === this.id &&
+					main.brush.selected_geometry instanceof Polygon
+				);
+				if (options.remove_geometry_selection)
+					is_geometry_selected = false;
+				
 				this.selected_geometry.setSymbol({
 					lineColor: `rgb(255, 255, 0)`,
-					lineDasharray : [10, 10, 10],
+					lineDasharray : (!is_geometry_selected) ? [10, 10, 10] : undefined,
 					lineWidth: 4,
 					polygonOpacity: 1
 				});
 			}
 		} else {
-			this.geometry.remove();
-			this.geometry = undefined;
-			this.selected_geometry.remove();
-			this.selected_geometry = undefined;
+			if (this.geometry) {
+				this.geometry.remove();
+				this.geometry = undefined;
+			}
+			if (this.selected_geometry) {
+				this.selected_geometry.remove();
+				this.selected_geometry = undefined;
+			}
 		}
 	}
 	
 	/**
 	 * Updates the current Polygon for the present Date and redraws it.
 	 */
-	update (arg0_options) { //[WIP] - Refactor function body
+	update (arg0_options) {
+		//Convert from parameters
+		let options = (arg0_options) ? arg0_options : {};
+		
 		//Declare local instance variables
 		let brush_interface_obj = main.brush.interface;
 		let optimisation_obj = brush_interface_obj.optimisation;
@@ -170,16 +203,15 @@ global.Polygon = class extends ve.Class {
 			});
 			this.geometry = Geospatiale.convertTurfToMaptalks(turf_simplified_geometry);
 		}
-		this.setGeometry(this.geometry);
+		this.setGeometry(this.geometry, options);
 		
 		//Update bindings
 		
-		//Update selection
-		
 		//Update symbol
-		this.symbol.polygonFill = Colour.convertRGBToHex(brush_interface_obj.colour.v);
-		this.symbol.polygonOpacity = brush_interface_obj.opacity.v;
 		this.geometry.setSymbol(this.symbol);
+		this.geometry.addEventListener("click", (e) => {
+			console.log(e);
+		});
 	}
 	
 	//Class methods

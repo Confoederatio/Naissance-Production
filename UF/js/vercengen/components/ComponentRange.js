@@ -70,7 +70,7 @@ ve.Range = class veRange extends ve.Component {
 		this.element.querySelector("#value-label").innerHTML = `${this.value}`;
 		if (this.options.onchange)
 			try {
-				this.options.onchange(this.value);
+				this.options.onchange(this);
 			} catch (e) { console.warn(e); }
 	}
 	

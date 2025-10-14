@@ -3,13 +3,13 @@ global.Brush = class extends ve.Class {
 		//Declare local instance variables
 		super();
 		this.caret_layer = new maptalks.VectorLayer("caret_layer", [], {
-			hitDetect: true,
-			interactive: true,
+			//hitDetect: true,
+			//interactive: true,
 			zIndex: 98
 		}).addTo(map);
 		this.cursor_layer = new maptalks.VectorLayer("cursor_layer", [], {
-			hitDetect: true,
-			interactive: true,
+			//hitDetect: true,
+			//interactive: true,
 			zIndex: 99
 		}).addTo(map);
 		this.radius = 50000;
@@ -22,23 +22,28 @@ global.Brush = class extends ve.Class {
 			disabled: new ve.Checkbox(false, { 
 				onchange: (e) => {
 					if (this.cursor)
-						(e.v) ? this.cursor.hide() : this.cursor.show();
+						if (e.v) {
+							this.cursor.hide();
+							map.config("draggable", true);
+						} else {
+							this.cursor.show();
+						}
 				}, 
 				name: "Disable Brush", x: 0, y: 0
 			}),
 			
 			//Row 1: Colour
 			colour: new ve.Colour("#1bbc9b", {
-				onchange: (e) => {
-					try { this.selected_geometry.update(); } catch (e) {}
-				},
+				onchange: (e) => { try { 
+					Polygon.setSelectedSymbol({ polygonFill: Colour.convertRGBToHex(e.v) });
+				} catch (e) {} },
 				x: 0, y: 1 
 			}),
 			opacity: new ve.Range(0.70, {
 				name: "Opacity",
-				onchange: (e) => { 
-					try { this.selected_geometry.update(); } catch (e) {} 
-				},
+				onchange: (e) => { try { 
+					Polygon.setSelectedSymbol({ polygonOpacity: e.v });
+				} catch (e) {} },
 				x: 1, y: 1
 			}),
 			
@@ -97,6 +102,9 @@ global.Brush = class extends ve.Class {
 	handleEvents () {
 		//Map event handlers
 		map.on("mousedown", (e) => {
+			if ([1, 3].includes(e.domEvent.which))
+				map.config("draggable", false);
+				
 			if (e.domEvent.which === 1) {
 				delete this.right_click;
 				this.left_click = true;
@@ -121,8 +129,6 @@ global.Brush = class extends ve.Class {
 			this.cursor.setCoordinates(e.coordinate);
 			
 			if (this.type === "polygon" && (this.left_click || this.right_click)) {
-				map.config("draggable", false);
-				
 				//Process cursor based on this.interface.optimisation
 				let optimisation_obj = this.interface.optimisation;
 				let processed_geometry = this.cursor;
@@ -174,11 +180,16 @@ global.Brush = class extends ve.Class {
 		//Convert from parameters
 		let polygon = (arg0_polygon) ? arg0_polygon : new Polygon();
 		
+		//Deal with any extant selected geometry first
+		if (this.selected_geometry)
+			if (this.selected_geometry instanceof Polygon)
+				this.selected_geometry.update({ remove_geometry_selection: true });
+		
 		//Set this.selected_geometry
 		this.type = "polygon";
 		this.selected_geometry = polygon;
 		setTimeout(() => {
-			this.selected_geometry.selected = true;
+			polygon.selected = true;
 		});
 	}
 	
