@@ -13,6 +13,12 @@ global.Polygon = class extends ve.Class {
 		//Declare local interface variables
 		this.interface = new ve.Interface({
 			information: new ve.HTML((e) => `ID: ${this.id}`),
+			edit_nodes: new ve.Checkbox(false, {
+				name: "Edit Nodes",
+				onchange: (e) => {
+					this.edit_nodes = e.v;
+				}
+			}),
 			selected: new ve.Checkbox(false, { 
 				name: "Select Symbol",
 				onchange: (e) => {
@@ -20,8 +26,17 @@ global.Polygon = class extends ve.Class {
 					if (this.is_geometry_selected && e.v === false)
 						main.brush.selectPolygon();
 				}
+			}),
+			log_polygon: new ve.Button((e) => {
+				console.log(this);
+			}, { name: "Log Polygon" }),
+			
+			keyframes: new ve.Interface({
+			}, {
+				name: "Keyframes", 
+				width: 99
 			})
-		}, { name: "Polygon Settings", open: true })
+		}, { name: "Polygon", open: true })
 		
 		//Declare local instance variables
 		this.id = Class.generateRandomID(Polygon);
@@ -42,12 +57,17 @@ global.Polygon = class extends ve.Class {
 		Polygon.instances.push(this);	
 	}
 	
-	get edit_nodes () {
-		
-	}
-	
 	set edit_nodes (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
 		
+		//Declare local instance variables
+		if (this.geometry)
+			if (value === true) {
+				this.geometry.startEdit();
+			} else {
+				this.geometry.endEdit();
+			}
 	}
 	
 	get is_geometry_selected () {
@@ -76,10 +96,13 @@ global.Polygon = class extends ve.Class {
 	 * @param arg0_geometry
 	 * @param {Object} [arg1_options]
 	 *  @param {Date} [arg1_options.date=main.date]
+	 *  @param {Object} [arg1_options.geometry]
 	 *  @param {Object} [arg1_options.properties]
 	 *  @param {Object} [arg1_options.symbol]
+	 *  
+	 * @returns {PolygonKeyframe}
 	 */
-	addKeyframe (arg0_geometry, arg1_options) {
+	addKeyframe (arg0_geometry, arg1_options) { 
 		//Convert from parameters
 		let geometry = arg0_geometry;
 		let options = (arg1_options) ? arg1_options : {};
@@ -87,7 +110,21 @@ global.Polygon = class extends ve.Class {
 		//Initialise options
 		if (options.date === undefined) options.date = main.date;
 		
-		//Concatenate with existing options if history is already defined
+		//Declare local instance variables
+		let timestamp = Date.getTimestamp(options.date);
+		
+		//Create a new keyframe, otherwise concatenate with existing options if history is already defined
+		if (this.history[timestamp] === undefined) {
+			this.history[timestamp] = new PolygonKeyframe(options.date, {
+				geometry: geometry,
+				...options
+			});
+		} else {
+			this.history[timestamp].setOptions(options);
+		}
+		
+		//Return statement
+		return this.history[timestamp];
 	}
 	
 	addToPolygon (arg0_geometry) {
@@ -143,7 +180,45 @@ global.Polygon = class extends ve.Class {
 	 * @returns {{geometry: Object, properties: Object, symbol: Object}}
 	 */
 	getKeyframe (arg0_options) { //[WIP] - Finish function body
+		//Convert from parameters
+		let options = (arg0_options) ? arg0_options : {};
 		
+		//Initialise options
+		if (options.date === undefined) options.date = main.date;
+		
+		//Declare local instance variables
+		let current_keyframe = {
+			geometry: {},
+			properties: {},
+			symbol: {}
+		};
+		let timestamp = Date.getTimestamp(options.date);
+		
+		//Iterate over all keyframes in this.history
+		Object.iterate(this.history, (local_key, local_value) => {
+			local_value = local_value.options;
+			
+			if (Math.numerise(local_key) <= Math.numerise(timestamp))
+				if (!options.absolute_keyframe) {
+					if (local_value.geometry)
+						current_keyframe.geometry = local_value.geometry;
+					if (local_value.properties)
+						current_keyframe.properties = {
+							...current_keyframe.properties,
+							...local_value.properties
+						};
+					if (local_value.symbol)
+						current_keyframe.symbol = {
+							...current_keyframe.symbol,
+							...local_value.symbol
+						};
+				} else {
+					current_keyframe = local_value;
+				}
+		});
+		
+		//Return statement
+		return current_keyframe;
 	}
 	
 	removeFromPolygon (arg0_geometry) {
@@ -181,12 +256,32 @@ global.Polygon = class extends ve.Class {
 			}
 	}
 	
+	/**
+	 * Deletes a keyframe at the given date.
+	 *
+	 * @param {Object} [arg0_options]
+	 *  @param {Date} [arg0_options.date=main.date]
+	 */
 	removeKeyframe (arg0_options) {
 		//Convert from parameters
+		let options = (arg0_options) ? arg0_options : {};
+		
+		//Initialise options
+		if (options.date === undefined) options.date = main.date;
+		
+		//Declare local instance variables
+		let timestamp = Date.getTimestamp(options.date);
+		
+		//Remove keyframe if defined
+		delete this.history[timestamp];
+	}
+	
+	updateKeyframesUI () { //[WIP] - Finish function body
+		//Declare local instance variables
 	}
 	
 	//Present keyframe functions
-	setGeometry (arg0_geometry, arg1_options) { //[WIP] - Refactor to use keyframes
+	setGeometry (arg0_geometry, arg1_options) {
 		//Convert from parameters
 		let geometry = arg0_geometry;
 		let options = (arg1_options) ? arg1_options : {};
@@ -203,6 +298,12 @@ global.Polygon = class extends ve.Class {
 				this.geometry.remove();
 				this.geometry = undefined;
 			}
+		}
+		
+		if (this.geometry) {
+			this.addKeyframe(this.geometry.copy(), { date: options.date });
+		} else {
+			this.addKeyframe(undefined, { date: options.date });
 		}
 		this.updateSelection();
 	}
@@ -232,12 +333,14 @@ global.Polygon = class extends ve.Class {
 		this.setGeometry(this.geometry, options);
 		
 		//Update bindings
+		this.geometry.addEventListener("click", (e) => {
+			super.open("instance", {
+				name: this.options.name
+			});
+		});
 		
 		//Update symbol
 		this.geometry.setSymbol(this.symbol);
-		this.geometry.addEventListener("click", (e) => {
-			super.open("instance", { name: "Test" });
-		});
 	}
 	
 	updateSelection () {
