@@ -13,6 +13,7 @@ global.Polygon = class extends ve.Class {
 		//Declare local instance variables
 		this.id = Class.generateRandomID(Polygon);
 		this.is_selected = false;
+		this.history = {};
 		this.layer = main.layers.geometry; //Reference - [WIP] - Move all geometries to a singular geometry_layer
 		this.selected_geometry = undefined;
 		
@@ -47,8 +48,22 @@ global.Polygon = class extends ve.Class {
 	}
 	
 	//Coords/symbol; keyframe functions
+	
+	/**
+	 * Adds a keyframe at the given date.
+	 * 
+	 * @param arg0_geometry
+	 * @param {Object} [arg1_options]
+	 *  @param {Date} [arg1_options.date=main.date]
+	 *  @param {Object} [arg1_options.properties]
+	 *  @param {Object} [arg1_options.symbol]
+	 */
 	addKeyframe (arg0_geometry, arg1_options) {
 		//Convert from parameters
+		let geometry = arg0_geometry;
+		let options = (arg1_options) ? arg1_options : {};
+		
+		//Concatenate with existing options if history is already defined
 	}
 	
 	addToPolygon (arg0_geometry) {
@@ -94,6 +109,19 @@ global.Polygon = class extends ve.Class {
 		}
 	}
 	
+	/**
+	 * Fetches the keyframe at the selected date.
+	 * 
+	 * @param {Object} [arg0_options]
+	 *  @param {boolean} [arg0_options.absolute_keyframe=false] - Whether to fetch the absolute keyframe instead of the relative keyframe as concatenated.
+	 *  @param {Object} [arg0_options.date=main.date] - The date at which to fetch the keyframe. User-selected date by default.
+	 *  
+	 * @returns {{geometry: Object, properties: Object, symbol: Object}}
+	 */
+	getKeyframe (arg0_options) { //[WIP] - Finish function body
+		
+	}
+	
 	removeFromPolygon (arg0_geometry) {
 		//Convert from parameters
 		let geometry = arg0_geometry;
@@ -120,7 +148,7 @@ global.Polygon = class extends ve.Class {
 		}
 	}
 	
-	remove () {
+	remove () { //[WIP] - Refactor to handle keyframes
 		//Iterate over all instances
 		for (let i = 0; i < Polygon.instances.length; i++)
 			if (Polygon.instances[i].id === this.id) {
@@ -134,7 +162,7 @@ global.Polygon = class extends ve.Class {
 	}
 	
 	//Present keyframe functions
-	setGeometry (arg0_geometry, arg1_options) {
+	setGeometry (arg0_geometry, arg1_options) { //[WIP] - Refactor to use keyframes
 		//Convert from parameters
 		let geometry = arg0_geometry;
 		let options = (arg1_options) ? arg1_options : {};
@@ -184,7 +212,7 @@ global.Polygon = class extends ve.Class {
 	/**
 	 * Updates the current Polygon for the present Date and redraws it.
 	 */
-	update (arg0_options) {
+	update (arg0_options) { //[WIP] - Refactor to load from relative keyframe
 		//Convert from parameters
 		let options = (arg0_options) ? arg0_options : {};
 		
@@ -210,7 +238,7 @@ global.Polygon = class extends ve.Class {
 		//Update symbol
 		this.geometry.setSymbol(this.symbol);
 		this.geometry.addEventListener("click", (e) => {
-			console.log(e);
+			super.open("instance", { name: "Test" });
 		});
 	}
 	
@@ -228,7 +256,7 @@ global.Polygon = class extends ve.Class {
 		return selected_polygons;
 	}
 	
-	static setSelectedSymbol (arg0_symbol) {
+	static setSelectedSymbol (arg0_symbol) { //[WIP] - Refactor to use keyframes
 		//Convert from parameters
 		let symbol = (arg0_symbol) ? arg0_symbol : {};
 		

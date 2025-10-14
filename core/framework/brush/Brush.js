@@ -16,7 +16,7 @@ global.Brush = class extends ve.Class {
 		this.selected_geometry = undefined;
 		this.type = "polygon"; //Either 'none'/'polygon'/'line'/'point'
 		
-		//Declare local symbol variables
+		//Declare local interface variables
 		this.interface = new ve.Interface({
 			//Row 0: Enable/Disable
 			disabled: new ve.Checkbox(false, { 
@@ -60,7 +60,6 @@ global.Brush = class extends ve.Class {
 			}, { name: "Optimisation", open: true, width: 99 })
 		}, { name: "Brush Options", open: true });
 		
-		//Declare local interface variables
 		this.information_display = new ve.HTML((e) => {
 			//Declare local instance variables
 			let cursor_coordinates = this.cursor.getCoordinates();

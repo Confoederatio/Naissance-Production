@@ -17,6 +17,9 @@ global.path = require("path");
     global.main = {
 			brush: new Brush(),
 			hierarchy: {},
+			interfaces: {
+				date_ui: new DateMenu()
+			},
 			layers: {},
 			map: map
     };
