@@ -16,6 +16,16 @@ global.path = require("path");
     //Declare global variables
     global.main = {
 			brush: new Brush(),
+			get date () {
+				return main.interfaces.date_ui.interface.date.v;
+			},
+			set date (arg0_value) {
+				//Convert from parameters
+				let value = arg0_value;
+				
+				//Set UI date
+				main.interfaces.date_ui.interface.date.v = value;
+			},
 			hierarchy: {},
 			interfaces: {
 				date_ui: new DateMenu()

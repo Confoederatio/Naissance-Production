@@ -12,6 +12,7 @@ global.Polygon = class extends ve.Class {
 		
 		//Declare local instance variables
 		this.id = Class.generateRandomID(Polygon);
+		this.is_editing_nodes = false;
 		this.is_selected = false;
 		this.history = {};
 		this.layer = main.layers.geometry; //Reference - [WIP] - Move all geometries to a singular geometry_layer
@@ -27,6 +28,14 @@ global.Polygon = class extends ve.Class {
 			polygonOpacity: Math.returnSafeNumber(this.options.opacity, 0.4)
 		};
 		Polygon.instances.push(this);	
+	}
+	
+	get edit_nodes () {
+		
+	}
+	
+	set edit_nodes (arg0_value) {
+		
 	}
 	
 	get selected () {
@@ -62,6 +71,9 @@ global.Polygon = class extends ve.Class {
 		//Convert from parameters
 		let geometry = arg0_geometry;
 		let options = (arg1_options) ? arg1_options : {};
+		
+		//Initialise options
+		if (options.date === undefined) options.date = main.date;
 		
 		//Concatenate with existing options if history is already defined
 	}
