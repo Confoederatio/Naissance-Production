@@ -2,9 +2,15 @@ global.Brush = class extends ve.Class {
 	constructor () {
 		//Declare local instance variables
 		super();
+		this.caret_layer = new maptalks.VectorLayer("caret_layer", [], {
+			hitDetect: true,
+			interactive: true,
+			zIndex: 98
+		}).addTo(map);
 		this.cursor_layer = new maptalks.VectorLayer("cursor_layer", [], {
 			hitDetect: true,
-			interactive: true
+			interactive: true,
+			zIndex: 99
 		}).addTo(map);
 		this.radius = 50000;
 		this.selected_geometry = undefined;
@@ -171,6 +177,9 @@ global.Brush = class extends ve.Class {
 		//Set this.selected_geometry
 		this.type = "polygon";
 		this.selected_geometry = polygon;
+		setTimeout(() => {
+			this.selected_geometry.selected = true;
+		});
 	}
 	
 	//Tracker functions
