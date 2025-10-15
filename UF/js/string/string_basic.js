@@ -11,7 +11,7 @@
 		let hour_name = date.hour.toString().padStart(2, "0");
 		
 		//Return statement
-		return `${day_name} ${month_name} ${Math.abs(date.year)}${(date.year >= 0) ? "AD" : "BC"} ${hour_name}:${minute_name}`;
+		return `${day_name} ${month_name} ${Math.abs(date.year)}${(date.year >= 0) ? "AD" : "BC"} - ${hour_name}:${minute_name}`;
 	};
 	
 	String.formatNumber = function (arg0_number, arg1_places) {

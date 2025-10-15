@@ -26,7 +26,7 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 	 */
 	addKeyframe (arg0_geometry, arg1_options) {
 		//Convert from parameters
-		let geometry = arg0_geometry.toJSON();
+		let geometry = (arg0_geometry) ? arg0_geometry.toJSON() : undefined;
 		let options = (arg1_options) ? arg1_options : {};
 		
 		//Initialise options
@@ -42,8 +42,12 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 				...options
 			});
 		} else {
-			if (geometry) this.keyframes[timestamp].setOptions({ geometry: geometry });
-			this.keyframes[timestamp].setOptions(options);
+			let local_keyframe = this.keyframes[timestamp];
+			
+			//Handle geometry manually since it replaces the .geometry field
+			if (geometry) 
+				local_keyframe.setOptions({ geometry: geometry });
+			local_keyframe.setOptions(options);
 		}
 		this.refresh();
 		
@@ -147,11 +151,30 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 		let components_obj = {};
 		
 		//Iterate over all this.keyframes
-		Object.iterate(this.keyframes, (local_key, local_value) => {
-			components_obj[local_key] = new ve.Interface({
-				date_info: new ve.HTML((e) => `${local_value.timestamp}`)
-			}, { name: String.formatDate(local_value.date) });
-		})
+		let all_keyframes = Object.keys(this.keyframes).sort().reverse();
+		
+		for (let i = 0; i < all_keyframes.length; i++) {
+			let local_key = all_keyframes[i];
+			let local_value = this.keyframes[all_keyframes[i]];
+			
+			//Set components_obj
+			components_obj[local_key] = new ve.RawInterface({
+				date_info: new ve.HTML((e) => `${local_value.timestamp}`, { x: 0, y: 0 }),
+				jump_to_date: new ve.HTML((e) => {
+					let icon_el = document.createElement("icon");
+						icon_el.innerHTML = `arrow_forward`;
+						icon_el.addEventListener("click", (e) => {
+							console.log(e);
+						});
+					return icon_el;
+				}, { tooltip: "Jump to Date", style: { cursor: "pointer" } })
+			}, { 
+				name: String.formatDate(local_value.date),
+				style: {
+					display: "flex"
+				}
+			});
+		}
 		this.interface.v = components_obj;
 	}
 };
