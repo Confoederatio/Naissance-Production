@@ -27,9 +27,10 @@ ve.Interface = class veInterface extends ve.Component {
 		let html_string = [];
 		if (options.is_folder) {
 			html_string.push(`<details class = "ve interface-folder"${HTML.objectToAttributes(attributes)}>`);
-				html_string.push(`<summary id = "name"></summary>`);
 		}
+				html_string.push(`<summary id = "name"></summary>`);
 				html_string.push(`<table></table>`);
+		if (options.is_folder)
 			html_string.push(`</details>`);
 		
 		this.element.innerHTML = html_string.join("");

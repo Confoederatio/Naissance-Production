@@ -26,11 +26,11 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 	 */
 	addKeyframe (arg0_geometry, arg1_options) {
 		//Convert from parameters
-		let geometry = arg0_geometry;
+		let geometry = arg0_geometry.toJSON();
 		let options = (arg1_options) ? arg1_options : {};
 		
 		//Initialise options
-		if (options.date === undefined) options.date = main.date;
+		if (options.date === undefined) options.date = structuredClone(main.date);
 		
 		//Declare local instance variables
 		let timestamp = Date.getTimestamp(options.date);
@@ -42,8 +42,10 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 				...options
 			});
 		} else {
+			if (geometry) this.keyframes[timestamp].setOptions({ geometry: geometry });
 			this.keyframes[timestamp].setOptions(options);
 		}
+		this.refresh();
 		
 		//Return statement
 		return this.keyframes[timestamp];
@@ -78,13 +80,16 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 		let timestamp = Date.getTimestamp(options.date);
 		
 		//Iterate over all keyframes in this.keyframes
-		Object.iterate(this.keyframes, (local_key, local_value) => {
-			local_value = local_value.options;
+		let all_keyframes = Object.keys(this.keyframes).sort().reverse();
+		
+		for (let i = 0; i < all_keyframes.length; i++) {
+			let local_key = all_keyframes[i];
+			let local_value = this.keyframes[all_keyframes[i]].options;
 			
-			if (Math.numerise(local_key) <= Math.numerise(timestamp))
+			if (Date.convertTimestampToInt(local_key) <= Date.convertTimestampToInt(timestamp))
 				if (!options.absolute_keyframe) {
 					if (local_value.geometry)
-						current_keyframe.geometry = local_value.geometry;
+						current_keyframe.geometry = maptalks.Geometry.fromJSON(local_value.geometry);
 					if (local_value.properties)
 						current_keyframe.properties = {
 							...current_keyframe.properties,
@@ -98,7 +103,7 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 				} else {
 					current_keyframe = local_value;
 				}
-		});
+		}
 		
 		//Return statement
 		return current_keyframe;
@@ -115,13 +120,14 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 		let options = (arg0_options) ? arg0_options : {};
 		
 		//Initialise options
-		if (options.date === undefined) options.date = main.date;
+		if (options.date === undefined) options.date = structuredClone(main.date);
 		
 		//Declare local instance variables
 		let timestamp = Date.getTimestamp(options.date);
 		
 		//Remove keyframe if defined
 		delete this.keyframes[timestamp];
+		this.refresh();
 	}
 	
 	//Deserialisation/Serialisation
@@ -141,5 +147,11 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 		let components_obj = {};
 		
 		//Iterate over all this.keyframes
+		Object.iterate(this.keyframes, (local_key, local_value) => {
+			components_obj[local_key] = new ve.Interface({
+				date_info: new ve.HTML((e) => `${local_value.timestamp}`)
+			}, { name: String.formatDate(local_value.date) });
+		})
+		this.interface.v = components_obj;
 	}
 };

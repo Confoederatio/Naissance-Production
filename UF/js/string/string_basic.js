@@ -1,5 +1,19 @@
 //Initialise functions
 {
+	String.formatDate = function (arg0_date) {
+		//Convert from parameters
+		let date = (arg0_date) ? arg0_date : Date.getCurrentDate();
+		
+		//Declare local instance variables
+		let day_name = String.ordinalise(date.day);
+		let minute_name =  date.minute.toString().padStart(2, "0");
+		let month_name = Date.months[Object.keys(Date.months)[date.month - 1]].name;
+		let hour_name = date.hour.toString().padStart(2, "0");
+		
+		//Return statement
+		return `${day_name} ${month_name} ${Math.abs(date.year)}${(date.year >= 0) ? "AD" : "BC"} ${hour_name}:${minute_name}`;
+	};
+	
 	String.formatNumber = function (arg0_number, arg1_places) {
 		//Convert from parameters
 		let number = parseFloat(arg0_number);
@@ -10,6 +24,25 @@
 		
 		//Return statement
 		return new Intl.NumberFormat("de-DE").format(number);
+	};
+	
+	String.ordinalise = function (arg0_number) {
+		//Convert from parameters
+		let number = Math.returnSafeNumber(arg0_number);
+		
+		//Declare local instance variables
+		let negative_suffix = (number < 0) ? "-" : "";
+			number = Math.abs(number);
+		let n_a = number % 10, n_b = number % 100;
+		
+		//Return statement
+		if (n_a === 1 && n_b !== 11)
+			return `${negative_suffix}${number}st`;
+		if (n_a === 2 && n_b !== 12)
+			return `${negative_suffix}${number}nd`;
+		if (n_a === 3 && n_b !== 13)
+			return `${negative_suffix}${number}rd`;
+		return `${negative_suffix}${number}th`;
 	};
 	
 	String.prototype.isURL = function () {

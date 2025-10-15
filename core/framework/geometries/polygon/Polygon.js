@@ -28,7 +28,9 @@ global.Polygon = class extends ve.Class {
 				}
 			}),
 			log_polygon: new ve.Button((e) => {
-				console.log(this);
+				//console.log(this);
+				let local_geometry = this.history.getKeyframe().geometry;
+				this.layer.addGeometry(local_geometry);
 			}, { name: "Log Polygon" }),
 			
 			keyframes: new ve.Interface({
@@ -36,7 +38,7 @@ global.Polygon = class extends ve.Class {
 				name: "Keyframes", 
 				width: 99
 			})
-		}, { name: "Polygon", open: true })
+		}, { name: "Polygon", open: true });
 		
 		//Declare local instance variables
 		this.history = new History();
@@ -229,6 +231,7 @@ global.Polygon = class extends ve.Class {
 			super.open("instance", {
 				name: this.options.name
 			});
+			this.interface.keyframes.v = this.history.interface.v;
 		});
 		
 		//Update symbol
