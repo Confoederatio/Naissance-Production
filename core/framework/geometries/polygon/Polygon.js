@@ -28,9 +28,9 @@ global.Polygon = class extends ve.Class {
 				}
 			}),
 			log_polygon: new ve.Button((e) => {
-				//console.log(this);
-				let local_geometry = this.history.getKeyframe().geometry;
-				this.layer.addGeometry(local_geometry);
+				console.log(this);
+				//let local_geometry = this.history.getKeyframe().geometry;
+				//this.layer.addGeometry(local_geometry);
 			}, { name: "Log Polygon" }),
 			
 			keyframes: new ve.Interface({

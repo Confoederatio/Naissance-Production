@@ -70,7 +70,7 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 	 *
 	 * @returns {{geometry: Object, properties: Object, symbol: Object}}
 	 */
-	getKeyframe (arg0_options) {them
+	getKeyframe (arg0_options) {
 		//Convert from parameters
 		let options = (arg0_options) ? arg0_options : {};
 		

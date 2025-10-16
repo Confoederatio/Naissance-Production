@@ -13,20 +13,98 @@ ve.Component = class {
 		this.x = options.x;
 		this.y = options.y;
 		
-		this.options = options;
-		
-		//.onload handler
-		if (this.options.onload)
-			setTimeout(() => {
-				this.options.onload(this);
-			}, 100);
-		
-		//.tooltip handler
-		if (this.options.tooltip)
-			setTimeout(() => {
+		//Binding handlers; setTimeout() is necessary to tick a frame until ve.Component child class's constructor populates
+		setTimeout(() => {
+			if (this.options === undefined)
+				this.options = options; //Preferably overridden by lower components
+			
+			//.from_binding handler
+			if (this.options.from_binding)
+				this.from_binding  = this.options.from_binding;
+			
+			//.onload handler
+			if (this.options.onload)
+				setTimeout(() => {
+					this.options.onload(this);
+				}, 100);
+			
+			//.tooltip handler
+			if (this.options.tooltip)
 				this.tooltip = new ve.Tooltip(this.options.tooltip, { element: this.element });
+		});
+	}
+	
+	//ve.Component directional flow functions
+	
+	/**
+	 * To binding. Fires only upon user-driven changes, which means that this has to be monitored manually component-side.
+	 * 
+	 * @param {string} arg0_variable_string
+	 */
+	fireToBinding (arg0_variable_string) {
+		//Convert from parameters
+		let variable_string = arg0_variable_string;
+		
+		//Declare local instance variables
+		let initial_object = global;
+		
+		//Parse this to this.owner; watch variable mutation using getter/setter, and set this.v to new value
+		if (variable_string.startsWith("this.")) {
+			initial_object = this.owner;
+		} else if (variable_string.startsWith("window.")) {
+			initial_object = window;
+		}
+		
+		//Set value of to object by fetching this.v
+		let local_value = this.v; //Because this is a getter, run it once
+		
+		if (typeof this.options.onuserchange === "function") //Fire onuserchange
+			this.options.onuserchange(local_value);
+		Object.setValue(initial_object, variable_string, local_value);
+	}
+	
+	set from_binding (arg0_variable_string) { //[WIP] - Finish function body
+		//Convert from parameters
+		let variable_string = arg0_variable_string;
+		
+		//Declare local instance variables
+		let initial_object = global;
+		
+		//Parse this to this.owner; watch variable mutation using getter/setter, and set this.v to new value
+		if (variable_string.startsWith("this.")) {
+			initial_object = this.owner;
+		} else if (variable_string.startsWith("window.")) {
+			initial_object = window;
+		}
+		
+		//Add getter/setter
+		Object.addGetterSetter(initial_object, variable_string, {
+			set_function: (arg0_value) => {
+				//Convert from parameters
+				let local_value = arg0_value;
+				
+				if (typeof this.options.onprogramchange === "function") //Fire onprogramchange
+					this.options.onprogramchange(local_value);
+				this.v = local_value;
+			}
+		});
+	}
+	
+	setOwner (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Declare local instance variables
+		this.owner = value;
+		
+		//Iterate over all this.child_class_argument_names and recursively drill down owners
+		if (this.components_obj)
+			Object.iterate(this.components_obj, (local_key, local_value) => {
+				local_value.setOwner(value);
 			});
 	}
+	
+	//ve.Compponent UI functions
 	
 	bind (arg0_container_el) {
 		//Convert from parameters
