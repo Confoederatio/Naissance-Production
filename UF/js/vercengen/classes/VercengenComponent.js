@@ -18,10 +18,15 @@ ve.Component = class {
 				this.options = options; //Preferably overridden by lower components
 			
 			//Flow control handlers
-			//.from_binding handler
+			//.binding handler (bidirectional)
+			if (this.options.binding) {
+				this.from_binding = this.options.binding; //onprogramchange
+				this.to_binding = this.options.binding; //onuserchange
+			}
+			//.from_binding handler (unidirectional, onprogramchange, variable -> this)
 			if (this.options.from_binding)
 				this.from_binding  = this.options.from_binding;
-			//.to_binding handler
+			//.to_binding handler (unidirectional, onuserchange, this -> variable)
 			if (this.options.to_binding)
 				this.to_binding = this.options.to_binding;
 			
