@@ -53,9 +53,14 @@ global.Brush = class extends ve.Class {
 					name: "Simplify", x: 0, y: 0
 				}),
 				simplify_applies_to_brush: new ve.Checkbox(false, {
-					name: "Applies to Brush",
+					name: "Applies to Brush [WIP]",
 					tooltip: "Whether the simplification should apply to the brush only instead of the selected polygon.",
 					x: 1, y: 0
+				}),
+				persistent_selection: new ve.Checkbox(false, {
+					name: "Persistent Selection [WIP]",
+					tooltip: "Selections should be persistent, even when jumping between dates.",
+					x: 2, y: 0
 				})
 			}, { name: "Optimisation", open: true, width: 99 })
 		}, { name: "Brush Options", open: true });

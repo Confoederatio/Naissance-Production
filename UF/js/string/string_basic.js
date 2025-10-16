@@ -1,5 +1,11 @@
 //Initialise functions
 {
+	/**
+	 * Formats a Date object into a default string.
+	 * @param {Object} arg0_date
+	 * 
+	 * @returns {string}
+	 */
 	String.formatDate = function (arg0_date) {
 		//Convert from parameters
 		let date = (arg0_date) ? arg0_date : Date.getCurrentDate();
@@ -14,6 +20,13 @@
 		return `${day_name} ${month_name} ${Math.abs(date.year)}${(date.year >= 0) ? "AD" : "BC"} - ${hour_name}:${minute_name}`;
 	};
 	
+	/**
+	 * Formats a number based off of the selected locale, rounding it to the specified number of places.
+	 * @param {number} arg0_number
+	 * @param {number} [arg1_places=0]
+	 * 
+	 * @returns {string}
+	 */
 	String.formatNumber = function (arg0_number, arg1_places) {
 		//Convert from parameters
 		let number = parseFloat(arg0_number);
@@ -26,6 +39,12 @@
 		return new Intl.NumberFormat("de-DE").format(number);
 	};
 	
+	/**
+	 * Ordinalises a given number and returns it as a string.
+	 * @param {number} arg0_number
+	 * 
+	 * @returns {string}
+	 */
 	String.ordinalise = function (arg0_number) {
 		//Convert from parameters
 		let number = Math.returnSafeNumber(arg0_number);
@@ -45,6 +64,11 @@
 		return `${negative_suffix}${number}th`;
 	};
 	
+	/**
+	 * Checks whether a given string is loosely a valid URL.
+	 * 
+	 * @returns {boolean}
+	 */
 	String.prototype.isURL = function () {
 		//Return statement
 		try {

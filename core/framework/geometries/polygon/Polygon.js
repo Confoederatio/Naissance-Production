@@ -48,6 +48,7 @@ global.Polygon = class extends ve.Class {
 		this.selected_geometry = undefined;
 		
 		this.geometry = undefined;
+		this.properties = {};
 		this.symbol = {
 			lineColor:(this.options.line_colour) ? 
 				Colour.convertRGBToHex(this.options.line_colour) : "#000000",
@@ -69,6 +70,7 @@ global.Polygon = class extends ve.Class {
 				this.geometry.startEdit();
 			} else {
 				this.geometry.endEdit();
+				this.update();
 			}
 	}
 	
@@ -90,7 +92,7 @@ global.Polygon = class extends ve.Class {
 		this.updateSelection();
 	}
 	
-	//Coords/symbol
+	//Brush functions
 	
 	addToPolygon (arg0_geometry) {
 		//Convert from parameters
@@ -148,7 +150,7 @@ global.Polygon = class extends ve.Class {
 			
 			let turf_difference = turf.difference(turf.featureCollection([turf_geometry, ot_turf_geometry]));
 				if (turf_difference === null) { //Internal guard clause if turf_difference is null
-					this.setGeometry(undefined);
+					this.setGeometry(undefined, { is_brush: true });
 					return;
 				}
 			
@@ -161,7 +163,7 @@ global.Polygon = class extends ve.Class {
 		}
 	}
 	
-	remove () { //[WIP] - Refactor to handle keyframes
+	remove () {
 		//Iterate over all instances
 		for (let i = 0; i < Polygon.instances.length; i++)
 			if (Polygon.instances[i].id === this.id) {
@@ -170,11 +172,50 @@ global.Polygon = class extends ve.Class {
 			}
 	}
 	
-	updateKeyframesUI () { //[WIP] - Finish function body
+	//Keyframing functions
+	
+	/**
+	 * Loads the date of the Polygon in question by moving it to the keyframe at hand.
+	 * @param arg0_date
+	 */
+	loadDate (arg0_date) {
+		//Convert from parameters
+		let date_obj = Date.convertTimestampToDate(arg0_date);
+		
 		//Declare local instance variables
+		let hide_geometry = false;
+		let keyframe_obj = this.history.getKeyframe({ date: date_obj });
+		
+		if (keyframe_obj) {
+			//.geometry handling
+			if (this.geometry) this.geometry.show();
+			if (keyframe_obj.geometry) {
+				this.setGeometry(keyframe_obj.geometry);
+			} else if (keyframe_obj.geometry === false) { //Handle hidden geometries
+				if (this.geometry) hide_geometry = true;
+			}
+			
+			//.properties handling
+			if (keyframe_obj.properties)
+				this.setProperties(keyframe_obj.properties);
+			
+			//.symbol handling
+			if (keyframe_obj.symbol) {
+				console.log(keyframe_obj.symbol);
+				this.setSymbol(keyframe_obj.symbol);
+			}
+		}	else {
+			//Hide geometry for now
+			if (this.geometry) hide_geometry = true;
+		}
+		
+		//Hide geometry if applicable and deselect it
+		if (hide_geometry) {
+			this.geometry.hide();
+			this.selected = false;
+		}
 	}
 	
-	//Present keyframe functions
 	setGeometry (arg0_geometry, arg1_options) {
 		//Convert from parameters
 		let geometry = arg0_geometry;
@@ -194,21 +235,59 @@ global.Polygon = class extends ve.Class {
 			}
 		}
 		
-		if (this.geometry) {
-			this.history.addKeyframe(this.geometry.copy(), { date: options.date });
-		} else {
-			this.history.addKeyframe(undefined, { date: options.date });
-		}
+		if (options.is_brush)
+			if (this.geometry) {
+				this.history.addKeyframe(this.geometry.copy(), { date: options.date });
+			} else {
+				this.history.addKeyframe(false, { date: options.date });
+			}
+		this.updateBindings();
 		this.updateSelection();
 	}
 	
 	/**
-	 * Updates the current Polygon for the present Date and redraws it.
+	 * Concatenates, then sets {@link Polygon} properties after loading the current relative properties from keyframes. 
+	 * @param {Object} arg0_properties_obj
+	 * @param {Object} [arg1_options]
+	 *  @param {boolean} [arg1_options.is_brush=false]
 	 */
-	update (arg0_options) { //[WIP] - Refactor to load from relative keyframe
-		//Convert from parameters
-		let options = (arg0_options) ? arg0_options : {};
+	setProperties (arg0_properties_obj, arg1_options) { //[WIP] - Finish function body
 		
+	}
+	
+	/**
+	 * Concatenates, then sets {@link Polygon} symbol after loading the current relative symbol from keyframes.
+	 * @param {Object} arg0_symbol_obj
+	 * @param {Object} [arg1_options]
+	 *  @param {boolean} [arg1_options.is_brush=false]
+	 */
+	setSymbol (arg0_symbol_obj, arg1_options) {
+		//Convert from parameters
+		let symbol_obj = (arg0_symbol_obj) ? arg0_symbol_obj : {};
+		let options = (arg1_options) ? arg1_options : {};
+		
+		//Set geometry symbol
+		if (options.is_brush)
+			this.history.addKeyframe(undefined, {
+				date: options.date,
+				symbol: symbol_obj
+			});
+		
+		//Update symbol
+		this.symbol = {
+			...this.symbol,
+			...symbol_obj
+		};
+		if (this.geometry)
+			this.geometry.setSymbol(this.symbol);
+	}
+	
+	//Render update functions
+	
+	/**
+	 * Updates the current Polygon upon a user brush action/change.
+	 */
+	update () {
 		//Declare local instance variables
 		let brush_interface_obj = main.brush.interface;
 		let optimisation_obj = brush_interface_obj.optimisation;
@@ -224,23 +303,30 @@ global.Polygon = class extends ve.Class {
 			});
 			this.geometry = Geospatiale.convertTurfToMaptalks(turf_simplified_geometry);
 		}
-		this.setGeometry(this.geometry, options);
-		
-		//Update bindings
-		this.geometry.addEventListener("click", (e) => {
-			super.open("instance", {
-				name: this.options.name
-			});
-			this.interface.keyframes.v = this.history.interface.v;
-		});
+		this.setGeometry(this.geometry, { is_brush: true });
+		this.updateBindings();
 		
 		//Update symbol
-		this.geometry.setSymbol(this.symbol);
+		this.setSymbol(this.symbol);
 	}
 	
-	updateSelection () {
+	updateBindings () {
+		//Update bindings
+		if (this.geometry)
+			this.geometry.addEventListener("click", (e) => {
+				super.open("instance", {
+					name: this.options.name
+				});
+				this.interface.keyframes.v = this.history.interface.v;
+			});
+	}
+	
+	updateSelection (arg0_options) {
+		//Convert from parameters
+		let options = (arg0_options) ? arg0_options : {};
+		
 		//Declare local instance variables
-		let remove_selection = false;
+		let remove_selection = (options.remove_selection);
 		
 		//Handle this.is_selected
 		if (this.is_selected === false) {
@@ -298,6 +384,7 @@ global.Polygon = class extends ve.Class {
 				...selected_polygons[i].symbol,
 				...symbol
 			};
+			selected_polygons[i].history.addKeyframe(undefined, { symbol: symbol });
 			selected_polygons[i].update();
 		}
 	}

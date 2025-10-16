@@ -4,8 +4,7 @@ global.DateMenu = class extends ve.Class {
 		this.interface = new ve.Interface({
 			date: new ve.Date(undefined, {
 				onchange: (e) => {
-					console.log(e.v);
-					//console.log(Date.getTimestamp(e.v));
+					History.loadDate(e.v);
 				}
 			})
 		}, { name: "Date", open: true });

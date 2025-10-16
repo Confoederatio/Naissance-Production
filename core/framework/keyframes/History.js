@@ -15,7 +15,7 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 	/**
 	 * Adds a keyframe at the given date.
 	 *
-	 * @param arg0_geometry
+	 * @param {boolean|maptalks.Geometry} arg0_geometry - If of a boolean type false, geometry is resolved as being hidden for that keyframe.
 	 * @param {Object} [arg1_options]
 	 *  @param {Date} [arg1_options.date=main.date]
 	 *  @param {Object} [arg1_options.geometry]
@@ -26,7 +26,8 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 	 */
 	addKeyframe (arg0_geometry, arg1_options) {
 		//Convert from parameters
-		let geometry = (arg0_geometry) ? arg0_geometry.toJSON() : undefined;
+		let geometry = (arg0_geometry) ? arg0_geometry : undefined;
+			try { geometry = geometry.toJSON(); } catch (e) {}
 		let options = (arg1_options) ? arg1_options : {};
 		
 		//Initialise options
@@ -68,7 +69,7 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 	 *
 	 * @returns {{geometry: Object, properties: Object, symbol: Object}}
 	 */
-	getKeyframe (arg0_options) {
+	getKeyframe (arg0_options) { //[WIP] - Finish function body, both .symbol and .properties should use the only available keyframe if only one keyframe is available for them
 		//Convert from parameters
 		let options = (arg0_options) ? arg0_options : {};
 		
@@ -77,7 +78,7 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 		
 		//Declare local instance variables
 		let current_keyframe = {
-			geometry: {},
+			geometry: false,
 			properties: {},
 			symbol: {}
 		};
@@ -85,6 +86,8 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 		
 		//Iterate over all keyframes in this.keyframes
 		let all_keyframes = Object.keys(this.keyframes).sort().reverse();
+		let properties_count = 0;
+		let symbol_count = 0;
 		
 		for (let i = 0; i < all_keyframes.length; i++) {
 			let local_key = all_keyframes[i];
@@ -109,6 +112,8 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 				}
 		}
 		
+		//[WIP] - Iterate over all keyframes in this.keyframes to assess if either current_keyframe.properties or current_keyframe.symbol should be overridden
+		
 		//Return statement
 		return current_keyframe;
 	}
@@ -132,6 +137,19 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 		//Remove keyframe if defined
 		delete this.keyframes[timestamp];
 		this.refresh();
+	}
+	
+	//Date
+	
+	static loadDate (arg0_date_obj) {
+		//Convert from parameters
+		let date_obj = (arg0_date_obj) ? arg0_date_obj : main.date;
+		
+		//Declare local instance variables
+		date_obj = Date.convertTimestampToDate(Date.getTimestamp(date_obj));
+		
+		//Handle Polygon, Line, Point
+		Polygon.instances.forEach((local_polygon) => local_polygon.loadDate(date_obj));
 	}
 	
 	//Deserialisation/Serialisation
