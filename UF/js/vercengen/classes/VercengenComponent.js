@@ -4,8 +4,7 @@ ve.Component = class {
 		let options = (arg0_options) ? arg0_options : {};
 		
 		//Declare local instance variables
-		let child_class = this.constructor;
-		
+		this.child_class = this.constructor;
 		this.is_vercengen_component = true;
 		
 		this.height = options.height;
@@ -18,16 +17,22 @@ ve.Component = class {
 			if (this.options === undefined)
 				this.options = options; //Preferably overridden by lower components
 			
+			//Flow control handlers
 			//.from_binding handler
 			if (this.options.from_binding)
 				this.from_binding  = this.options.from_binding;
+			//.to_binding handler
+			if (this.options.to_binding)
+				this.to_binding = this.options.to_binding;
 			
+			//Event handlers
 			//.onload handler
 			if (this.options.onload)
 				setTimeout(() => {
 					this.options.onload(this);
 				}, 100);
 			
+			//KEEP AT BOTTOM! - Feature handlers
 			//.tooltip handler
 			if (this.options.tooltip)
 				this.tooltip = new ve.Tooltip(this.options.tooltip, { element: this.element });
@@ -37,16 +42,19 @@ ve.Component = class {
 	//ve.Component directional flow functions
 	
 	/**
-	 * To binding. Fires only upon user-driven changes, which means that this has to be monitored manually component-side.
-	 * 
-	 * @param {string} arg0_variable_string
+	 * Pseudo-setter to binding. Fires only upon user-driven changes, which means that this has to be monitored manually component-side.
 	 */
-	fireToBinding (arg0_variable_string) {
-		//Convert from parameters
-		let variable_string = arg0_variable_string;
+	fireToBinding () {
+		//Internal guard clause if this.to_binding is not defined
+		if (this.to_binding === undefined) return;
+		if (typeof this.to_binding !== "string") {
+			console.error(`ve.Component: ${this.child_class.prototype.constructor.name}: this.to_binding is an invalid string:`, this.to_binding);
+			return;
+		}
 		
 		//Declare local instance variables
 		let initial_object = global;
+		let variable_string = this.to_binding;
 		
 		//Parse this to this.owner; watch variable mutation using getter/setter, and set this.v to new value
 		if (variable_string.startsWith("this.")) {
@@ -58,12 +66,14 @@ ve.Component = class {
 		//Set value of to object by fetching this.v
 		let local_value = this.v; //Because this is a getter, run it once
 		
-		if (typeof this.options.onuserchange === "function") //Fire onuserchange
+		if (typeof this.options.onchange === "function") //Fire onchange (bidirectional)
+			this.options.onchange(local_value);
+		if (typeof this.options.onuserchange === "function") //Fire onuserchange (unidirectional)
 			this.options.onuserchange(local_value);
 		Object.setValue(initial_object, variable_string, local_value);
 	}
 	
-	set from_binding (arg0_variable_string) { //[WIP] - Finish function body
+	set from_binding (arg0_variable_string) {
 		//Convert from parameters
 		let variable_string = arg0_variable_string;
 		
@@ -73,9 +83,13 @@ ve.Component = class {
 		//Parse this to this.owner; watch variable mutation using getter/setter, and set this.v to new value
 		if (variable_string.startsWith("this.")) {
 			initial_object = this.owner;
+			variable_string = variable_string.replace("this.", "");
 		} else if (variable_string.startsWith("window.")) {
 			initial_object = window;
 		}
+		
+		//Set init value if applicable
+		this.v = Object.getValue(initial_object, variable_string);
 		
 		//Add getter/setter
 		Object.addGetterSetter(initial_object, variable_string, {
@@ -83,7 +97,9 @@ ve.Component = class {
 				//Convert from parameters
 				let local_value = arg0_value;
 				
-				if (typeof this.options.onprogramchange === "function") //Fire onprogramchange
+				if (typeof this.options.onchange === "function") //Fire onchange (bidirectional)
+					this.options.onchange(local_value);
+				if (typeof this.options.onprogramchange === "function") //Fire onprogramchange (unidirectional)
 					this.options.onprogramchange(local_value);
 				this.v = local_value;
 			}

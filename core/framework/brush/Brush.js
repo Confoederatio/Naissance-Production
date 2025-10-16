@@ -12,6 +12,7 @@ global.Brush = class extends ve.Class {
 			//interactive: true,
 			zIndex: 99
 		}).addTo(map);
+		this.disabled = true;
 		this.radius = 50000;
 		this.selected_geometry = undefined;
 		this.type = "polygon"; //Either 'none'/'polygon'/'line'/'point'
@@ -19,7 +20,8 @@ global.Brush = class extends ve.Class {
 		//Declare local interface variables
 		this.interface = new ve.Interface({
 			//Row 0: Enable/Disable
-			disabled: new ve.Checkbox(false, { 
+			disabled: new ve.Checkbox(false, {
+				from_binding: "this.disabled",
 				onchange: (e) => {
 					if (this.cursor)
 						if (e.v) {
@@ -92,6 +94,10 @@ global.Brush = class extends ve.Class {
 		
 		//Open UI
 		this.openUI();
+		
+		setTimeout(() => { //[WIP] - Debug statement. Remove at a later date
+			this.disabled = true;
+		}, 3000);
 	}
 	
 	//Backend functions

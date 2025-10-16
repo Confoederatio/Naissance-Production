@@ -86,9 +86,8 @@
 					internal_value = value;
 				}
 				
-				if (options.set_function) {
+				if (options.set_function)
 					options.set_function.call(this, value);
-				}
 			}
 		});
 		
