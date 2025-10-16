@@ -63,9 +63,13 @@ ve.Component = class {
 		
 		//Parse this to this.owner; watch variable mutation using getter/setter, and set this.v to new value
 		if (variable_string.startsWith("this.")) {
+			variable_string = variable_string.replace("this.", "");
 			initial_object = this.owner;
 		} else if (variable_string.startsWith("window.")) {
+			variable_string = variable_string.replace("window.", "");
 			initial_object = window;
+		} else {
+			variable_string = variable_string.replace("global.", "");
 		}
 		
 		//Set value of to object by fetching this.v
@@ -87,10 +91,13 @@ ve.Component = class {
 		
 		//Parse this to this.owner; watch variable mutation using getter/setter, and set this.v to new value
 		if (variable_string.startsWith("this.")) {
-			initial_object = this.owner;
 			variable_string = variable_string.replace("this.", "");
+			initial_object = this.owner;
 		} else if (variable_string.startsWith("window.")) {
+			variable_string = variable_string.replace("window.", "");
 			initial_object = window;
+		} else {
+			variable_string = variable_string.replace("global.", "");
 		}
 		
 		//Set init value if applicable

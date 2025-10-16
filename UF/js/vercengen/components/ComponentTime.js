@@ -40,6 +40,7 @@ ve.Time = class veTime extends ve.Component {
 			let split_value = e.target.value.split(":");
 			
 			this.v = { hour: parseInt(split_value[0]), minute: parseInt(split_value[1]) };
+			this.fireToBinding();
 		});
 		this.v = this.value;
 	}
@@ -75,7 +76,6 @@ ve.Time = class veTime extends ve.Component {
 		//Set value and update UI
 		this.value = value;
 		this.element.querySelector("input").value = `${value.hour.toString().padStart(2, "0")}:${value.minute.toString().padStart(2, "0")}`;
-		if (this.options.onchange) this.options.onchange(this.value);
 	}
 	
 	remove () {

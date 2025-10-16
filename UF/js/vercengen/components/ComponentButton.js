@@ -59,6 +59,7 @@ ve.Button = class veButton extends ve.Component {
 		let button_el = this.element.querySelector("button");
 		button_el.addEventListener("click", (e) => {
 			if (this.value) this.value(e);
+			this.fireToBinding();
 		});
 		this.name = options.name;
 		this.v = this.value;
@@ -88,7 +89,6 @@ ve.Button = class veButton extends ve.Component {
 		
 		//Set value and update UI
 		this.value = value;
-		if (this.options.onchange) this.options.onchange(this);
 	}
 	
 	/**

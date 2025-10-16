@@ -32,6 +32,9 @@ ve.File = class veFile extends ve.Component {
 		
 		//Populate element and initialise handlers
 		this.element.innerHTML = html_string.join("");
+		this.element.querySelector(`#confirm-file`).addEventListener("click", (e) => {
+			this.fireToBinding();
+		});
 		this.v = this.value;
 	}
 	
@@ -70,7 +73,6 @@ ve.File = class veFile extends ve.Component {
 		} else if (save_file_el) {
 			save_file_el.setAttribute("value", value);
 		}
-		if (this.options.onchange) this.options.onchange(this.value);
 	}
 	
 	remove () {

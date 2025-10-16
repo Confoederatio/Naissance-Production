@@ -45,6 +45,7 @@ ve.Radio = class veRadio extends ve.Component {
 		let all_radio_els = this.element.querySelectorAll("input");
 		all_radio_els.forEach((el) => el.addEventListener("change", (e) => {
 			this.value = this.v;
+			this.fireToBinding();
 		}));
 		ve.Radio.instances.push(this);
 		
@@ -120,8 +121,6 @@ ve.Radio = class veRadio extends ve.Component {
 			traverse(root_ul, value);
 			this.value = value;
 		}
-		
-		if (this.options.onchange) this.options.onchange(this.value);
 	}
 	
 	remove () {

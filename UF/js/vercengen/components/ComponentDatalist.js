@@ -71,6 +71,7 @@ ve.Datalist = class veDatalist extends ve.Component {
 		let input_el = this.element.querySelector("input");
 		input_el.addEventListener("change", (e) => {
 			this.v = e.target.value.toString();
+			this.fireToBinding();
 		});
 		this.name = options.name;
 		this.v = this.value;
@@ -121,7 +122,6 @@ ve.Datalist = class veDatalist extends ve.Component {
 		}
 		
 		this.value = value;
-		if (this.options.onchange) this.options.onchange(this);
 	}
 	
 	/**

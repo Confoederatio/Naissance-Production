@@ -147,10 +147,10 @@ ve.WYSIWYG = class extends ve.Component {
 			
 			//Add change handlers
 			html_view_el.addEventListener("input", (e) => {
-				this.options.onchange(this);
+				this.fireToBinding();
 			});
 			visual_view_el.addEventListener("input", (e) => {
-				this.options.onchange(this);
+				this.fireToBinding();
 			});
 		}
 	}

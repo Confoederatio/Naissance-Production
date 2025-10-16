@@ -158,7 +158,7 @@ ve.Date = class veDate extends ve.Component {
 				
 				e.target.value = actual_value;
 				this.value.year = actual_value;
-				if (this.options.onchange) this.options.onchange(this);
+				this.fireToBinding();
 			}
 		});
 		this.element.querySelector(`#month`).addEventListener("change", (e) => {
@@ -175,7 +175,7 @@ ve.Date = class veDate extends ve.Component {
 			
 			e.target.value = Date.months[Date.all_months[actual_month - 1]].name;
 			this.value.month = actual_month;
-			if (this.options.onchange) this.options.onchange(this);
+			this.fireToBinding();
 		});
 		this.element.querySelector(`#day`).addEventListener("change", (e) => { 
 			let actual_value = parseInt(e.target.value);
@@ -196,7 +196,7 @@ ve.Date = class veDate extends ve.Component {
 			
 			e.target.value = actual_value;
 			this.value.day = actual_value;
-			if (this.options.onchange) this.options.onchange(this);
+			this.fireToBinding();
 		});
 		
 		this.element.querySelector(`#hour`).addEventListener("change", (e) => {
@@ -211,7 +211,7 @@ ve.Date = class veDate extends ve.Component {
 			
 			e.target.value = actual_value.toString().padStart(2, "0");
 			this.value.hour = actual_value;
-			if (this.options.onchange) this.options.onchange(this);
+			this.fireToBinding();
 		});
 		this.element.querySelector(`#minute`).addEventListener("change", (e) => {
 			let actual_value = parseInt(e.target.value);
@@ -225,7 +225,7 @@ ve.Date = class veDate extends ve.Component {
 			
 			e.target.value = actual_value.toString().padStart(2, "0");
 			this.value.minute = actual_value;
-			if (this.options.onchange) this.options.onchange(this);
+			this.fireToBinding();
 		});
 	}
 	

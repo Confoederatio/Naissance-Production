@@ -21,7 +21,7 @@ global.Brush = class extends ve.Class {
 		this.interface = new ve.Interface({
 			//Row 0: Enable/Disable
 			disabled: new ve.Checkbox(false, {
-				from_binding: "this.disabled",
+				binding: "this.disabled",
 				onchange: (e) => {
 					if (this.cursor)
 						if (e.v) {
@@ -133,7 +133,7 @@ global.Brush = class extends ve.Class {
 		});
 		
 		map.on("mousemove", (e) => {
-			if (this.interface.disabled.v) return;
+			if (this.disabled) return;
 			
 			//Set coordinates for this.cursor
 			this.cursor.setCoordinates(e.coordinate);
@@ -163,7 +163,7 @@ global.Brush = class extends ve.Class {
 		});
 		
 		map.getContainer().addEventListener("wheel", (e) => {
-			if (this.interface.disabled.v) return; //Internal guard clause if brush is disabled
+			if (this.disabled) return; //Internal guard clause if brush is disabled
 			
 			//Normalise the wheel delta across different browsers
 			let delta_y = e.deltaY*-1;

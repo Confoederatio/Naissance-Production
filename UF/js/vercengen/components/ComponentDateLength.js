@@ -40,6 +40,11 @@ ve.DateLength = class veDateLength extends ve.Component {
 		
 		//Populate element and initialise handlers
 		this.element.innerHTML = html_string.join("");
+		let all_input_els = document.querySelectorAll(this.element);
+		
+		all_input_els.forEach((local_el) => local_el.addEventListener("change", (e) => {
+			this.fireToBinding();
+		}));
 		this.v = value;
 	}
 	
@@ -77,7 +82,6 @@ ve.DateLength = class veDateLength extends ve.Component {
 		this.element.querySelector(`#days`).value = Math.returnSafeNumber(value.day);
 		this.element.querySelector(`#hours`).value = Math.returnSafeNumber(value.hour);
 		this.element.querySelector(`#minutes`).value = Math.returnSafeNumber(value.minute);
-		if (this.options.onchange) this.options.onchange(this.value);
 	}
 	
 	remove () {

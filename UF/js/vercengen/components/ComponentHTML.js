@@ -74,7 +74,6 @@ ve.HTML = class veHTML extends ve.Component {
 		} else {
 			this.element.innerHTML = this.value;
 		}
-		if (this.options.onchange) this.options.onchange(this.element);
 		this.value = this.element;
 	}
 	

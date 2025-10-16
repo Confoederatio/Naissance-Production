@@ -122,7 +122,7 @@ ve.BIUF = class veBIUF extends ve.Component {
 	
 	sendOnchangeEvent () {
 		this.value = this.v;
-		if (this.options.onchange) this.options.onchange(this);
+		this.fireToBinding();
 	}
 	
 	get name () {
