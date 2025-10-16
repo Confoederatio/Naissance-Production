@@ -22,7 +22,7 @@ ve.Text = class veText extends ve.Component {
 			this.element.setAttribute("component", "ve-text");
 			this.element.instance = this;
 		HTML.applyCSSStyle(this.element, options.style);
-		
+		this.options = options;
 		this.value = value;
 		
 		//Format html_string

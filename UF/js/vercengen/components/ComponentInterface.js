@@ -23,7 +23,8 @@ ve.Interface = class veInterface extends ve.Component {
 			this.element.setAttribute("component", "ve-interface");
 			this.element.instance = this;
 			HTML.applyCSSStyle(this.element, options.style);
-		
+		this.options = options;
+			
 		let html_string = [];
 		if (options.is_folder) {
 			html_string.push(`<details class = "ve interface-folder"${HTML.objectToAttributes(attributes)}>`);

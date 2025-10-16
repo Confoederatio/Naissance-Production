@@ -44,7 +44,7 @@ ve.Select = class veSelect extends ve.Component {
 			this.element.setAttribute("component", "ve-select");
 			this.element.instance = this;
 		HTML.applyCSSStyle(this.element, options.style);
-		
+		this.options = options;
 		this.value = value;
 		
 		//Format HTML string

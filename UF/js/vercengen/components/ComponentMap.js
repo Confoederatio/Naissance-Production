@@ -31,6 +31,7 @@ ve.Map = class veMap extends ve.Component {
 			this.element.instance = this;
 			HTML.setAttributesObject(this.element, options.attributes);
 			HTML.applyCSSStyle(this.element, options.style);
+		this.options = options;
 		this.map = undefined;
 		
 		//Set this.v

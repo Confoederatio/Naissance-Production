@@ -19,7 +19,7 @@ ve.DateLength = class veDateLength extends ve.Component {
 			this.element.setAttribute("component", "ve-datelength");
 			this.element.instance = this;
 		HTML.applyCSSStyle(this.element, options.style);
-		
+		this.options = options;
 		this.value = value;
 		
 		//Format HTML string

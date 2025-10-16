@@ -57,6 +57,7 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 	}
 	
 	cleanKeyframes () { //[WIP] - Finish function body, cleans un-necessary/duplicate keyframes
+		//Iterate over this.keyframes and check look-ahead relative keyframe against current relative keyframe
 		
 	}
 	
@@ -69,7 +70,7 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 	 *
 	 * @returns {{geometry: Object, properties: Object, symbol: Object}}
 	 */
-	getKeyframe (arg0_options) { //[WIP] - Finish function body, both .symbol and .properties should use the only available keyframe if only one keyframe is available for them
+	getKeyframe (arg0_options) {them
 		//Convert from parameters
 		let options = (arg0_options) ? arg0_options : {};
 		

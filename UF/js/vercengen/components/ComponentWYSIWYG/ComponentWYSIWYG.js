@@ -128,6 +128,8 @@ ve.WYSIWYG = class extends ve.Component {
 
 		//Set .innerHTML; this.v
 		this.element.innerHTML = html_string.join("");
+		this.options = options;
+		
 		this.handleEvents();
 		this.initWYSIWYG();
 		this.v = value;

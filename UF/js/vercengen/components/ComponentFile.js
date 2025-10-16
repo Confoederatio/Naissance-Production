@@ -15,7 +15,7 @@ ve.File = class veFile extends ve.Component {
 			this.element.setAttribute("component", "ve-file");
 			this.element.instance = this;
 		HTML.applyCSSStyle(this.element, options.style);
-		
+		this.options = options;
 		this.value = value;
 		
 		//Format HTML string

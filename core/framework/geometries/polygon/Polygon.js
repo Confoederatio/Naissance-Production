@@ -200,10 +200,8 @@ global.Polygon = class extends ve.Class {
 				this.setProperties(keyframe_obj.properties);
 			
 			//.symbol handling
-			if (keyframe_obj.symbol) {
-				console.log(keyframe_obj.symbol);
+			if (keyframe_obj.symbol)
 				this.setSymbol(keyframe_obj.symbol);
-			}
 		}	else {
 			//Hide geometry for now
 			if (this.geometry) hide_geometry = true;

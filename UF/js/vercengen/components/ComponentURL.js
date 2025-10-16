@@ -16,10 +16,10 @@ ve.URL = class veURL extends ve.Component {
 			...options.attributes
 		};
 		this.element = document.createElement("div");
-		this.element.setAttribute("component", "ve-url");
-		this.element.instance = this;
-		HTML.applyCSSStyle(this.element, options.style);
-		
+			this.element.setAttribute("component", "ve-url");
+			this.element.instance = this;
+			HTML.applyCSSStyle(this.element, options.style);
+		this.options = options;
 		this.value = value;
 		
 		//Format html_string
