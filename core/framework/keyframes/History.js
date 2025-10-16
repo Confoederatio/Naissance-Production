@@ -84,10 +84,10 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 		};
 		let timestamp = Date.getTimestamp(options.date);
 		
-		//Iterate over all keyframes in this.keyframes
+		//1. Iterate over all keyframes in this.keyframes
 		let all_keyframes = Object.keys(this.keyframes).sort().reverse();
-		let properties_count = 0;
-		let symbol_count = 0;
+		let property_override = [0, undefined];
+		let symbol_override = [0, undefined];
 		
 		for (let i = 0; i < all_keyframes.length; i++) {
 			let local_key = all_keyframes[i];
@@ -112,7 +112,26 @@ global.History = class extends ve.Class { //[WIP] - Finish class body
 				}
 		}
 		
-		//[WIP] - Iterate over all keyframes in this.keyframes to assess if either current_keyframe.properties or current_keyframe.symbol should be overridden
+		//2. Iterate over all keyframes in this.keyframes to assess if either current_keyframe.properties or current_keyframe.symbol should be overridden
+		for (let i = 0; i < all_keyframes.length; i++) {
+			let local_key = all_keyframes[i];
+			let local_value = this.keyframes[all_keyframes[i]].options;
+			
+			if (local_value.properties) {
+				if (Object.keys(local_value.properties) > 1)
+					property_override[0]++;
+				property_override[1] = local_value.properties;
+			}
+			if (local_value.symbol) {
+				if (Object.keys(local_value.properties) > 1)
+					symbol_override[0]++;
+				symbol_override[1] = local_value.symbol;
+			}
+		}
+		
+		//Assign overrides where appropriate
+		if (property_override[0] === 1) current_keyframe.properties = property_override[1];
+		if (symbol_override[0] === 1) current_keyframe.symbol = symbol_override[1];
 		
 		//Return statement
 		return current_keyframe;
