@@ -140,19 +140,16 @@ ve.WYSIWYG = class extends ve.Component {
 	 */
 	handleEvents () {
 		//Declare local instance variables
-		if (this.options.onchange) {
-			let editor_el = this.element.querySelector(`.wysiwyg-editor`);
-			let html_view_el = this.element.querySelector(`.html-view`);
-			let visual_view_el = this.element.querySelector(`.visual-view`);
-			
-			//Add change handlers
-			html_view_el.addEventListener("input", (e) => {
-				this.fireToBinding();
-			});
-			visual_view_el.addEventListener("input", (e) => {
-				this.fireToBinding();
-			});
-		}
+		let html_view_el = this.element.querySelector(`.html-view`);
+		let visual_view_el = this.element.querySelector(`.visual-view`);
+		
+		//Add change handlers
+		html_view_el.addEventListener("input", (e) => {
+			this.fireToBinding();
+		});
+		visual_view_el.addEventListener("input", (e) => {
+			this.fireToBinding();
+		});
 	}
 	
 	//Internal helper functions
@@ -263,6 +260,7 @@ ve.WYSIWYG = class extends ve.Component {
 		//Set element .html-view, .visual-view content
 		this.element.querySelector(`.html-view`).value = value;
 		this.element.querySelector(`.visual-view`).innerHTML = value;
+		this.fireFromBinding();
 	}
 };
 

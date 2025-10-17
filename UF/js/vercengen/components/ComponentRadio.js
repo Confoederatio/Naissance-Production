@@ -121,6 +121,7 @@ ve.Radio = class veRadio extends ve.Component {
 			traverse(root_ul, value);
 			this.value = value;
 		}
+		this.fireFromBinding();
 	}
 	
 	remove () {

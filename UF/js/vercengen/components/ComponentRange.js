@@ -69,6 +69,7 @@ ve.Range = class veRange extends ve.Component {
 		this.value = value;
 		this.element.querySelector("input").value = this.value;
 		this.element.querySelector("#value-label").innerHTML = `${this.value}`;
+		this.fireFromBinding();
 	}
 	
 	remove () {

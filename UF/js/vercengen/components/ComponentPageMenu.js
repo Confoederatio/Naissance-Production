@@ -152,6 +152,7 @@ ve.PageMenu = class vePageMenu extends ve.Component { //[WIP] - This should be u
 		setTimeout(() => {
 			this.updateUnderline();
 		}, 100);
+		this.fireFromBinding();
 	}
 	
 	/**

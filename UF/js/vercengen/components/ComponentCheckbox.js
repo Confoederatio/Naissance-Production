@@ -171,7 +171,7 @@ ve.Checkbox = class veCheckbox extends ve.Component {
 	
 	set v (arg0_value) {
 		//Convert from parameters
-		let value = arg0_value;
+		let value = (typeof arg0_value !== "undefined") ? arg0_value : false;
 		
 		//Parse value
 		if (typeof value === "boolean") {
@@ -196,6 +196,7 @@ ve.Checkbox = class veCheckbox extends ve.Component {
 			traverse(root_ul, value);
 			this.value = value;
 		}
+		this.fireFromBinding();
 	}
 	
 	/**

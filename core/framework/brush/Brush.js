@@ -12,7 +12,6 @@ global.Brush = class extends ve.Class {
 			//interactive: true,
 			zIndex: 99
 		}).addTo(map);
-		this.disabled = true;
 		this.radius = 50000;
 		this.selected_geometry = undefined;
 		this.type = "polygon"; //Either 'none'/'polygon'/'line'/'point'
@@ -22,9 +21,9 @@ global.Brush = class extends ve.Class {
 			//Row 0: Enable/Disable
 			disabled: new ve.Checkbox(false, {
 				binding: "this.disabled",
-				onchange: (e) => {
+				onchange: (v) => { //Bidirectionally bound to this.disabled, use .onprogramchange/.onuserchange otherwise
 					if (this.cursor)
-						if (e.v) {
+						if (v) {
 							this.cursor.hide();
 							map.config("draggable", true);
 						} else {
@@ -36,15 +35,17 @@ global.Brush = class extends ve.Class {
 			
 			//Row 1: Colour
 			colour: new ve.Colour("#1bbc9b", {
-				onchange: (e) => { try { 
-					Polygon.setSelectedSymbol({ polygonFill: Colour.convertRGBToHex(e.v) });
-				} catch (e) {} },
+				onchange: (v) => { 
+					try {
+						Polygon.setSelectedSymbol({ polygonFill: Colour.convertRGBToHex(v) });
+					} catch (e) { console.error(e); } 
+				},
 				x: 0, y: 1 
 			}),
 			opacity: new ve.Range(0.70, {
 				name: "Opacity",
-				onchange: (e) => { try { 
-					Polygon.setSelectedSymbol({ polygonOpacity: e.v });
+				onchange: (v) => { try { 
+					Polygon.setSelectedSymbol({ polygonOpacity: v });
 				} catch (e) {} },
 				x: 1, y: 1
 			}),
@@ -95,8 +96,8 @@ global.Brush = class extends ve.Class {
 		//Open UI
 		this.openUI();
 		
-		setTimeout(() => { //[WIP] - Debug statement. Remove at a later date
-			this.disabled = true;
+		setTimeout(() => { //[WIP] - Debug statement. Remove at a later date, automatically invokes onchange
+			this.interface.disabled.v = true;
 		}, 3000);
 	}
 	
@@ -199,7 +200,7 @@ global.Brush = class extends ve.Class {
 		this.type = "polygon";
 		this.selected_geometry = polygon;
 		setTimeout(() => {
-			polygon.interface.selected.v = true;
+			polygon.is_selected = true;
 		});
 	}
 	
@@ -219,18 +220,5 @@ global.Brush = class extends ve.Class {
 			x: 8,
 			y: 8,
 		});
-	}
-	
-	//Symbol functions
-	setColour (arg0_rgb) {
-		//Convert from parameters
-		let rgb = Colour.convertHexToRGBA(arg0_rgb);
-		
-		//Declare local instance variables
-		this.colour.v = rgb;
-	}
-	
-	setSimplify (arg0_tolerance, arg1_options) {
-		
 	}
 };

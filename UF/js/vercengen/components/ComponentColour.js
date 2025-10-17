@@ -89,6 +89,7 @@ ve.Colour = class veColour extends ve.Component {
 		//Set value and update UI
 		this.value = value;
 		this.element.querySelector("input").value = this.value;
+		this.fireFromBinding();
 	}
 	
 	//Class methods

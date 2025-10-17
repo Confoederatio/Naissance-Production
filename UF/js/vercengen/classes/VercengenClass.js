@@ -14,6 +14,9 @@ ve.Class = class {
 		
 		this.class_window = undefined;
 		this.instance_window = undefined;
+		
+		//Call updateOwner() upon initialisation
+		this.updateOwner();
 	}
 	
 	//Class methods
@@ -73,24 +76,13 @@ ve.Class = class {
 		) options.type = "static";
 		
 		//Declare local instance variables
-		let state_obj = this.getState();
+		let state_obj = this.updateOwner();
 		
-		let class_components_obj = {};
-		let instance_components_obj = {};
+		let class_components_obj = state_obj.class_components_obj;
+		let instance_components_obj = state_obj.instance_components_obj;
 		
 		//Close window if open first
 		if (this.isOpen(mode) && !options.do_not_close_if_open) this.close(mode);
-		
-		//Iterate over all properties in class that .is_vercengen_component and append them to class_components_obj
-		Object.iterate(state_obj, (local_key, local_value) => {
-			if (local_key.startsWith("static-")) {
-				class_components_obj[local_key] = local_value;
-				class_components_obj[local_key].setOwner(this);
-			} else {
-				instance_components_obj[local_key] = local_value;
-				instance_components_obj[local_key].setOwner(this);
-			}
-		});
 		
 		//Open ve.Window if either 'static'/'window'
 		let components_obj = (mode === "class") ? class_components_obj : instance_components_obj;
@@ -143,5 +135,30 @@ ve.Class = class {
 		
 		//Return statement
 		return state_obj;
+	}
+	
+	updateOwner () {
+		//Declare local instance variables
+		let state_obj = this.getState();
+		
+		let class_components_obj = {};
+		let instance_components_obj = {};
+		
+		//Iterate over all components in state_obj to update their owners
+		Object.iterate(state_obj, (local_key, local_value) => {
+			if (local_key.startsWith("static-")) {
+				class_components_obj[local_key] = local_value;
+				class_components_obj[local_key].setOwner(this);
+			} else {
+				instance_components_obj[local_key] = local_value;
+				instance_components_obj[local_key].setOwner(this);
+			}
+		});
+		
+		//Return statement
+		return {
+			class_components_obj: class_components_obj,
+			instance_components_obj: instance_components_obj
+		};
 	}
 };

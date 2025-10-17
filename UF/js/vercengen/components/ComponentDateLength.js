@@ -82,6 +82,7 @@ ve.DateLength = class veDateLength extends ve.Component {
 		this.element.querySelector(`#days`).value = Math.returnSafeNumber(value.day);
 		this.element.querySelector(`#hours`).value = Math.returnSafeNumber(value.hour);
 		this.element.querySelector(`#minutes`).value = Math.returnSafeNumber(value.minute);
+		this.fireFromBinding();
 	}
 	
 	remove () {

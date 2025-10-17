@@ -122,6 +122,7 @@ ve.Datalist = class veDatalist extends ve.Component {
 		}
 		
 		this.value = value;
+		this.fireFromBinding();
 	}
 	
 	/**

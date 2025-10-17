@@ -76,6 +76,7 @@ ve.Time = class veTime extends ve.Component {
 		//Set value and update UI
 		this.value = value;
 		this.element.querySelector("input").value = `${value.hour.toString().padStart(2, "0")}:${value.minute.toString().padStart(2, "0")}`;
+		this.fireFromBinding();
 	}
 	
 	remove () {

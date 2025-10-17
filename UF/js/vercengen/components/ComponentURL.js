@@ -69,6 +69,7 @@ ve.URL = class veURL extends ve.Component {
 		this.value = value;
 		this.element.querySelector("input").value = this.value;
 		this.element.querySelector(`#open-link`).setAttribute("valid-url", value.isURL());
+		this.fireFromBinding();
 	}
 	
 	remove () {

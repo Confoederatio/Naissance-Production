@@ -101,6 +101,7 @@ ve.Select = class veSelect extends ve.Component {
 		} else if (typeof value === "string") {
 			this.element.querySelector(`option[id="${value}"]`).selected = true;
 		}
+		this.fireFromBinding();
 	}
 	
 	generateHTML () {

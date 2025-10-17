@@ -89,6 +89,7 @@ ve.Button = class veButton extends ve.Component {
 		
 		//Set value and update UI
 		this.value = value;
+		this.fireFromBinding();
 	}
 	
 	/**

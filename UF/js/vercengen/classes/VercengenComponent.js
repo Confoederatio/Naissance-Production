@@ -46,22 +46,15 @@ ve.Component = class {
 	
 	//ve.Component directional flow functions
 	
-	/**
-	 * Pseudo-setter to binding. Fires only upon user-driven changes, which means that this has to be monitored manually component-side.
-	 */
-	fireToBinding () {
-		//Internal guard clause if this.to_binding is not defined
-		if (this.to_binding === undefined) return;
-		if (typeof this.to_binding !== "string") {
-			console.error(`ve.Component: ${this.child_class.prototype.constructor.name}: this.to_binding is an invalid string:`, this.to_binding);
-			return;
-		}
+	fireFromBinding () {
+		//Convert from parameters
+		let variable_string = (this.from_binding_string) ? JSON.parse(JSON.stringify(this.from_binding_string)) : undefined;
+			if (variable_string === undefined) return; //Internal guard clause if variable_string is undefined
 		
 		//Declare local instance variables
 		let initial_object = global;
-		let variable_string = this.to_binding;
 		
-		//Parse this to this.owner; watch variable mutation using getter/setter, and set this.v to new value
+		//Parse this to this.owner; watch mutation using getter/setter, and set this.v to new value
 		if (variable_string.startsWith("this.")) {
 			variable_string = variable_string.replace("this.", "");
 			initial_object = this.owner;
@@ -72,14 +65,57 @@ ve.Component = class {
 			variable_string = variable_string.replace("global.", "");
 		}
 		
+		//Set this.from_binding in a to binding manner
+		if (this.from_binding_string) {
+			this.from_binding_fire_silently = true;
+			Object.setValue(initial_object, variable_string, this.v);
+			delete this.from_binding_fire_silently;
+			
+			if (typeof this.options.onchange === "function") //Fire onchange (bidirectional)
+				this.options.onchange(this.v);
+			if (typeof this.options.onprogramchange === "function") //Fire onprogramchange (unidirectional)
+				this.options.onprogramchange(this.v);
+		}
+	}
+	
+	/**
+	 * Pseudo-setter to binding. Fires only upon user-driven changes, which means that this has to be monitored manually component-side.
+	 */
+	fireToBinding () {
+		//Declare local instance variables
+		let initial_object = global;
+		let variable_string = this.to_binding;
+		
+		//Internal guard clause if this.to_binding is not defined
+		if (this.to_binding) {
+			if (typeof this.to_binding !== "string") {
+				console.error(`ve.Component: ${this.child_class.prototype.constructor.name}: this.to_binding is an invalid string:`, this.to_binding);
+				return;
+			}
+			
+			//Parse this to this.owner; watch variable mutation using getter/setter, and set this.v to new value
+			if (variable_string.startsWith("this.")) {
+				variable_string = variable_string.replace("this.", "");
+				initial_object = this.owner;
+			} else if (variable_string.startsWith("window.")) {
+				variable_string = variable_string.replace("window.", "");
+				initial_object = window;
+			} else {
+				variable_string = variable_string.replace("global.", "");
+			}
+		}
+		
 		//Set value of to object by fetching this.v
 		let local_value = this.v; //Because this is a getter, run it once
+		//console.log(initial_object, variable_string, local_value);
 		
 		if (typeof this.options.onchange === "function") //Fire onchange (bidirectional)
 			this.options.onchange(local_value);
 		if (typeof this.options.onuserchange === "function") //Fire onuserchange (unidirectional)
 			this.options.onuserchange(local_value);
-		Object.setValue(initial_object, variable_string, local_value);
+		
+		if (this.to_binding)
+			Object.setValue(initial_object, variable_string, local_value);
 	}
 	
 	set from_binding (arg0_variable_string) {
@@ -88,34 +124,48 @@ ve.Component = class {
 		
 		//Declare local instance variables
 		let initial_object = global;
+		this.from_binding_string = variable_string;
 		
-		//Parse this to this.owner; watch variable mutation using getter/setter, and set this.v to new value
-		if (variable_string.startsWith("this.")) {
-			variable_string = variable_string.replace("this.", "");
-			initial_object = this.owner;
-		} else if (variable_string.startsWith("window.")) {
-			variable_string = variable_string.replace("window.", "");
-			initial_object = window;
-		} else {
-			variable_string = variable_string.replace("global.", "");
-		}
-		
-		//Set init value if applicable
-		this.v = Object.getValue(initial_object, variable_string);
-		
-		//Add getter/setter
-		Object.addGetterSetter(initial_object, variable_string, {
-			set_function: (arg0_value) => {
-				//Convert from parameters
-				let local_value = arg0_value;
-				
-				if (typeof this.options.onchange === "function") //Fire onchange (bidirectional)
-					this.options.onchange(local_value);
-				if (typeof this.options.onprogramchange === "function") //Fire onprogramchange (unidirectional)
-					this.options.onprogramchange(local_value);
-				this.v = local_value;
+		try {
+			//Parse this to this.owner; watch variable mutation using getter/setter, and set this.v to new value
+			if (variable_string.startsWith("this.")) {
+				variable_string = variable_string.replace("this.", "");
+				initial_object = this.owner;
+			} else if (variable_string.startsWith("window.")) {
+				variable_string = variable_string.replace("window.", "");
+				initial_object = window;
+			} else {
+				variable_string = variable_string.replace("global.", "");
 			}
-		});
+			
+			//Set init value if applicable
+			this.v = Object.getValue(initial_object, variable_string);
+			
+			//Add getter/setter
+			Object.addGetterSetter(initial_object, variable_string, {
+				set_function: (arg0_value) => {
+					//Convert from parameters
+					let local_value = arg0_value;
+					if (this.from_binding_fire_silently) return;
+					
+					//Declare local instance variables
+					let is_same_value = Boolean.strictEquality(local_value, this.v);
+					if (is_same_value) return;
+					
+					if (typeof this.options.onchange === "function") //Fire onchange (bidirectional)
+						this.options.onchange(local_value);
+					if (typeof this.options.onprogramchange === "function") //Fire onprogramchange (unidirectional)
+						this.options.onprogramchange(local_value);
+					this.v = local_value;
+				}
+			});
+		} catch (e) {
+			let error_array = [];
+				error_array.push(`ve.Component: ${this.child_class.prototype.constructor.name}: this.from_binding failed. Are you sure you called this.updateOwner() synchronously in your constructor?`);
+				if (initial_object === undefined)
+					error_array.push(`- this.updateOwner() has not been called synchronously (check constructors and/or ve.Component updates).`);
+			console.error(`${error_array.join("\n")}\n- initial_object:`, initial_object, `variable_string:`, variable_string);
+		}
 	}
 	
 	setOwner (arg0_value) {

@@ -75,6 +75,7 @@ ve.HTML = class veHTML extends ve.Component {
 			this.element.innerHTML = this.value;
 		}
 		this.value = this.element;
+		this.fireFromBinding();
 	}
 	
 	remove () {

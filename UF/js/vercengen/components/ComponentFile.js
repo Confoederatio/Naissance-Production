@@ -73,6 +73,7 @@ ve.File = class veFile extends ve.Component {
 		} else if (save_file_el) {
 			save_file_el.setAttribute("value", value);
 		}
+		this.fireFromBinding();
 	}
 	
 	remove () {

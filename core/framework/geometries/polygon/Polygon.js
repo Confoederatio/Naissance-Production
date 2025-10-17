@@ -15,15 +15,16 @@ global.Polygon = class extends ve.Class {
 			information: new ve.HTML((e) => `ID: ${this.id}`),
 			edit_nodes: new ve.Checkbox(false, {
 				name: "Edit Nodes",
-				onchange: (e) => {
-					this.edit_nodes = e.v;
+				onchange: (v) => {
+					this.edit_nodes = v;
 				}
 			}),
 			selected: new ve.Checkbox(false, { 
+				binding: "this.is_selected",
 				name: "Select Symbol",
-				onchange: (e) => {
-					this.selected = e.v;
-					if (this.is_geometry_selected && e.v === false)
+				onuserchange: (v) => {
+					this.selected = v;
+					if (this.is_geometry_selected && v === false)
 						main.brush.selectPolygon();
 				}
 			}),
@@ -57,7 +58,8 @@ global.Polygon = class extends ve.Class {
 				Colour.convertRGBToHex(this.options.colour) : "#1bbc9b",
 			polygonOpacity: Math.returnSafeNumber(this.options.opacity, 0.4)
 		};
-		Polygon.instances.push(this);	
+		Polygon.instances.push(this);
+		this.updateOwner();
 	}
 	
 	set edit_nodes (arg0_value) {
@@ -293,7 +295,7 @@ global.Polygon = class extends ve.Class {
 		//Refresh geometry
 		this.layer.removeGeometry(this.geometry);
 		
-		if (!optimisation_obj.simplify_applies_to_brush.v) {
+		if (!optimisation_obj.simplify_applies_to_brush.v && this.geometry) {
 			let turf_geometry = Geospatiale.convertMaptalksToTurf(this.geometry);
 			let turf_simplified_geometry = turf.simplify(turf_geometry, {
 				tolerance: optimisation_obj.simplify.v,

@@ -132,7 +132,7 @@ ve.Date = class veDate extends ve.Component {
 		
 		//Set value
 		this.value = value;
-		if (this.options.onchange) this.options.onchange(this);
+		this.fireFromBinding();
 	}
 	
 	/**
