@@ -44,8 +44,11 @@ ve.Component = class {
 		});
 	}
 	
-	//ve.Component directional flow functions
+	//ve.Component directional flow functions - [WIP] - Reduce redundancy with parsing variablee_string
 	
+	/**
+	 * Pseudo-setter from binding. Fires only upon program-driven changes to .v directly, which means that this has to be monitored manually component-side in set v(). This should always come last in set v().
+	 */
 	fireFromBinding () {
 		//Convert from parameters
 		let variable_string = (this.from_binding_string) ? JSON.parse(JSON.stringify(this.from_binding_string)) : undefined;
