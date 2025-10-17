@@ -172,7 +172,8 @@ ve.Interface = class veInterface extends ve.Component {
 		Object.iterate(this.components_obj, (local_key, local_value) => {
 			try {
 				if (local_value.is_vercengen_component) {
-					let target_cell_el = this.element.querySelector(`table td[id="${local_value.x}-${local_value.y}"]`);
+					let all_candidate_cell_els = this.element.querySelectorAll(`table td[id="${local_value.x}-${local_value.y}"]`);
+					let target_cell_el = all_candidate_cell_els[all_candidate_cell_els.length - 1];
 					
 					//Parse height, width
 					if (local_value.height !== undefined) {

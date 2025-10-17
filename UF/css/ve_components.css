@@ -79,9 +79,6 @@
 }
 
 /* -- ve.Interface -- */
-td:has([component="ve-interface"]) {
-    padding-inline-start: 0.5rem;
-}
 [component="ve-interface"] {
     summary:hover {
         cursor: pointer;
@@ -89,6 +86,12 @@ td:has([component="ve-interface"]) {
     tr td {
         vertical-align: top;
     }
+}
+td:has([component="ve-interface"]) {
+    padding-inline-start: 0.5rem;
+}
+.ve-disable-nesting > table > tbody > tr > td {
+    padding: 0;
 }
 
 /* -- ve.PageMenu -- */

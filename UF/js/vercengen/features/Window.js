@@ -16,6 +16,7 @@
  *   - `x=HTML.mouse_x`: {@link number}
  *   - `y=HTML.mouse_y`: {@link number}
  *   -
+ *   - `do_not_wrap=false`: {@link boolean} - Whether to disable wrapping in an always open ve.Interface.
  *   - `mode="window"`: {@link string} - Either 'static_ui'/'static_window'/'window'.
  *   - `name=""`: {@link string} - Auto-resolves to 'Window' instead if `.can_rename=true`.
  *   - `theme`: {@link string} - The CSS theme to apply to the Feature.
@@ -227,21 +228,40 @@ ve.Window = class {
 		});
 	}
 	
-	refresh (arg0_components_obj) {
+	refresh (arg0_components_obj) { //[WIP] - Finish ve.Interface wrapping
 		//Convert from parameters
 		this.components_obj = arg0_components_obj;
 		
-		//Append all components in components_obj to this.element.querySelector("#feature-body")
-		Object.iterate(this.components_obj, (local_key, local_value) => {
-			let feature_body_el = this.element.querySelector(`#feature-body`);
+		//Declare local instance variables
+		let feature_body_el = this.element.querySelector(`#feature-body`);
+		
+		//Automatically wrap this.components_obj in a ve.Interface object (.is_folder=false)
+		if (!this.options.do_not_wrap) {
+			feature_body_el.innerHTML = "";
+			this._interface = new ve.Interface(this.components_obj, { //[WIP] - Make generic via .is_container field for ve.Interface
+				is_folder: false,
+				name: " ",
+				
+				style: {
+					padding: 0
+				}
+			});
+			this._interface.element.setAttribute("class", "ve-disable-nesting");
+			feature_body_el.appendChild(this._interface.element);
+		} else {
+			delete this._interface;
 			
-			if (local_value.element) {
-				local_value.element.id = local_key;
-				feature_body_el.appendChild(local_value.element);
-			}
-			if (local_value.name === undefined || local_value.name === "")
-				local_value.name = local_key;
-		});
+			//Append all components in components_obj to this.element.querySelector("#feature-body")
+			feature_body_el.innerHTML = "";
+			Object.iterate(this.components_obj, (local_key, local_value) => {
+				if (local_value.element) {
+					local_value.element.id = local_key;
+					feature_body_el.appendChild(local_value.element);
+				}
+				if (local_value.name === undefined || local_value.name === "")
+					local_value.name = local_key;
+			});
+		}
 	}
 	
 	remove () {
