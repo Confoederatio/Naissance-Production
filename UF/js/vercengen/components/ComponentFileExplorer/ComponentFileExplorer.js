@@ -1,5 +1,5 @@
 ve.FileExplorer = class extends ve.Component {
-	constructor (arg0_value, arg1_options) {
+	constructor (arg0_value, arg1_options) { //[WIP] - Implement selection instead of copy/move/delete for every file/folder
 		//Convert from parameters
 		let value = (arg0_value) ? arg0_value : __dirname;
 		let options = (arg1_options) ? arg1_options : {};
@@ -8,7 +8,9 @@ ve.FileExplorer = class extends ve.Component {
 		//Initialise options
 		options.attributes = (options.attributes) ? options.attributes : {};
 		options.file_components_obj = (options.file_components_obj) ? options.file_components_obj : {
-			copy: new ve.Button((e) => {}, {
+			copy: new ve.Button((e) => {
+				new ve.Modal({ test: new ve.HTML((e) => "test") });
+			}, {
 				name: `<icon>content_copy</icon>`,
 				tooltip: "Copy"
 			}),
@@ -74,6 +76,20 @@ ve.FileExplorer = class extends ve.Component {
 		
 		//Set name
 		this.element.querySelector(`#name`).innerHTML = (value) ? value : "";
+	}
+	
+	get v () {
+		//Return statement
+		return this.value;
+	}
+	
+	set v (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Set new folder path before refreshing display
+		this.value = value;
+		this.refresh();
 	}
 	
 	/**
@@ -198,19 +214,5 @@ ve.FileExplorer = class extends ve.Component {
 	
 	remove () {
 		this.element.remove();
-	}
-	
-	get v () {
-		//Return statement
-		return this.value;
-	}
-	
-	set v (arg0_value) {
-		//Convert from parameters
-		let value = arg0_value;
-		
-		//Set new folder path before refreshing display
-		this.value = value;
-		this.refresh();
 	}
 };
