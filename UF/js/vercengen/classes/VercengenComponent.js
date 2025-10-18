@@ -171,21 +171,26 @@ ve.Component = class {
 		}
 	}
 	
-	setOwner (arg0_value) {
+	setOwner (arg0_value, arg1_owner_array) {
 		//Convert from parameters
 		let value = arg0_value;
+		let owner_array = (arg1_owner_array) ? arg1_owner_array : [this];
 		
 		//Declare local instance variables
-		this.owner = value;
+		this.owner = value;	
+		this.owners = [].concat(owner_array); //Mutate to avoid shallow copies
 		
 		//Iterate over all this.child_class_argument_names and recursively drill down owners
-		if (this.components_obj)
+		if (this.components_obj) {
+			owner_array.push(this);
+			
 			Object.iterate(this.components_obj, (local_key, local_value) => {
-				local_value.setOwner(value);
+				local_value.setOwner(value, owner_array);
 			});
+		}
 	}
 	
-	//ve.Compponent UI functions
+	//ve.Component UI functions
 	
 	bind (arg0_container_el) {
 		//Convert from parameters

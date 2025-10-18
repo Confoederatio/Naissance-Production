@@ -148,10 +148,10 @@ ve.Class = class {
 		Object.iterate(state_obj, (local_key, local_value) => {
 			if (local_key.startsWith("static-")) {
 				class_components_obj[local_key] = local_value;
-				class_components_obj[local_key].setOwner(this);
+				class_components_obj[local_key].setOwner(this, [this]);
 			} else {
 				instance_components_obj[local_key] = local_value;
-				instance_components_obj[local_key].setOwner(this);
+				instance_components_obj[local_key].setOwner(this, [this]);
 			}
 		});
 		
