@@ -11,9 +11,7 @@ ve.FileExplorer = class extends ve.Component {
 			select: new ve.Toggle(false, {
 				off_name: `<icon>check_box_outline_blank</icon>`,
 				on_name: `<icon>check_box</icon>`,
-				onchange: (v, e) => {
-					console.log(v, e);
-				},
+				onchange: (v, e) => this.fireSelectToggle(v, e),
 				tooltip: "Select"
 			})
 		};
@@ -23,11 +21,13 @@ ve.FileExplorer = class extends ve.Component {
 			select: new ve.Toggle(false, {
 				off_name: `<icon>check_box_outline_blank</icon>`,
 				on_name: `<icon>indeterminate_check_box</icon>`,
+				onchange: (v, e) => this.fireSelectToggle(v, e),
 				tooltip: "Select"
 			})
 		};
 		options.folder_icon = (options.folder_icon) ? options.folder_icon : "<icon>folder</icon>";
 		options.folder_options = (options.folder_options) ? options.folder_options : {};
+		options.name = (options.name) ? options.name : "";
 		
 		//Declare local instance variables
 		this.element = document.createElement("div");
@@ -44,11 +44,12 @@ ve.FileExplorer = class extends ve.Component {
 		html_string.push(`<span id = "name"></span>`);
 		html_string.push(`<div id = "file-explorer-body"></div>`);
 		this.element.innerHTML = html_string.join("");
+		this.clipboard = []; //Array<String> containing file paths currently in clipboard
 		this.selected = []; //Array<String> containing file paths that are currently selected
 		
 		//Refresh file explorer display
 		this.options = options;
-		this.name = options.name;
+		this.name = this.options.name;
 		this.value = value;
 		this.refresh();
 	}
@@ -76,15 +77,82 @@ ve.FileExplorer = class extends ve.Component {
 		let value = arg0_value;
 		
 		//Set new folder path before refreshing display
+		this.deselectAll();
 		this.value = value;
 		this.refresh();
+	}
+	
+	clearClipboard () {
+		this.clipboard = [];
+	}
+	
+	deselect (arg0_file_path, arg1_options) {
+		//Convert from parameters
+		let file_path = arg0_file_path;
+		let options = (arg1_options) ? arg1_options : {};
+		
+		//Iterate over all this.selected and splice
+		for (let i = 0; i < this.selected.length; i++)
+			if (this.selected[i] === file_path) {
+				//Try to find the element in question and remove .selected
+				if (!options.do_not_modify_classes)
+					Object.iterate(this.hierarchy.components_obj, (local_key, local_value) => {
+						if (local_key === file_path)
+							local_value.element.classList.remove("selected");
+					});
+				this.selected.splice(i, 1);
+			}
+		
+		//Return statement
+		return this.selected;
+	}
+	
+	deselectAll () {
+		//Iterate over all this.selected and deselect them
+		for (let i = this.selected.length - 1; i >= 0; i--)
+			this.deselect(this.selected[i], { do_not_modify_classes: true });
+		//Iterate over all this.hierarchy.components_obj and update their classes to be deselected
+		Object.iterate(this.hierarchy.components_obj, (local_key, local_value) => {
+			local_value.element.classList.remove("selected");
+		});
+	}
+	
+	select (arg0_file_path) {
+		//Convert from parameters
+		let file_path = arg0_file_path;
+		
+		//Push to this.selected if not already selected
+		if (!this.selected.includes(file_path)) {
+			this.selected.push(file_path);
+			if (this.hierarchy.components_obj[file_path])
+				this.hierarchy.components_obj[file_path].element.classList.add("selected");
+		}
+		
+		//Return statement
+		return this.selected;
+	}
+	
+	selectAll () {
+		//Declare local instance variables
+		let all_files_in_directory = fs.readdirSync(this.value, { withFileTypes: true });
+		this.deselectAll(); //Reset this.selected
+		
+		//Iterate over all_files_in_directory and select them
+		for (let i = 0; i < all_files_in_directory.length; i++) {
+			let local_full_path = path.join(this.value, all_files_in_directory[i].name);
+			this.select(local_full_path);
+		}
+	}
+	
+	setClipboard () {
+		this.clipboard = structuredClone(this.selected);
 	}
 	
 	/**
 	 * Refreshes the current file explorer path, rerendering the display for folders and files within the Component.
 	 * - Method of: {@link ve.FileExplorer}
 	 */
-	refresh () {
+	refresh () { //[WIP] - Finish topbar actions, driver elements
 		//Declare local instance variables
 		let all_files_in_directory = fs.readdirSync(this.value, { withFileTypes: true });
 		let hierarchy_obj = {};
@@ -92,12 +160,47 @@ ve.FileExplorer = class extends ve.Component {
 		//Add item button to move up one folder at the top
 		let previous_folder_path = path.join(this.value, "..");
 		
+		if (!this.options.disable_actions)
+			hierarchy_obj.selection = new ve.HierarchyDatatype({
+				information: new ve.HTML((e) => `${(this.clipboard.length > 0) ? `Clipboard (${String.formatNumber(this.clipboard.length)})` : "Clipboard is empty."} &nbsp; | &nbsp; ${(this.selected.length > 0) ? `
+				${String.formatNumber(this.selected.length)} Element(s) selected &nbsp; ` : ""}
+				`, { style: { padding: 0 }}),
+				copy_button: new ve.Button((e) => {
+					if (this.selected.length === 0) return; //Internal guard clause if nothing is selected
+					this.setClipboard();
+					new ve.Toast(`Copied ${String.formatNumber(this.clipboard.length)} elements to clipboard.`);
+				}, { name: "<icon>copy</icon>", tooltip: "Copy Selected" }),
+				cut_button: new ve.Button((e) => {
+					//This has to use a new file explorer in a modal with .options.disable_actions=true, since it would be fatal otherwise
+					
+					if (this.selected.length === 0) return; //Internal guard clause if nothing is selected
+					
+					//Declare local instance variables
+					let modal = new ve.Modal({
+						file_explorer: new ve.FileExplorer(this.v, { 
+							disable_actions: true,
+							file_components_obj: {},
+							folder_components_obj: {},
+							onload: (e) => e.name = ""
+						}),
+						confirm_button: new ve.Button((e) => {
+							console.log(`[WIP] - Implement recursive async cut from:`, this.selected, `to`, modal.components_obj.file_explorer.v);
+						}, { name: "Confirm" })
+					}, { name: `Cut/Paste ${String.formatNumber(this.selected.length)} files`, draggable: true, resizeable: true, width: "24rem" });
+				}, { name: "<icon>cut</icon>", tooltip: "Cut Selected" }),
+				paste_button: new ve.Button((e) => {
+					
+				}, { name: "<icon>paste</icon>", tooltip: "Paste Clipboard" }),
+				
+				//move_button, delete_button
+			}, {
+				attributes: { "data-ve-is-information": true },
+				disabled: true 
+			});
 		hierarchy_obj[previous_folder_path] = new ve.HierarchyDatatype({
 			up_icon: new ve.HTML(`<icon>subdirectory_arrow_left</icon>`, { style: { padding: 0 }}),
 			two_dots: new ve.HTML(`Back`)
-		}, {
-			disabled: true
-		});
+		}, { disabled: true });
 		
 		let previous_folder_obj = hierarchy_obj[previous_folder_path];
 		previous_folder_obj.element.onclick = (e) => {
@@ -133,16 +236,11 @@ ve.FileExplorer = class extends ve.Component {
 								padding: 0
 							},
 							...this.options.folder_options
-						}),
-						/*actions_menu: new ve.HTML("Actions Menu", {
-							onload: (e) => {
-								new ve.Tooltip("<b>Test</b>", { element: e.element });
-							},
-							style: { order: 99, marginLeft: "auto" }
-						}),*/
+						})
 					}, { 
 						attributes: {
-							"data-folder": true
+							"data-folder": true,
+							"data-path": local_full_path
 						},
 						name: all_files_in_directory[i].name,
 						disabled: true,
@@ -152,6 +250,7 @@ ve.FileExplorer = class extends ve.Component {
 				
 				//Add onclick event handler to hierarchy_obj[local_full_path] since we need navigation to work into a folder
 				let local_folder_obj = hierarchy_obj[local_full_path];
+				//local_folder_obj.setOwner(this.owner);
 				local_folder_obj.element.onclick = (e) => {
 					//Internal guard clause for protected elements
 					if (e.target.closest(`button, input, .tippy-arrow, .tippy-box, .tippy-content`)) return;
@@ -165,7 +264,7 @@ ve.FileExplorer = class extends ve.Component {
 			
 			//Check to make sure local_full_path is a directory is a file
 			if (all_files_in_directory[i].isFile()) {
-				hierarchy_obj[local_full_path] = new ve.HierarchyDatatype(
+				hierarchy_obj[local_full_path] = new ve.HierarchyDatatype(	
 					{
 						file_icon: new ve.HTML(this.options.file_icon, {
 							style: { opacity: 0.6, padding: 0 }
@@ -188,7 +287,8 @@ ve.FileExplorer = class extends ve.Component {
 						})
 					}, {
 						attributes: {
-							"data-file": true
+							"data-file": true,
+							"data-path": local_full_path
 						},
 						name: all_files_in_directory[i].name,
 						disabled: true,
@@ -204,9 +304,25 @@ ve.FileExplorer = class extends ve.Component {
 		this.hierarchy = new ve.Hierarchy(hierarchy_obj);
 		file_explorer_el.innerHTML = "";
 		file_explorer_el.appendChild(this.hierarchy.element);
+		
+		//[WIP] - Set .name.options.onuserchange listener for all this.hierarchy.components_obj
+		
+		setTimeout(() => {
+			this.hierarchy.setOwner(this.owner, [this.owner]);
+		});
 	}
 	
 	remove () {
 		this.element.remove();
+	}
+	
+	fireSelectToggle (v, e) {
+		if (e.owners)
+			for (let i = e.owners.length - 1; i >= 0; i--)
+				if (e.owners[i] instanceof ve.HierarchyDatatype) try {
+					let full_path = e.owners[i].element.getAttribute("data-path");
+					(v) ? this.select(full_path) : this.deselect(full_path);
+					break;
+				} catch (e) { console.error(e); }
 	}
 };
