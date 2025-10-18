@@ -48,25 +48,25 @@ global.Brush = class extends ve.Class {
 					Polygon.setSelectedSymbol({ polygonOpacity: v });
 				} catch (e) {} },
 				x: 1, y: 1
-			}),
-			
-			//Row 2: Optimisation
-			optimisation: new ve.Interface({
-				simplify: new ve.Range(0.05, {
-					name: "Simplify", x: 0, y: 0
-				}),
-				simplify_applies_to_brush: new ve.Checkbox(false, {
-					name: "Applies to Brush [WIP]",
-					tooltip: "Whether the simplification should apply to the brush only instead of the selected polygon.",
-					x: 1, y: 0
-				}),
-				persistent_selection: new ve.Checkbox(false, {
-					name: "Persistent Selection [WIP]",
-					tooltip: "Selections should be persistent, even when jumping between dates.",
-					x: 2, y: 0
-				})
-			}, { name: "Optimisation", open: true, width: 99 })
+			})
 		}, { name: "Brush Options", open: true });
+		this.alert_test = new ve.Text("Hello", { onuserchange: (v) => alert(v) });
+			setTimeout(() => this.alert_test.v = "World!", 3000);
+		this.optimisation = new ve.Interface({
+			simplify: new ve.Range(0.05, {
+				name: "Simplify", x: 0, y: 0
+			}),
+			simplify_applies_to_brush: new ve.Checkbox(false, {
+				name: "Applies to Brush [WIP]",
+				tooltip: "Whether the simplification should apply to the brush only instead of the selected polygon.",
+				x: 1, y: 0
+			}),
+			persistent_selection: new ve.Checkbox(false, {
+				name: "Persistent Selection [WIP]",
+				tooltip: "Selections should be persistent, even when jumping between dates.",
+				x: 2, y: 0
+			})
+		}, { name: "Optimisation", open: true, width: 99 });
 		
 		this.information_display = new ve.HTML((e) => {
 			//Declare local instance variables
@@ -140,8 +140,8 @@ global.Brush = class extends ve.Class {
 			this.cursor.setCoordinates(e.coordinate);
 			
 			if (this.type === "polygon" && (this.left_click || this.right_click)) {
-				//Process cursor based on this.interface.optimisation
-				let optimisation_obj = this.interface.optimisation;
+				//Process cursor based on this.optimisation
+				let optimisation_obj = this.optimisation;
 				let processed_geometry = this.cursor;
 				
 				{

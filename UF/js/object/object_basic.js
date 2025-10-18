@@ -30,8 +30,8 @@
 			
 			if (typeof target !== "object" || target === null) return target;
 			
-			const handler = {
-				set(obj, prop, value, receiver) {
+			let handler = {
+				set (obj, prop, value, receiver) {
 					const result = Reflect.set(obj, prop, value, receiver);
 					if (typeof value === "object" && value !== null) {
 						obj[prop] = createDeepProxy(value, onChange);
@@ -39,20 +39,20 @@
 					if (typeof onChange === "function") onChange(obj);
 					return result;
 				},
-				deleteProperty(obj, prop) {
+				deleteProperty (obj, prop) {
 					const result = Reflect.deleteProperty(obj, prop);
 					if (typeof onChange === "function") onChange(obj);
 					return result;
 				}
 			};
 			
-			// Proxy recursion for existing object properties/array values
+			//Proxy recursion for existing object properties/array values
 			Object.keys(target).forEach((k) => {
-				if (typeof target[k] === "object" && target[k] !== null) {
+				if (typeof target[k] === "object" && target[k] !== null)
 					target[k] = createDeepProxy(target[k], onChange);
-				}
 			});
 			
+			//Return statement
 			return new Proxy(target, handler);
 		}
 		

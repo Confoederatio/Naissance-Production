@@ -8,36 +8,23 @@ ve.FileExplorer = class extends ve.Component {
 		//Initialise options
 		options.attributes = (options.attributes) ? options.attributes : {};
 		options.file_components_obj = (options.file_components_obj) ? options.file_components_obj : {
-			copy: new ve.Button((e) => {
-				new ve.Modal({ test: new ve.HTML((e) => "test") });
-			}, {
-				name: `<icon>content_copy</icon>`,
-				tooltip: "Copy"
-			}),
-			move: new ve.Button((e) => {}, {
-				name: `<icon>subdirectory_arrow_right</icon>`,
-				tooltip: "Move"
-			}),
-			delete_forever: new ve.Button((e) => {}, {
-				name: `<icon>delete</icon>`,
-				tooltip: "Delete"
-			}),
+			select: new ve.Toggle(false, {
+				off_name: `<icon>check_box_outline_blank</icon>`,
+				on_name: `<icon>check_box</icon>`,
+				onchange: (v, e) => {
+					console.log(v, e);
+				},
+				tooltip: "Select"
+			})
 		};
 		options.file_icon = (options.file_icon) ? options.file_icon : "<icon>description</icon>";
 		options.file_options = (options.file_options) ? options.file_options : {};
 		options.folder_components_obj = (options.folder_components_obj) ? options.folder_components_obj : {
-			copy: new ve.Button((e) => {}, { 
-				name: `<icon>content_copy</icon>`,
-				tooltip: "Copy"
-			}),
-			move: new ve.Button((e) => {}, {
-				name: `<icon>subdirectory_arrow_right</icon>`,
-				tooltip: "Move"
-			}),
-			delete_forever: new ve.Button((e) => {}, {
-				name: `<icon>delete</icon>`,
-				tooltip: "Delete"
-			}),
+			select: new ve.Toggle(false, {
+				off_name: `<icon>check_box_outline_blank</icon>`,
+				on_name: `<icon>indeterminate_check_box</icon>`,
+				tooltip: "Select"
+			})
 		};
 		options.folder_icon = (options.folder_icon) ? options.folder_icon : "<icon>folder</icon>";
 		options.folder_options = (options.folder_options) ? options.folder_options : {};
@@ -57,6 +44,7 @@ ve.FileExplorer = class extends ve.Component {
 		html_string.push(`<span id = "name"></span>`);
 		html_string.push(`<div id = "file-explorer-body"></div>`);
 		this.element.innerHTML = html_string.join("");
+		this.selected = []; //Array<String> containing file paths that are currently selected
 		
 		//Refresh file explorer display
 		this.options = options;
@@ -103,6 +91,7 @@ ve.FileExplorer = class extends ve.Component {
 		
 		//Add item button to move up one folder at the top
 		let previous_folder_path = path.join(this.value, "..");
+		
 		hierarchy_obj[previous_folder_path] = new ve.HierarchyDatatype({
 			up_icon: new ve.HTML(`<icon>subdirectory_arrow_left</icon>`, { style: { padding: 0 }}),
 			two_dots: new ve.HTML(`Back`)
@@ -135,6 +124,9 @@ ve.FileExplorer = class extends ve.Component {
 								})
 							)
 						}, {
+							attributes: {
+								"data-ve-is-actions-menu": true
+							},
 							style: {
 								marginLeft: "auto",
 								order: 99,
@@ -161,8 +153,10 @@ ve.FileExplorer = class extends ve.Component {
 				//Add onclick event handler to hierarchy_obj[local_full_path] since we need navigation to work into a folder
 				let local_folder_obj = hierarchy_obj[local_full_path];
 				local_folder_obj.element.onclick = (e) => {
-					if (!e.target.closest(`button, input, .tippy-arrow, .tippy-box, .tippy-content`))
-						this.v = local_full_path;
+					//Internal guard clause for protected elements
+					if (e.target.closest(`button, input, .tippy-arrow, .tippy-box, .tippy-content`)) return;
+					
+					this.v = local_full_path;
 				};
 			}
 		}

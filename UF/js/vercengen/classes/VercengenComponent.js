@@ -75,9 +75,9 @@ ve.Component = class {
 			delete this.from_binding_fire_silently;
 			
 			if (typeof this.options.onchange === "function") //Fire onchange (bidirectional)
-				this.options.onchange(this.v);
+				this.options.onchange(this.v, this);
 			if (typeof this.options.onprogramchange === "function") //Fire onprogramchange (unidirectional)
-				this.options.onprogramchange(this.v);
+				this.options.onprogramchange(this.v, this);
 		}
 	}
 	
@@ -113,9 +113,9 @@ ve.Component = class {
 		//console.log(initial_object, variable_string, local_value);
 		
 		if (typeof this.options.onchange === "function") //Fire onchange (bidirectional)
-			this.options.onchange(local_value);
+			this.options.onchange(local_value, this);
 		if (typeof this.options.onuserchange === "function") //Fire onuserchange (unidirectional)
-			this.options.onuserchange(local_value);
+			this.options.onuserchange(local_value, this);
 		
 		if (this.to_binding)
 			Object.setValue(initial_object, variable_string, local_value);
@@ -156,9 +156,9 @@ ve.Component = class {
 					if (is_same_value) return;
 					
 					if (typeof this.options.onchange === "function") //Fire onchange (bidirectional)
-						this.options.onchange(local_value);
+						this.options.onchange(local_value, this);
 					if (typeof this.options.onprogramchange === "function") //Fire onprogramchange (unidirectional)
-						this.options.onprogramchange(local_value);
+						this.options.onprogramchange(local_value, this);
 					this.v = local_value;
 				}
 			});

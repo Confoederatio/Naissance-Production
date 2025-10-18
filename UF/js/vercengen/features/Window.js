@@ -86,7 +86,19 @@ ve.Window = class {
 		//Declare local instance variables
 		this.options = options;
 		
-		this.components_obj = components_obj;
+		//Parse to ve.HTML if components_obj is typeof function or string
+		//this.components_obj
+		if (typeof components_obj === "function" || typeof components_obj === "string") {
+			this.components_obj = {
+				html: new ve.HTML(components_obj)
+			};
+		} else if (components_obj.is_vercengen_component) {
+			this.components_obj = {
+				component: components_obj
+			};
+		} else {
+			this.components_obj = components_obj;
+		}
 		this.element = document.createElement("div");
 		this.id = Class.generateRandomID(ve.Window);
 		this.x = options.x;

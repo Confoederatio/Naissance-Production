@@ -289,7 +289,7 @@ global.Polygon = class extends ve.Class {
 	 */
 	update () {
 		//Declare local instance variables
-		let brush_interface_obj = main.brush.interface;
+		let brush_interface_obj = main.brush;
 		let optimisation_obj = brush_interface_obj.optimisation;
 		
 		//Refresh geometry
