@@ -191,6 +191,8 @@ ve.Window = class {
 		return (!options.return_object) ? highest_z_index[0] : highest_z_index[1];
 	}
 	
+	close () { this.remove(); }
+	
 	/**
 	 * Returns the current z-index of this {@link ve.Window}.
 	 *

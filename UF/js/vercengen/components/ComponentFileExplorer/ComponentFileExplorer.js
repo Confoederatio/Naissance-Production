@@ -170,9 +170,9 @@ ve.FileExplorer = class extends ve.Component {
 		//Add item button to move up one folder at the top
 		let previous_folder_path = path.join(this.value, "..");
 		
-		hierarchy_obj.file_path = new ve.HierarchyDatatype({
-			information: new ve.HTML(() => this.v)
-		});
+		hierarchy_obj.file_path = new ve.HierarchyDatatype({ 
+			information: new ve.HTML(() => this.v) 
+		}, { disabled: true });
 		if (!this.options.disable_actions)
 			hierarchy_obj.selection = new ve.HierarchyDatatype({
 				information: new ve.HTML((e) => `${(this.clipboard.length > 0) ? `Clipboard (${String.formatNumber(this.clipboard.length)})` : "Clipboard is empty."} &nbsp; | &nbsp; ${(this.selected.length > 0) ? `
