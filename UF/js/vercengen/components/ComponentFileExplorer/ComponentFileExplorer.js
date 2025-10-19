@@ -1,5 +1,5 @@
 ve.FileExplorer = class extends ve.Component {
-	constructor (arg0_value, arg1_options) { //[WIP] - Implement selection instead of copy/move/delete for every file/folder
+	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
 		let value = (arg0_value) ? arg0_value : __dirname;
 		let options = (arg1_options) ? arg1_options : {};
