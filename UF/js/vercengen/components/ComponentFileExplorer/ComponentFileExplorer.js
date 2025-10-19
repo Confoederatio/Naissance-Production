@@ -197,7 +197,8 @@ ve.FileExplorer = class extends ve.Component {
 						let confirm = new ve.Confirm(`Are you sure you want to copy/paste ${String.formatNumber(this.clipboard.length)} file(s) to ${this.v}?`, {
 							name: `Paste ${String.formatNumber(this.clipboard.length)} files`,
 							special_function: () => {
-								ve.FileExplorer.copy(this.clipboard, this.v);
+								confirm.close();
+								ve.FileExplorer_copy(this.clipboard, this.v);
 							}
 						});
 					}, { name: "<icon>paste</icon>", limit: () => this.clipboard.length, tooltip: "Paste Clipboard" }),

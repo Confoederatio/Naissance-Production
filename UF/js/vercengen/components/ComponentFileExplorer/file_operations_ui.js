@@ -1,25 +1,48 @@
-import { pipeline } from "stream/promises";
+global.stream_promises = require("stream/promises");
 
 //Initialise functions
 {
-	//Copy
-	ve.FileExplorer.copy = function (arg0_file_paths, arg1_file_path) {
+	ve.FileExplorer_getFiles = function (arg0_file_paths) {
 		//Convert from parameters
 		let file_paths = arg0_file_paths;
+		
+		//Declare local instance variables
+		let actual_paths = [];
+		
+		//Iterate over all file_paths
+		for (let i = 0; i < file_paths.length; i++)
+			if (fs.statSync(file_paths[i]).isDirectory()) {
+				//Iterate over all_file_paths in local directory 
+				let all_file_paths = fs.readdirSync(file_paths[i], { recursive: true });
+				
+				for (let x = 0; x < all_file_paths.length; x++)
+					actual_paths.push(path.join(file_paths[i], all_file_paths[x]));
+			} else {
+				actual_paths.push(file_paths[i]);
+			}
+		
+		//Return statement
+		return actual_paths;
+	};
+	
+	//Copy
+	ve.FileExplorer_copy = function (arg0_file_paths, arg1_file_path) { //[WIP] - Does not work for folder paths, parse folder paths first
+		//Convert from parameters
+		let file_paths = ve.FileExplorer_getFiles(arg0_file_paths);
 		let file_path = arg1_file_path;
 		
 		//Declare local instance variables
 		let currently_resolved = false;
 		let dialog_window = new ve.Window({
-			html: (e) => [
+			html: new ve.HTML([
 				`<progress id = "files-progress" value = "0" max = "100"></progress><label for = "files-progress"></label>`,
 				`<progress id = "file-progress" value = "0" max = "100"></progress><label for = "file-progress"></label>`
-			].join("<br>"),
+			].join("<br>")),
 			confirmation_prompt: new ve.RawInterface({
 				//Limit: currently_resolved === false
 				overwrite_button: new ve.Button((e) => {
 					overwrite = true;
-				}, { name: "Overwrite Button" }),
+				}, { name: "Overwrite" }),
 				skip_button: new ve.Button((e) => {
 					skip = true;
 				}, { name: "Skip" }),
@@ -27,7 +50,7 @@ import { pipeline } from "stream/promises";
 					overwrite_all = true;
 				}, { name: "Overwrite All" })
 			}, { name: " ", limit: () => (currently_resolved === false), style: { display: "flex" } })
-		}, { can_close: false, name: `Copying ${String.formatNumber(file_paths.length)} file(s) to ${file_path}` });
+		}, { name: `Copying ${String.formatNumber(file_paths.length)} file(s) to ${file_path}` });
 		let overwrite_all = false;
 		let overwrite = false;
 		let skip = false;
@@ -35,10 +58,8 @@ import { pipeline } from "stream/promises";
 		function copyFileAtIndex (arg0_file_path) {
 			//Convert from parameters
 			let local_file_path = arg0_file_path;
-			if (local_file_path === undefined) {
-				try { dialog_window.close(); } catch (e) {}
+			if (local_file_path === undefined)
 				return;
-			}
 			
 			//Declare local instance variables
 			currently_resolved = false; //Call new check
@@ -50,6 +71,7 @@ import { pipeline } from "stream/promises";
 				path.join(file_path, target_name) : file_path;
 			
 			//Update files-progress based on file_index
+			console.log(dialog_window.components_obj);
 			let html_el = dialog_window.components_obj.html.element;
 			let files_progress_bar_el = html_el.querySelector(`progress#files-progress`);
 			let files_progress_label_el = html_el.querySelector(`label[for="files-progress"]`);
@@ -94,9 +116,31 @@ import { pipeline } from "stream/promises";
 			let ot_file_path = arg1_file_path;
 			
 			//Declare local instance variables
+			let stats = fs.statSync(file_path);
+			
+			//Directory case handling
+			if (stats.isDirectory()) { //[WIP] - Refactor later
+				// Ensure destination directory exists
+				if (!fs.existsSync(ot_file_path)) {
+					await fs.promises.mkdir(ot_file_path, { recursive: true });
+				}
+				
+				// Recursively copy subentries
+				const entries = await fs.promises.readdir(file_path, { withFileTypes: true });
+				for (const entry of entries) {
+					const srcEntry = path.join(file_path, entry.name);
+					const destEntry = path.join(ot_file_path, entry.name);
+					await copyFileWithProgress(srcEntry, destEntry); // recursion
+				}
+				
+				// When a folder finishes, render 100% for file progress bar (optional)
+				renderFileProgress(1, 0);
+				return;
+			}
+			
+			//File case handling
 			let copied_bytes = 0;
 			let start_time = Date.now();
-			let stats = fs.statSync(file_path);
 			let total_bytes = stats.size;
 			
 			let destination_stream = fs.createWriteStream(ot_file_path);
@@ -112,7 +156,7 @@ import { pipeline } from "stream/promises";
 				let eta = (total_bytes - copied_bytes)/(speed || 1);
 				renderFileProgress(percent_progress, eta);
 			});
-			await pipeline(source_stream, destination_stream).then(() => {
+			await stream_promises.pipeline(source_stream, destination_stream).then(() => {
 				renderFileProgress(1, 0);
 			});
 		}
