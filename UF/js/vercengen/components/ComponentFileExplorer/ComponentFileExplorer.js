@@ -236,7 +236,24 @@ ve.FileExplorer = class extends ve.Component {
 								ve.FileExplorer_delete(this.selected, () => this.refresh());
 							}
 						});
-					}, { name: "<icon>delete</icon>", limit: () => this.selected.length, tooltip: "Delete Selected" })
+					}, { name: "<icon>delete</icon>", limit: () => this.selected.length, tooltip: "Delete Selected" }),
+					
+					new_folder_button: new ve.Button((e) => {
+						let local_modal = new ve.Window({
+							html: new ve.HTML(`Create a new folder:`),
+							new_folder_name: new ve.Text("",  { name: " " }),
+							confirm_button: new ve.Button((e) => {
+								let new_folder_path = path.join(this.v, local_modal.components_obj.new_folder_name.v);
+								
+								if (local_modal.components_obj.new_folder_name.v.length > 0) {
+									fs.mkdirSync(new_folder_path, { recursive: true });
+									this.refresh();
+								} else {
+									new ve.Toast(`You cannot create a folder with no name.`);
+								}
+							})
+						}, { name: "Create New Folder" })
+					}, { name: "<icon>create_new_folder</icon>", tooltip: "Create New Folder" })
 				}, { 
 					style: { marginLeft: "auto", order: 99, padding: 0 } 
 				}),
