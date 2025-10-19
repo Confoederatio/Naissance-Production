@@ -26,17 +26,19 @@ global.stream_promises = require("stream/promises");
 	};
 	
 	//Copy
-	ve.FileExplorer_copy = function (arg0_file_paths, arg1_file_path) { //[WIP] - Does not work for folder paths, parse folder paths first
+	ve.FileExplorer_copy = function (arg0_file_paths, arg1_file_path, arg2_function) { //[WIP] - Does not work for folder paths, parse folder paths first
 		//Convert from parameters
 		let file_paths = ve.FileExplorer_getFiles(arg0_file_paths);
 		let file_path = arg1_file_path;
+		let callback_function = arg2_function;
 		
 		//Declare local instance variables
 		let currently_resolved = false;
 		let dialog_window = new ve.Window({
 			html: new ve.HTML([
 				`<progress id = "files-progress" value = "0" max = "100"></progress><label for = "files-progress"></label>`,
-				`<progress id = "file-progress" value = "0" max = "100"></progress><label for = "file-progress"></label>`
+				`<progress id = "file-progress" value = "0" max = "100"></progress><label for = "file-progress"></label>`,
+				`<div id = "current-file"></div>`
 			].join("<br>")),
 			confirmation_prompt: new ve.RawInterface({
 				//Limit: currently_resolved === false
@@ -58,8 +60,10 @@ global.stream_promises = require("stream/promises");
 		function copyFileAtIndex (arg0_file_path) {
 			//Convert from parameters
 			let local_file_path = arg0_file_path;
-			if (local_file_path === undefined)
+			if (local_file_path === undefined) {
+				if (callback_function !== undefined) callback_function();
 				return;
+			}
 			
 			//Declare local instance variables
 			currently_resolved = false; //Call new check
@@ -71,7 +75,6 @@ global.stream_promises = require("stream/promises");
 				path.join(file_path, target_name) : file_path;
 			
 			//Update files-progress based on file_index
-			console.log(dialog_window.components_obj);
 			let html_el = dialog_window.components_obj.html.element;
 			let files_progress_bar_el = html_el.querySelector(`progress#files-progress`);
 			let files_progress_label_el = html_el.querySelector(`label[for="files-progress"]`);
@@ -140,12 +143,14 @@ global.stream_promises = require("stream/promises");
 			
 			//File case handling
 			let copied_bytes = 0;
+			let html_el = dialog_window.components_obj.html.element;
 			let start_time = Date.now();
 			let total_bytes = stats.size;
 			
 			let destination_stream = fs.createWriteStream(ot_file_path);
 			let source_stream = fs.createReadStream(file_path);
 			
+			html_el.querySelector(`#current-file`).innerHTML = `Copying ${file_path} to ${ot_file_path}`;
 			source_stream.on("data", (local_chunk) => {
 				copied_bytes += local_chunk.length;
 				

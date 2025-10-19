@@ -172,7 +172,7 @@ ve.FileExplorer = class extends ve.Component {
 		
 		if (!this.options.disable_actions)
 			hierarchy_obj.selection = new ve.HierarchyDatatype({
-				information: new ve.HTML((e) => `${(this.clipboard.length > 0) ? `Clipboard (${String.formatNumber(this.clipboard.length)})` : "Clipboard is empty."} &nbsp; | &nbsp; ${(this.selected.length > 0) ? `
+				information: new ve.HTML((e) => `${this.v}<br>${(this.clipboard.length > 0) ? `Clipboard (${String.formatNumber(this.clipboard.length)})` : "Clipboard is empty."} &nbsp; | &nbsp; ${(this.selected.length > 0) ? `
 				${String.formatNumber(this.selected.length)} Element(s) selected &nbsp; ` : ""}
 				`, { style: { padding: 0 }}),
 				actions_menu: new ve.RawInterface({
@@ -198,7 +198,9 @@ ve.FileExplorer = class extends ve.Component {
 							name: `Paste ${String.formatNumber(this.clipboard.length)} files`,
 							special_function: () => {
 								confirm.close();
-								ve.FileExplorer_copy(this.clipboard, this.v);
+								ve.FileExplorer_copy(this.clipboard, this.v, () => {
+									this.refresh();
+								});
 							}
 						});
 					}, { name: "<icon>paste</icon>", limit: () => this.clipboard.length, tooltip: "Paste Clipboard" }),
