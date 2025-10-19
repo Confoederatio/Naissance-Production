@@ -28,7 +28,7 @@ global.stream_promises = require("stream/promises");
 	//Copy
 	ve.FileExplorer_copy = function (arg0_file_paths, arg1_file_path, arg2_function) { //[WIP] - Does not work for folder paths, parse folder paths first
 		//Convert from parameters
-		let file_paths = ve.FileExplorer_getFiles(arg0_file_paths);
+		let file_paths = arg0_file_paths;
 		let file_path = arg1_file_path;
 		let callback_function = arg2_function;
 		
