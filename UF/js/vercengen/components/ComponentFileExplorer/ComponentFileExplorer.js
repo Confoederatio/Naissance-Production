@@ -162,7 +162,7 @@ ve.FileExplorer = class extends ve.Component {
 	 * Refreshes the current file explorer path, rerendering the display for folders and files within the Component.
 	 * - Method of: {@link ve.FileExplorer}
 	 */
-	refresh () { //[WIP] - Finish topbar actions, driver elements
+	refresh () {
 		//Declare local instance variables
 		let all_files_in_directory = fs.readdirSync(this.value, { withFileTypes: true });
 		let hierarchy_obj = {};
@@ -170,9 +170,12 @@ ve.FileExplorer = class extends ve.Component {
 		//Add item button to move up one folder at the top
 		let previous_folder_path = path.join(this.value, "..");
 		
+		hierarchy_obj.file_path = new ve.HierarchyDatatype({
+			information: new ve.HTML(() => this.v)
+		});
 		if (!this.options.disable_actions)
 			hierarchy_obj.selection = new ve.HierarchyDatatype({
-				information: new ve.HTML((e) => `${this.v}<br>${(this.clipboard.length > 0) ? `Clipboard (${String.formatNumber(this.clipboard.length)})` : "Clipboard is empty."} &nbsp; | &nbsp; ${(this.selected.length > 0) ? `
+				information: new ve.HTML((e) => `${(this.clipboard.length > 0) ? `Clipboard (${String.formatNumber(this.clipboard.length)})` : "Clipboard is empty."} &nbsp; | &nbsp; ${(this.selected.length > 0) ? `
 				${String.formatNumber(this.selected.length)} Element(s) selected &nbsp; ` : ""}
 				`, { style: { padding: 0 }}),
 				actions_menu: new ve.RawInterface({
@@ -189,7 +192,11 @@ ve.FileExplorer = class extends ve.Component {
 						let modal = new ve.Modal({
 							file_explorer: new ve.FileExplorer(this.v, { navigation_only: true }),
 							confirm_button: new ve.Button((e) => {
-								console.log(`[WIP] - Invoke cut backend function: recursive async cut from:`, this.selected, `to`, modal.components_obj.file_explorer.v);
+								modal.close();
+								ve.FileExplorer_move(this.selected, modal.components_obj.file_explorer.v, () => {
+									this.refresh();
+									this.deselectAll();
+								});
 							}, { name: "Confirm" })
 						}, { name: `Cut/Paste ${String.formatNumber(this.selected.length)} files`, draggable: true, resizeable: true, width: "24rem" });
 					}, { name: "<icon>cut</icon>", limit: () => this.selected.length, tooltip: "Cut Selected" }),
@@ -198,9 +205,7 @@ ve.FileExplorer = class extends ve.Component {
 							name: `Paste ${String.formatNumber(this.clipboard.length)} files`,
 							special_function: () => {
 								confirm.close();
-								ve.FileExplorer_copy(this.clipboard, this.v, () => {
-									this.refresh();
-								});
+								ve.FileExplorer_copy(this.clipboard, this.v, () => this.refresh());
 							}
 						});
 					}, { name: "<icon>paste</icon>", limit: () => this.clipboard.length, tooltip: "Paste Clipboard" }),
@@ -215,15 +220,20 @@ ve.FileExplorer = class extends ve.Component {
 						let modal = new ve.Modal({
 							file_explorer: new ve.FileExplorer(this.v, { navigation_only: true }),
 							confirm_button: new ve.Button((e) => {
-								console.log(`[WIP] - Invoke move backend function: recursive async move from:`, this.selected, `to`, modal.components_obj.file_explorer.v);
+								modal.close();
+								ve.FileExplorer_move(this.selected, modal.components_obj.file_explorer.v, () => { 
+									this.refresh();
+									this.deselectAll();
+								});
 							}, { name: "Confirm" })
 						}, { name: `Move ${String.formatNumber(this.selected.length)} files`, draggable: true, resizeable: true, width: "24rem" });
 					}, { name: "<icon>arrow_forward</icon>", limit: () => this.selected.length, tooltip: "Move Selected" }),
 					delete_button: new ve.Button((e) => {
-						new ve.Confirm(`Are you sure you want to delete the following files?<br><br>${this.selected.join(", ")}<br><br>This action cannot be undone!`, {
+						let confirm = new ve.Confirm(`Are you sure you want to delete the following files?<br><br>${this.selected.join(", ")}<br><br>This action cannot be undone!`, {
 							name: `Delete ${String.formatNumber(this.selected.length)} files`,
 							special_function: () => {
-								console.log(`[WIP] - Invoke delete function: recursive delete:`, this.selected);
+								confirm.close();
+								ve.FileExplorer_delete(this.selected, () => this.refresh());
 							}
 						});
 					}, { name: "<icon>delete</icon>", limit: () => this.selected.length, tooltip: "Delete Selected" })
@@ -244,6 +254,28 @@ ve.FileExplorer = class extends ve.Component {
 			this.v = previous_folder_path;
 		};
 		
+		//Special handling for drive switching
+		if (File.isDrive(this.v)) {
+			let all_drives = File.getAllDrives();
+			
+			for (let i = 0; i < all_drives.length; i++) {
+				if (path.resolve(this.v) === path.resolve(all_drives[i])) continue; //Internal guard clause if paths are the same
+				hierarchy_obj[all_drives[i]] = new ve.HierarchyDatatype({
+					drive_icon: new ve.HTML(`<icon>storage</icon>`, { style: { padding: 0 } } )
+				}, {
+					attributes: {
+						"data-folder": true,
+						"data-path": all_drives[i]
+					},
+					name: all_drives[i],
+					disabled: true
+				});
+				hierarchy_obj[all_drives[i]].element.ondblclick = () => {
+					this.v = all_drives[i];
+				};
+			}
+		}
+		
 		//Iterate over all files and folders in the current directory
 		for (let i = 0; i < all_files_in_directory.length; i++) {
 			let local_full_path = path.join(this.value, all_files_in_directory[i].name);
@@ -256,6 +288,13 @@ ve.FileExplorer = class extends ve.Component {
 							style: { padding: 0 }
 						}),
 						actions_menu: new ve.RawInterface({
+							rename: new ve.Button((e) => {
+								ve.FileExplorer_rename(local_full_path, () => this.refresh());
+							}, {
+								name: `<icon>drive_file_rename_outline</icon>`,
+								tooltip: "Rename",
+								style: { padding: `var(--cell-padding)` }
+							}),
 							...Object.fromEntries(
 								Object.entries(this.options.folder_components_obj).map(([local_key, local_component]) => {
 									return [local_key, local_component.clone ? 
@@ -265,7 +304,7 @@ ve.FileExplorer = class extends ve.Component {
 							)
 						}, {
 							attributes: { "data-ve-is-actions-menu": true },
-							style: { marginLeft: "auto", order: 99, padding: 0 },
+							style: { display: "flex", marginLeft: "auto", order: 99, padding: 0 },
 							...this.options.folder_options
 						})
 					}, { 
@@ -282,7 +321,7 @@ ve.FileExplorer = class extends ve.Component {
 				//Add onclick event handler to hierarchy_obj[local_full_path] since we need navigation to work into a folder
 				let local_folder_obj = hierarchy_obj[local_full_path];
 				//local_folder_obj.setOwner(this.owner);
-				local_folder_obj.element.onclick = (e) => {
+				local_folder_obj.element.ondblclick = (e) => {
 					//Internal guard clause for protected elements
 					if (e.target.closest(`button, input, .tippy-arrow, .tippy-box, .tippy-content`)) return;
 					
@@ -301,6 +340,13 @@ ve.FileExplorer = class extends ve.Component {
 							style: { opacity: 0.6, padding: 0 }
 						}),
 						actions_menu: new ve.RawInterface({
+							rename: new ve.Button((e) => {
+								ve.FileExplorer_rename(local_full_path, () => this.refresh());
+							}, {
+								name: `<icon>drive_file_rename_outline</icon>`,
+								tooltip: "Rename",
+								style: { padding: `var(--cell-padding)` }
+							}),
 							...Object.fromEntries(
 								Object.entries(this.options.file_components_obj).map(([local_key, local_component]) => {
 									return [local_key, local_component.clone ?
@@ -309,11 +355,7 @@ ve.FileExplorer = class extends ve.Component {
 								})
 							)
 						}, {
-							style: {
-								marginLeft: "auto",
-								order: 99,
-								padding: 0
-							},
+							style: { display: "flex", marginLeft: "auto", order: 99, padding: 0 },
 							...this.options.folder_options
 						})
 					}, {

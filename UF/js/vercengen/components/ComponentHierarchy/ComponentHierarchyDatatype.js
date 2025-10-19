@@ -88,7 +88,7 @@ ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 		if (this.components_obj.name) {
 			this.components_obj.name.v = value;
 		} else {
-			this.components_obj.name = new ve.Text(value);
+			this.components_obj.name = new ve.Text(value, { disabled: this.options.disabled });
 			this.v = this.components_obj;
 		}
 	}

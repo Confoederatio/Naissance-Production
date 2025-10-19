@@ -1,6 +1,6 @@
 global.stream_promises = require("stream/promises");
 
-//Initialise functions
+//Initialise functions - [WIP] - Finish ve.FileExplorer_delete, ve.FileExplorer_move
 {
 	ve.FileExplorer_getFiles = function (arg0_file_paths) {
 		//Convert from parameters
@@ -53,6 +53,7 @@ global.stream_promises = require("stream/promises");
 				}, { name: "Overwrite All" })
 			}, { name: " ", limit: () => (currently_resolved === false), style: { display: "flex" } })
 		}, { name: `Copying ${String.formatNumber(file_paths.length)} file(s) to ${file_path}` });
+		let html_el = dialog_window.components_obj.html.element;
 		let overwrite_all = false;
 		let overwrite = false;
 		let skip = false;
@@ -61,7 +62,7 @@ global.stream_promises = require("stream/promises");
 			//Convert from parameters
 			let local_file_path = arg0_file_path;
 			if (local_file_path === undefined) {
-				if (callback_function !== undefined) callback_function();
+				if (callback_function !== undefined) callback_function(dialog_window);
 				return;
 			}
 			
@@ -75,14 +76,13 @@ global.stream_promises = require("stream/promises");
 				path.join(file_path, target_name) : file_path;
 			
 			//Update files-progress based on file_index
-			let html_el = dialog_window.components_obj.html.element;
 			let files_progress_bar_el = html_el.querySelector(`progress#files-progress`);
 			let files_progress_label_el = html_el.querySelector(`label[for="files-progress"]`);
 			
 			files_progress_bar_el.value = ((file_index + 1) / file_paths.length)*100;
 			files_progress_label_el.innerHTML = `(${String.formatNumber(file_index + 1)} of ${String.formatNumber(file_paths.length)})`;
 			
-			//Check if file doesn't exist
+			//Polling check to make sure files meet conditions
 			if (fs.existsSync(target_path) && overwrite_all === false) {
 				let resolution_loop = setInterval(async () => {
 					if (currently_resolved) return;
@@ -92,12 +92,12 @@ global.stream_promises = require("stream/promises");
 						currently_resolved = true;
 						fs.unlink(target_path, () => {
 							copyFileWithProgress(local_file_path, target_path).then(() => {
-								setTimeout(() => copyFileAtIndex(file_paths[file_index + 1]), 0);
+								copyNextFile(file_index + 1);
 							});
 						})
 					} else if (skip) {
 						currently_resolved = true;
-						setTimeout(() => copyFileAtIndex(file_paths[file_index + 1]), 0);
+						copyNextFile(file_index + 1);
 					}
 					
 					//KEEP AT BOTTOM! Resolves resolution_loop
@@ -107,12 +107,19 @@ global.stream_promises = require("stream/promises");
 			} else {
 				currently_resolved = true;
 				copyFileWithProgress(local_file_path, target_path).then(() => {
-					setTimeout(() => copyFileAtIndex(file_paths[file_index + 1]), 0);
+					copyNextFile(file_index + 1);
 				});
+			}
+			
+			function copyNextFile (arg0_next_index) {
+				//Convert from parameters
+				let next_index = arg0_next_index;
+				
+				//Copy file at index
+				setTimeout(() => copyFileAtIndex(file_paths[next_index]), 0);
 			}
 		}
 		
-		//Declare local helper functions to deal with progress ETAs
 		async function copyFileWithProgress (arg0_file_path, arg1_file_path) {
 			//Convert from praameters
 			let file_path = arg0_file_path;
@@ -172,7 +179,6 @@ global.stream_promises = require("stream/promises");
 			let eta_seconds = arg1_eta_seconds;
 			
 			//Declare local instance variables
-			let html_el = dialog_window.components_obj.html.element;
 			let file_progress_bar_el = html_el.querySelector(`progress#file-progress`);
 			let file_progress_label_el = html_el.querySelector(`label[for="file-progress"]`);
 			
@@ -186,6 +192,162 @@ global.stream_promises = require("stream/promises");
 	};
 	
 	//Delete
+	ve.FileExplorer_delete = function (arg0_file_paths, arg1_function) {
+		// Convert parameters
+		let file_paths = arg0_file_paths;
+		let callback_function = arg1_function;
+		
+		// Create Window with simple progress UI
+		let dialog_window = new ve.Window(
+			{
+				html: new ve.HTML(
+					[
+						`<progress id="files-progress" value="0" max="100"></progress><label for="files-progress"></label>`,
+						`<progress id="file-progress" value="0" max="100"></progress><label for="file-progress"></label>`,
+						`<div id="current-file"></div>`,
+					].join("<br>")
+				),
+			},
+			{ name: `Deleting ${String.formatNumber(file_paths.length)} file(s)` }
+		);
+		
+		const html_el = dialog_window.components_obj.html.element;
+		
+		//
+		// Begin deletion process
+		//
+		deleteFileAtIndex(file_paths[0]);
+		
+		// ---------------------------------------------------------
+		// Helper: iterate through each file or folder sequentially
+		// ---------------------------------------------------------
+		function deleteFileAtIndex(arg0_file_path) {
+			const local_file_path = arg0_file_path;
+			if (local_file_path === undefined) {
+				// All done
+				if (callback_function !== undefined) callback_function(dialog_window);
+				return;
+			}
+			
+			const file_index = file_paths.indexOf(local_file_path);
+			
+			// Update overall progress
+			const files_progress_bar_el = html_el.querySelector(`progress#files-progress`);
+			const files_progress_label_el = html_el.querySelector(`label[for="files-progress"]`);
+			files_progress_bar_el.value = ((file_index + 1) / file_paths.length) * 100;
+			files_progress_label_el.innerHTML = `(${String.formatNumber(
+				file_index + 1
+			)} of ${String.formatNumber(file_paths.length)})`;
+			
+			// Delete existing file/folder if present
+			if (fs.existsSync(local_file_path)) {
+				deleteWithProgress(local_file_path).then(() => {
+					scheduleNextFile(file_index + 1);
+				});
+			} else {
+				// File doesn't exist, skip to next
+				scheduleNextFile(file_index + 1);
+			}
+			
+			function scheduleNextFile(next_index) {
+				setTimeout(() => deleteFileAtIndex(file_paths[next_index]), 0);
+			}
+		}
+		
+		// ---------------------------------------------------------
+		// Helper: delete a file or folder, show per‑file progress
+		// ---------------------------------------------------------
+		async function deleteWithProgress(target_path) {
+			html_el.querySelector(`#current-file`).innerHTML = `Deleting ${target_path}`;
+			
+			let stats;
+			try {
+				stats = fs.statSync(target_path);
+			} catch (err) {
+				renderFileProgress(1, 0);
+				return;
+			}
+			
+			if (stats.isDirectory()) {
+				// Recursively delete subentries
+				const entries = await fs.promises.readdir(target_path, { withFileTypes: true });
+				for (const entry of entries) {
+					const subPath = path.join(target_path, entry.name);
+					await deleteWithProgress(subPath);
+				}
+				
+				// After contents removed, remove directory itself
+				await fs.promises.rmdir(target_path);
+				renderFileProgress(1, 0);
+			} else {
+				// File case
+				renderFileProgress(0.5, 0.05);
+				await fs.promises.unlink(target_path);
+				renderFileProgress(1, 0);
+			}
+		}
+		
+		// ---------------------------------------------------------
+		// Helper: render single file progress
+		// ---------------------------------------------------------
+		function renderFileProgress(percent_progress, eta_seconds) {
+			const file_progress_bar_el = html_el.querySelector(`progress#file-progress`);
+			const file_progress_label_el = html_el.querySelector(`label[for="file-progress"]`);
+			
+			file_progress_bar_el.value = percent_progress * 100;
+			file_progress_label_el.innerHTML =
+				eta_seconds > 0
+					? `${Math.round(file_progress_bar_el.value)}% - ${String.formatDateLength(
+						Math.ceil(eta_seconds)
+					)} remaining`
+					: "Done";
+		}
+	};
 	
-	//Move
+	//Cut/Move
+	ve.FileExplorer_move = function (arg0_file_paths, arg1_file_path, arg2_function) {
+		//Convert from parameters
+		let file_paths = arg0_file_paths;
+		let file_path = arg1_file_path;
+		let callback_function = arg2_function;
+		
+		//Declare local instance variables
+		let files_total = String.formatNumber(ve.FileExplorer_getFiles(file_paths).length);
+		
+		//1. Copy files into new folder first
+		ve.FileExplorer_copy(file_paths, file_path, (local_modal) => {
+			local_modal.remove();
+			
+			//2. Delete files afterwards
+			ve.FileExplorer_delete(file_paths, (local_modal) => {
+				local_modal.remove();
+				
+				let modal = new ve.Window(`Finished moving ${files_total} file(s) to ${file_path}`, { name: "Finished moving files", width: "24rem" });
+				if (callback_function)
+					callback_function(modal);
+			});
+		});
+	};
+	
+	ve.FileExplorer_rename = function (arg0_file_path, arg1_function) {
+		//Convert from parameters
+		let file_path = arg0_file_path;
+		let callback_function = arg1_function;
+		
+		//Declare local instance variables
+		let base_name = path.basename(file_path);
+		let dir_name = path.dirname(file_path);
+		let local_modal = new ve.Window({
+			html: new ve.HTML(`Rename file ${base_name} to:`),
+			new_file_name: new ve.Text(base_name, { name: " " }),
+			confirm_button: new ve.Button((e) => {
+				let new_path = path.join(dir_name, local_modal.components_obj.new_file_name.v);
+				fs.rename(file_path, new_path, () => {
+					local_modal.remove();
+					if (callback_function !== undefined)
+						callback_function(local_modal);
+				});
+			})
+		}, { name: "Rename File", width: "24rem" });
+	};
 }

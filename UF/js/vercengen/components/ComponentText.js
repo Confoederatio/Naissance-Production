@@ -12,7 +12,7 @@ ve.Text = class veText extends ve.Component {
 		
 		//Declare local instance variables
 		let attributes = {
-			readonly: options.disabled,
+			disabled: options.disabled,
 			size: options.length,
 			maxlength: options.max,
 			minlength: options.min,
@@ -34,7 +34,8 @@ ve.Text = class veText extends ve.Component {
 		this.element.innerHTML = html_string.join("");
 		
 		let input_el = this.element.querySelector("input");
-		input_el.addEventListener("input", (e) => {
+		input_el.addEventListener("change", (e) => {
+			console.log(e);
 			this.v = global.String(e.target.value);
 			this.fireToBinding();
 		});
