@@ -37,11 +37,41 @@ ve.Component = class {
 					this.options.onload(this);
 				}, 100);
 			
-			//KEEP AT BOTTOM! - Feature handlers
+			//KEEP AT BOTTOM! - Feature/UI handlers
+			//.limit handler
+			if (this.options.limit) 
+				this.limit = this.options.limit;
+			
 			//.tooltip handler
 			if (this.options.tooltip)
 				this.tooltip = new ve.Tooltip(this.options.tooltip, { element: this.element });
 		});
+	}
+	
+	//ve.Component getters/setters
+	
+	get limit () {
+		//Return statement
+		return (this.limit_function) ? this.limit_function(this.v, this) : true;
+	}
+	
+	set limit (arg0_function) {
+		//Convert from parameters
+		this.limit_function = arg0_function;
+		
+		if (this.limit_function !== undefined) {
+			this.limit_logic_loop = setInterval(() => {
+				if (!this.limit) {
+					this.removeComponent();
+				} else {
+					this.addComponent();
+				}
+			}, 100);
+		} else {
+			delete this.limit_function;
+			clearInterval(this.limit_logic_loop);
+			delete this.limit_logic_loop;
+		}
 	}
 	
 	//ve.Component directional flow functions - [WIP] - Reduce redundancy with parsing variablee_string
@@ -192,12 +222,28 @@ ve.Component = class {
 	
 	//ve.Component UI functions
 	
+	addComponent () {
+		if (this.parent_el) try {
+			if (!this.parent_el.contains(this.element))
+				this.parent_el.appendChild(this.element);
+		} catch (e) { console.error(e); }
+	}
+	
 	bind (arg0_container_el) {
 		//Convert from parameters
 		let container_el = arg0_container_el;
 		
 		//Set variable_key, append to container_el
 		container_el.append(this.element);
+	}
+	
+	removeComponent () {
+		if (this.element.parentElement) try {
+			if (this.element.parentElement.contains(this.element)) {
+				this.parent_el = this.element.parentElement;
+				this.parent_el.removeChild(this.element);
+			}
+		} catch (e) { console.error(e); }
 	}
 	
 	//Runs over all ve classes that extend ve.Component and lint them

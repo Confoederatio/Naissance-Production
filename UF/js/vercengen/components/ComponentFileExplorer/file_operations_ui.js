@@ -1,0 +1,142 @@
+import { pipeline } from "stream/promises";
+
+//Initialise functions
+{
+	//Copy
+	ve.FileExplorer.copy = function (arg0_file_paths, arg1_file_path) {
+		//Convert from parameters
+		let file_paths = arg0_file_paths;
+		let file_path = arg1_file_path;
+		
+		//Declare local instance variables
+		let currently_resolved = false;
+		let dialog_window = new ve.Window({
+			html: (e) => [
+				`<progress id = "files-progress" value = "0" max = "100"></progress><label for = "files-progress"></label>`,
+				`<progress id = "file-progress" value = "0" max = "100"></progress><label for = "file-progress"></label>`
+			].join("<br>"),
+			confirmation_prompt: new ve.RawInterface({
+				//Limit: currently_resolved === false
+				overwrite_button: new ve.Button((e) => {
+					overwrite = true;
+				}, { name: "Overwrite Button" }),
+				skip_button: new ve.Button((e) => {
+					skip = true;
+				}, { name: "Skip" }),
+				overwrite_all_button: new ve.Button((e) => {
+					overwrite_all = true;
+				}, { name: "Overwrite All" })
+			}, { name: " ", limit: () => (currently_resolved === false), style: { display: "flex" } })
+		}, { can_close: false, name: `Copying ${String.formatNumber(file_paths.length)} file(s) to ${file_path}` });
+		let overwrite_all = false;
+		let overwrite = false;
+		let skip = false;
+		
+		function copyFileAtIndex (arg0_file_path) {
+			//Convert from parameters
+			let local_file_path = arg0_file_path;
+			if (local_file_path === undefined) {
+				try { dialog_window.close(); } catch (e) {}
+				return;
+			}
+			
+			//Declare local instance variables
+			currently_resolved = false; //Call new check
+			overwrite = false;
+			skip = false;
+			let file_index = file_paths.indexOf(local_file_path);
+			let target_name = path.basename(local_file_path);
+			let target_path =  fs.statSync(file_path).isDirectory() ?
+				path.join(file_path, target_name) : file_path;
+			
+			//Update files-progress based on file_index
+			let html_el = dialog_window.components_obj.html.element;
+			let files_progress_bar_el = html_el.querySelector(`progress#files-progress`);
+			let files_progress_label_el = html_el.querySelector(`label[for="files-progress"]`);
+			
+			files_progress_bar_el.value = ((file_index + 1) / file_paths.length)*100;
+			files_progress_label_el.innerHTML = `(${String.formatNumber(file_index + 1)} of ${String.formatNumber(file_paths.length)})`;
+			
+			//Check if file doesn't exist
+			if (fs.existsSync(target_path) && overwrite_all === false) {
+				let resolution_loop = setInterval(async () => {
+					if (currently_resolved) return;
+					
+					//Listen for a resolution as often as possible
+					if (overwrite || overwrite_all) {
+						currently_resolved = true;
+						fs.unlink(target_path, () => {
+							copyFileWithProgress(local_file_path, target_path).then(() => {
+								setTimeout(() => copyFileAtIndex(file_paths[file_index + 1]), 0);
+							});
+						})
+					} else if (skip) {
+						currently_resolved = true;
+						setTimeout(() => copyFileAtIndex(file_paths[file_index + 1]), 0);
+					}
+					
+					//KEEP AT BOTTOM! Resolves resolution_loop
+					if (currently_resolved === true)
+						clearInterval(resolution_loop);
+				}, 100);
+			} else {
+				currently_resolved = true;
+				copyFileWithProgress(local_file_path, target_path).then(() => {
+					setTimeout(() => copyFileAtIndex(file_paths[file_index + 1]), 0);
+				});
+			}
+		}
+		
+		//Declare local helper functions to deal with progress ETAs
+		async function copyFileWithProgress (arg0_file_path, arg1_file_path) {
+			//Convert from praameters
+			let file_path = arg0_file_path;
+			let ot_file_path = arg1_file_path;
+			
+			//Declare local instance variables
+			let copied_bytes = 0;
+			let start_time = Date.now();
+			let stats = fs.statSync(file_path);
+			let total_bytes = stats.size;
+			
+			let destination_stream = fs.createWriteStream(ot_file_path);
+			let source_stream = fs.createReadStream(file_path);
+			
+			source_stream.on("data", (local_chunk) => {
+				copied_bytes += local_chunk.length;
+				
+				let elapsed_time = (Date.now() - start_time)/1000;	
+				let percent_progress = copied_bytes/total_bytes;
+				let speed = copied_bytes/(elapsed_time || 1); //bytes_per_second
+				
+				let eta = (total_bytes - copied_bytes)/(speed || 1);
+				renderFileProgress(percent_progress, eta);
+			});
+			await pipeline(source_stream, destination_stream).then(() => {
+				renderFileProgress(1, 0);
+			});
+		}
+		
+		function renderFileProgress (arg0_percent_progress, arg1_eta_seconds) {
+			//Convert from parameters
+			let percent_progress = arg0_percent_progress;
+			let eta_seconds = arg1_eta_seconds;
+			
+			//Declare local instance variables
+			let html_el = dialog_window.components_obj.html.element;
+			let file_progress_bar_el = html_el.querySelector(`progress#file-progress`);
+			let file_progress_label_el = html_el.querySelector(`label[for="file-progress"]`);
+			
+			file_progress_bar_el.value = percent_progress*100;
+			file_progress_label_el.innerHTML = (eta_seconds > 0) ? 
+				`${Math.round(file_progress_bar_el.value)}% - ${String.formatDateLength(Math.ceil(eta_seconds))} remaining` : "Done";
+		}
+		
+		//Begin copy process
+		copyFileAtIndex(file_paths[0]);
+	};
+	
+	//Delete
+	
+	//Move
+}

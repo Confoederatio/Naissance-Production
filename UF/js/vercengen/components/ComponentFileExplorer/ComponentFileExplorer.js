@@ -29,6 +29,16 @@ ve.FileExplorer = class extends ve.Component {
 		options.folder_options = (options.folder_options) ? options.folder_options : {};
 		options.name = (options.name) ? options.name : "";
 		
+		//options.navigation_only override
+		if (options.navigation_only)
+			options = {
+				...options,
+				disable_actions: true,
+				file_components_obj: {},
+				folder_components_obj: {},
+				onload: (e) => e.name = ""
+			};
+		
 		//Declare local instance variables
 		this.element = document.createElement("div");
 			this.element.setAttribute("component", "ve-file-explorer");
@@ -165,34 +175,58 @@ ve.FileExplorer = class extends ve.Component {
 				information: new ve.HTML((e) => `${(this.clipboard.length > 0) ? `Clipboard (${String.formatNumber(this.clipboard.length)})` : "Clipboard is empty."} &nbsp; | &nbsp; ${(this.selected.length > 0) ? `
 				${String.formatNumber(this.selected.length)} Element(s) selected &nbsp; ` : ""}
 				`, { style: { padding: 0 }}),
-				copy_button: new ve.Button((e) => {
-					if (this.selected.length === 0) return; //Internal guard clause if nothing is selected
-					this.setClipboard();
-					new ve.Toast(`Copied ${String.formatNumber(this.clipboard.length)} elements to clipboard.`);
-				}, { name: "<icon>copy</icon>", tooltip: "Copy Selected" }),
-				cut_button: new ve.Button((e) => {
-					//This has to use a new file explorer in a modal with .options.disable_actions=true, since it would be fatal otherwise
+				actions_menu: new ve.RawInterface({
+					copy_button: new ve.Button((e) => {
+						if (this.selected.length === 0) return; //Internal guard clause if nothing is selected
+						this.setClipboard();
+						new ve.Toast(`Copied ${String.formatNumber(this.clipboard.length)} elements to clipboard.`);
+					}, { name: "<icon>copy</icon>", limit: () => this.selected.length, tooltip: "Copy Selected" }),
+					cut_button: new ve.Button((e) => {
+						//This has to use a new file explorer in a modal with .options.disable_actions=true, since it would be fatal otherwise
+						if (this.selected.length === 0) return; //Internal guard clause if nothing is selected
+						
+						//Declare local instance variables
+						let modal = new ve.Modal({
+							file_explorer: new ve.FileExplorer(this.v, { navigation_only: true }),
+							confirm_button: new ve.Button((e) => {
+								console.log(`[WIP] - Invoke cut backend function: recursive async cut from:`, this.selected, `to`, modal.components_obj.file_explorer.v);
+							}, { name: "Confirm" })
+						}, { name: `Cut/Paste ${String.formatNumber(this.selected.length)} files`, draggable: true, resizeable: true, width: "24rem" });
+					}, { name: "<icon>cut</icon>", limit: () => this.selected.length, tooltip: "Cut Selected" }),
+					paste_button: new ve.Button((e) => {
+						let confirm = new ve.Confirm(`Are you sure you want to copy/paste ${String.formatNumber(this.clipboard.length)} file(s) to ${this.v}?`, {
+							name: `Paste ${String.formatNumber(this.clipboard.length)} files`,
+							special_function: () => {
+								ve.FileExplorer.copy(this.clipboard, this.v);
+							}
+						});
+					}, { name: "<icon>paste</icon>", limit: () => this.clipboard.length, tooltip: "Paste Clipboard" }),
 					
-					if (this.selected.length === 0) return; //Internal guard clause if nothing is selected
+					//clear_clipboard
+					clear_clipboard: new ve.Button((e) => {
+						this.clipboard = [];
+					}, { name: "<icon>content_paste_off</icon>", limit: () => this.clipboard.length, tooltip: "Clear Clipboard" }),
 					
-					//Declare local instance variables
-					let modal = new ve.Modal({
-						file_explorer: new ve.FileExplorer(this.v, { 
-							disable_actions: true,
-							file_components_obj: {},
-							folder_components_obj: {},
-							onload: (e) => e.name = ""
-						}),
-						confirm_button: new ve.Button((e) => {
-							console.log(`[WIP] - Implement recursive async cut from:`, this.selected, `to`, modal.components_obj.file_explorer.v);
-						}, { name: "Confirm" })
-					}, { name: `Cut/Paste ${String.formatNumber(this.selected.length)} files`, draggable: true, resizeable: true, width: "24rem" });
-				}, { name: "<icon>cut</icon>", tooltip: "Cut Selected" }),
-				paste_button: new ve.Button((e) => {
-					
-				}, { name: "<icon>paste</icon>", tooltip: "Paste Clipboard" }),
-				
-				//move_button, delete_button
+					//move_button, delete_button
+					move_button: new ve.Button((e) => {
+						let modal = new ve.Modal({
+							file_explorer: new ve.FileExplorer(this.v, { navigation_only: true }),
+							confirm_button: new ve.Button((e) => {
+								console.log(`[WIP] - Invoke move backend function: recursive async move from:`, this.selected, `to`, modal.components_obj.file_explorer.v);
+							}, { name: "Confirm" })
+						}, { name: `Move ${String.formatNumber(this.selected.length)} files`, draggable: true, resizeable: true, width: "24rem" });
+					}, { name: "<icon>arrow_forward</icon>", limit: () => this.selected.length, tooltip: "Move Selected" }),
+					delete_button: new ve.Button((e) => {
+						new ve.Confirm(`Are you sure you want to delete the following files?<br><br>${this.selected.join(", ")}<br><br>This action cannot be undone!`, {
+							name: `Delete ${String.formatNumber(this.selected.length)} files`,
+							special_function: () => {
+								console.log(`[WIP] - Invoke delete function: recursive delete:`, this.selected);
+							}
+						});
+					}, { name: "<icon>delete</icon>", limit: () => this.selected.length, tooltip: "Delete Selected" })
+				}, { 
+					style: { marginLeft: "auto", order: 99, padding: 0 } 
+				}),
 			}, {
 				attributes: { "data-ve-is-information": true },
 				disabled: true 
@@ -200,7 +234,7 @@ ve.FileExplorer = class extends ve.Component {
 		hierarchy_obj[previous_folder_path] = new ve.HierarchyDatatype({
 			up_icon: new ve.HTML(`<icon>subdirectory_arrow_left</icon>`, { style: { padding: 0 }}),
 			two_dots: new ve.HTML(`Back`)
-		}, { disabled: true });
+		}, { disabled: true });	
 		
 		let previous_folder_obj = hierarchy_obj[previous_folder_path];
 		previous_folder_obj.element.onclick = (e) => {
@@ -227,14 +261,8 @@ ve.FileExplorer = class extends ve.Component {
 								})
 							)
 						}, {
-							attributes: {
-								"data-ve-is-actions-menu": true
-							},
-							style: {
-								marginLeft: "auto",
-								order: 99,
-								padding: 0
-							},
+							attributes: { "data-ve-is-actions-menu": true },
+							style: { marginLeft: "auto", order: 99, padding: 0 },
 							...this.options.folder_options
 						})
 					}, { 

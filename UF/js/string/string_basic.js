@@ -20,6 +20,22 @@
 		return `${day_name} ${month_name} ${Math.abs(date.year)}${(date.year >= 0) ? "AD" : "BC"} - ${hour_name}:${minute_name}`;
 	};
 	
+	String.formatDateLength = function (arg0_seconds) {
+		//Convert from parameters
+		let seconds = Math.returnSafeNumber(arg0_seconds);
+		
+		//Declare local instance variables
+		let days = Math.floor(seconds/86400);
+			seconds %= 86400;
+		let hours = Math.floor(seconds/3600);
+			seconds %= 3600;
+		let minutes = Math.floor(seconds/60);
+			seconds %= 60;
+		
+		//Return statement
+		return `${String.formatNumber(days)} day(s), ${String.formatNumber(hours)} hour(s), ${String.formatNumber(minutes)} minute(s), ${String.formatNumber(seconds)} second(s)`;
+	};
+	
 	/**
 	 * Formats a number based off of the selected locale, rounding it to the specified number of places.
 	 * @param {number} arg0_number

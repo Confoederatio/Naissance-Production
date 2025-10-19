@@ -2,6 +2,8 @@
  * Represents a Modal Feature that contains a set of components which are wrapped inside a ve.Modal.
  * @type {ve.Modal}
  * 
+ * - Inherited by: {@link ve.Confirm}
+ * 
  * ##### DOM:
  * - `.instance`: this:{@link ve.Modal}
  * 

@@ -169,6 +169,15 @@ ve.Interface = class veInterface extends ve.Component {
 	}
 	
 	refresh () {
+		//Iterate over all extant this.components_obj and remove all their elements
+		Object.iterate(this.components_obj, (local_key, local_value) => {
+			try {
+				if (local_value.element.parentElement)
+					local_value.element.parentElement.removeChild(local_value.element);
+			} catch (e) { console.error(e); }
+		});
+		
+		//Iterate over all this.components_obj and re-append them. This way components can share same coordinates
 		Object.iterate(this.components_obj, (local_key, local_value) => {
 			try {
 				if (local_value.is_vercengen_component) {
@@ -188,7 +197,6 @@ ve.Interface = class veInterface extends ve.Component {
 					}
 					
 					//Set inner cell contents
-					target_cell_el.innerHTML = "";
 					target_cell_el.appendChild(local_value.element);
 				}
 			} catch (e) { console.error(e); }
@@ -204,8 +212,9 @@ ve.Interface = class veInterface extends ve.Component {
 		let component_obj = arg0_component_obj;
 		
 		//Remove component_obj, refresh this ve.Interface
-		component_obj.remove();
-		this.refresh();
+		if (component_obj.element)
+			if (component_obj.element.parentElement)
+				component_obj.element.parentElement.removeChild(component_obj.element);
 	}
 	
 	resize (arg0_width, arg1_height) {
