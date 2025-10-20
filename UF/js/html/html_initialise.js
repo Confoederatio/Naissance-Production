@@ -32,16 +32,18 @@
 		if (!HTML.ve_css_active_loops) {
 			HTML.ve_css_active_loops = true;
 			HTML.ve_css_global_loop = () => {
-				const registry = HTML.ve_css_registry;
+				let ve_css_registry = HTML.ve_css_registry;
 				
-				for (const [local_el, local_entry] of registry.entries()) {
+				//Iterate over all elements in ve_css_registry
+				for (let [local_el, local_entry] of ve_css_registry.entries()) {
 					if (!document.body.contains(local_el)) {
 						//Cleanup elements removed from DOM
-						registry.delete(local_el);
+						ve_css_registry.delete(local_el);
 						continue;
 					}
+					
 					//Reapply only dynamic (function) styles
-					applyDynamicStyles(local_el, local_entry.dynamic);
+					HTML.applyDynamicStyles(local_el, local_entry.dynamic);
 				}
 				requestAnimationFrame(HTML.ve_css_global_loop);
 			};

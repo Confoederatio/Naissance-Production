@@ -17,18 +17,17 @@
 	/**
 	 * Main function API
 	 */
-	HTML.applyCSSStyleObject = function (arg0_el, arg1_style_obj, arg2_options) {
+	HTML.applyCSSStyleObject = function (arg0_el, arg1_style_obj) {
 		//Convert from parameters
 		let el = (typeof arg0_el === "object") ? arg0_el : document.querySelector(arg0_el);
 		let style_obj = (arg1_style_obj) ? arg1_style_obj : {};
-		let options = (arg2_options) ? arg2_options : {};
 		
 		//Internal guard clause if el is not defined
 		if (!el) return;
 		
 		//Declare local instance variables
 		let mutated_style_obj = structuredClone(style_obj);
-		let { static: staticStyles, dynamic: dynamicStyles } = splitStaticDynamic(mutated_style_obj);
+		let { static: staticStyles, dynamic: dynamicStyles } = HTML.splitStaticDynamic(mutated_style_obj);
 		let registry = HTML.ve_css_registry;
 		
 		//Apply static styles once immediately; register or update in global registry
@@ -48,7 +47,7 @@
 		Object.iterate(dynamic_obj, (local_key, local_value) => {
 			if (typeof local_value === "object" && !Array.isArray(local_value)) {
 				//Recursively invoke applyDynamicStyles
-				let targets = resolveSelector(el, local_key);
+				let targets = HTML.resolveSelector(el, local_key);
 				
 				for (let local_target of targets) 
 					HTML.applyDynamicStyles(local_target, local_value);
@@ -73,7 +72,7 @@
 		//Iterate over all entries in style_obj
 		Object.iterate(style_obj, (local_key, local_value) => {
 			if (typeof local_value === "object" && !Array.isArray(local_value)) {
-				let targets = resolveSelector(el, local_key);
+				let targets = HTML.resolveSelector(el, local_key);
 				
 				//Iterate over all targets to apply any static styles that might exist
 				for (let local_target of targets) 
@@ -88,20 +87,30 @@
 	 * Resolves a selector relative to an element.
 	 * Supports :nth-parent(n) and normal query selectors.
 	 */
-	function resolveSelector(element, selector) {
-		const parentMatch = selector.match(/^:nth-parent\((\d+)\)$/);
-		if (parentMatch) {
-			let n = parseInt(parentMatch[1]);
-			let target = element;
-			while (n-- > 0 && target.parentElement) target = target.parentElement;
+	HTML.resolveSelector = function (arg0_el, arg1_selector) {
+		//Convert from parameters
+		let el = arg0_el;
+		let selector = arg1_selector;
+		
+		//Declare local instance variables
+		let parent_match = selector.match(/^:nth-parent\((\d+)\)$/);
+		
+		if (parent_match) {
+			let n = parseInt(parent_match[1]);
+			let target = el;
+			
+			//While loop until parent element is found
+			while (n-- > 0 && target.parentElement) 
+				target = target.parentElement;
+			
+			//Return statement
 			return target ? [target] : [];
 		}
 		
-		// Normal descendant selectors
+		//Return statement; normal descendant functions
 		try {
-			return Array.from(element.querySelectorAll(selector));
+			return Array.from(el.querySelectorAll(selector));
 		} catch (e) {
-			console.warn("Invalid selector:", selector);
 			return [];
 		}
 	}
@@ -109,22 +118,32 @@
 	/**
 	 * Splits static and dynamic properties into two trees.
 	 */
-	function splitStaticDynamic(obj) {
-		const staticObj = {};
-		const dynamicObj = {};
+	HTML.splitStaticDynamic = function (arg0_object) {
+		//Convert from parameters
+		let object = arg0_object;
 		
-		for (const [key, val] of Object.entries(obj)) {
-			if (typeof val === "object" && !Array.isArray(val)) {
-				const nested = splitStaticDynamic(val);
-				staticObj[key] = nested.static;
-				dynamicObj[key] = nested.dynamic;
-			} else if (typeof val === "function") {
-				dynamicObj[key] = val;
+		//Declare local instance variables
+		let static_obj = {};
+		let dynamic_obj = {};
+		
+		//Iterate over all values in object
+		Object.iterate(object, (local_key, local_value) => {
+			if (typeof local_value === "object" && !Array.isArray(local_value)) {
+				let nested = HTML.splitStaticDynamic(local_value);
+				
+				static_obj[local_key] = nested.static;
+				dynamic_obj[local_key] = nested.dynamic;
+			} else if (typeof local_value === "function") {
+				dynamic_obj[local_key] = local_value;
 			} else {
-				staticObj[key] = val;
+				static_obj[local_key] = local_value;
 			}
-		}
+		});
 		
-		return { static: staticObj, dynamic: dynamicObj };
+		//Return statement
+		return {
+			dynamic: dynamic_obj,
+			static: static_obj
+		};
 	}
 }
