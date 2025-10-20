@@ -26,10 +26,13 @@
 		}
 	};
 	
-	HTML.applyCSSStyleObject = function (arg0_el, arg1_style_obj) {
+	HTML.applyCSSStyleObject = function (arg0_el, arg1_style_obj, arg2_options) { //[WIP] - Edit function to make it recursive and immediate
 		//Convert from parameters
 		let el = (typeof arg0_el === "object") ? arg0_el : document.querySelector(arg0_el);
 		let style_obj = (arg1_style_obj) ? arg1_style_obj : {};
+		let options = (arg2_options) ? arg2_options : {};
+		
+		//Initialise options
 		
 		//Iterate over style_obj and apply it to el.style
 		Object.iterate(style_obj, (local_key, local_value) => {
