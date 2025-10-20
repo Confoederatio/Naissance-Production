@@ -33,6 +33,7 @@
 		let options = (arg2_options) ? arg2_options : {};
 		
 		//Initialise options
+		if (options.parents === undefined) options.parents = [];
 		
 		//Iterate over style_obj and apply it to el.style
 		Object.iterate(style_obj, (local_key, local_value) => {

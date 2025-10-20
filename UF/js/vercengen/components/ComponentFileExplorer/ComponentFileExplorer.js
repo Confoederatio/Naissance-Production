@@ -264,10 +264,10 @@ ve.FileExplorer = class extends ve.Component {
 		hierarchy_obj[previous_folder_path] = new ve.HierarchyDatatype({
 			up_icon: new ve.HTML(`<icon>subdirectory_arrow_left</icon>`, { style: { padding: 0 }}),
 			two_dots: new ve.HTML(`Back`)
-		}, { disabled: true });	
+		}, { disabled: true, limit: () => !File.isDrive(this.v) });	
 		
 		let previous_folder_obj = hierarchy_obj[previous_folder_path];
-		previous_folder_obj.element.onclick = (e) => {
+		previous_folder_obj.element.ondblclick = (e) => {
 			this.v = previous_folder_path;
 		};
 		
