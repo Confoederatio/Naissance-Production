@@ -24,7 +24,7 @@ ve.BIUF = class veBIUF extends ve.Component {
 			this.element.setAttribute("component", "ve-biuf");
 			this.element.instance = this;
 		this.options = options;
-		HTML.applyCSSStyle(this.element, options.style);
+		HTML.applyTelestyle(this.element, options.style);
 		
 		this.value = value;
 		

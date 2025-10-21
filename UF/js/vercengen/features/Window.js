@@ -226,7 +226,7 @@ ve.Window = class {
 		this.element.style.left = "";
 		this.element.style.right = "";
 		this.element.style.top = "";
-		HTML.applyCSSStyleObject(this.element, {
+		HTML.applyTelestyle(this.element, {
 			...HTML.getCSSPosition(this.options.anchor, x, y)
 		});
 	}
@@ -237,7 +237,7 @@ ve.Window = class {
 		let height = arg1_height;
 		
 		//Apply style
-		HTML.applyCSSStyleObject(this.element, {
+		HTML.applyTelestyle(this.element, {
 			...HTML.getCSSSize(width, height)
 		});
 	}

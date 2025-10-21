@@ -202,8 +202,8 @@ global.path = require("path");
 			"!UF/archives",
 			//"UF/js/vercengen/(vercengen_initialisation).js",
 			"UF",
-			"UF/js/vercengen/classes",
-			"UF/js/vercengen/classes/Demo.js",
+			"UF/js/vercengen/engine",
+			"UF/js/vercengen/engine/Demo.js",
 			"UF/js/vercengen/components",
 		] : [];
 			load_patterns = load_patterns.concat(options.load_files);

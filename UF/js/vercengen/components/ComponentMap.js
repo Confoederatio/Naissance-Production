@@ -30,7 +30,7 @@ ve.Map = class veMap extends ve.Component { //[WIP] - Add options for manipulati
 			this.element.id = this.id;
 			this.element.instance = this;
 			HTML.setAttributesObject(this.element, options.attributes);
-			HTML.applyCSSStyle(this.element, options.style);
+			HTML.applyTelestyle(this.element, options.style);
 		this.options = options;
 		this.map = undefined;
 		

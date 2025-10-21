@@ -59,7 +59,7 @@ ve.PageMenu = class vePageMenu extends ve.Component { //[WIP] - This should be u
 				this.element.setAttribute(local_key, local_value.toString());
 			});
 			this.element.instance = this;
-			HTML.applyCSSStyle(this.element, options.style);
+			HTML.applyTelestyle(this.element, options.style);
 		this.interfaces_obj = {};
 		this.options = options;
 		this.navbar_el = document.createElement("nav");

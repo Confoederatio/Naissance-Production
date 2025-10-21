@@ -21,7 +21,7 @@ ve.Text = class veText extends ve.Component {
 		this.element = document.createElement("div");
 			this.element.setAttribute("component", "ve-text");
 			this.element.instance = this;
-		HTML.applyCSSStyle(this.element, options.style);
+		HTML.applyTelestyle(this.element, options.style);
 		this.options = options;
 		this.value = value;
 		

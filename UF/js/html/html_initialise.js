@@ -43,7 +43,7 @@
 					}
 					
 					//Reapply only dynamic (function) styles
-					HTML.applyDynamicStyles(local_el, local_entry.dynamic);
+					HTML.applyDynamicTelestyle(local_el, local_entry.dynamic);
 				}
 				requestAnimationFrame(HTML.ve_css_global_loop);
 			};
