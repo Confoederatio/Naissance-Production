@@ -165,7 +165,8 @@ ve.Hierarchy = class veHierarchy extends ve.Component {
 		this.element.appendChild(ol_el);
 		this.nestable = new Nestable(ol_el, { items: ".group, .item" });
 			this.nestable.on("stop", () => {
-				if (this.options.onchange) this.options.onchange(this);
+				this.fireToBinding();
 			});
+		this.fireFromBinding();
 	}
 };

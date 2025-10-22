@@ -90,6 +90,7 @@ ve.FileExplorer = class extends ve.Component {
 		this.deselectAll();
 		this.value = value;
 		this.refresh();
+		this.fireFromBinding();
 	}
 	
 	clearClipboard () {
@@ -269,6 +270,7 @@ ve.FileExplorer = class extends ve.Component {
 		let previous_folder_obj = hierarchy_obj[previous_folder_path];
 		previous_folder_obj.element.ondblclick = (e) => {
 			this.v = previous_folder_path;
+			this.fireToBinding();
 		};
 		
 		//Special handling for drive switching
@@ -289,6 +291,7 @@ ve.FileExplorer = class extends ve.Component {
 				});
 				hierarchy_obj[all_drives[i]].element.ondblclick = () => {
 					this.v = all_drives[i];
+					this.fireToBinding();
 				};
 			}
 		}
@@ -343,6 +346,7 @@ ve.FileExplorer = class extends ve.Component {
 					if (e.target.closest(`button, input, .tippy-arrow, .tippy-box, .tippy-content`)) return;
 					
 					this.v = local_full_path;
+					this.fireToBinding();
 				};
 			}
 		}
