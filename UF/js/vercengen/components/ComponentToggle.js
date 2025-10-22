@@ -6,7 +6,7 @@
  *   - `.attributes`: {@link Object}
  *     - `<attribute_key>`: {@link string}
  *   - `.off_name="<icon>toggle_off</icon>"`: {@link string} - The HTML that displays when the toggle is off.
- *   - `.name`/`.on_name="<icon>toggle_on</icon>"`: {@link string} - The HTML that displays when the toggle is on.
+ *   - `.name`/`.on_name="<icon class = "toggle-icon">toggle_on</icon>"`: {@link string} - The HTML that displays when the toggle is on.
  *   - `.onchange`: {@link boolean}({@link ve.Toggle.v})
  *   - `.style`: {@link Object}
  *     - `<style_key>`: {@link string}
@@ -24,8 +24,8 @@ ve.Toggle = class veToggle extends ve.Component {
 			
 		//Initialise options
 		options.attributes = (options.attributes) ? options.attributes : {};
-		if (options.off_name === undefined) options.off_name = `<icon>toggle_off</icon>`;
-		if (options.on_name === undefined) options.on_name = `<icon>toggle_on</icon>`;
+		if (options.off_name === undefined) options.off_name = `<icon class = "toggle-icon off">toggle_off</icon>`;
+		if (options.on_name === undefined) options.on_name = `<icon class = "toggle-icon on">toggle_on</icon>`;
 		
 		//Declare local instance variables
 		this.element = document.createElement("div");

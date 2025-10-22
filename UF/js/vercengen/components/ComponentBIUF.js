@@ -90,12 +90,10 @@ ve.BIUF = class veBIUF extends ve.Component {
 			
 			if (selection.toString() !== "" && this.element.querySelector(`#biuf-input:focus`)) {
 				//var range = selection.getRangeAt(0);
-				let rect = this.element.getBoundingClientRect();
+				let rect = toolbar_el.getBoundingClientRect();
 				
-				toolbar_el.style.display = "inline";
-				toolbar_el.style.position = "relative";
-				toolbar_el.style.top = "0px";
-				toolbar_el.style.left = "0px";
+				toolbar_el.style.display = "table";
+				toolbar_el.style.top = `-${toolbar_el.offsetHeight/2.5}px`;
 			} else {
 				toolbar_el.style.display = "none";
 			}

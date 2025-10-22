@@ -33,7 +33,7 @@ ve.WYSIWYG = class extends ve.Component {
 					//First box: Bold, Italic, Underline, Strikethrough
 					html_string.push(`<div class = "box">`);
 						//Bold
-						html_string.push(`<icon class = "editor-button icon small" data-action = "bold" data-tag-name = "b" title = "Bold"><icon>format_bold</icon></span>`);
+						html_string.push(`<span class = "editor-button icon small" data-action = "bold" data-tag-name = "b" title = "Bold"><icon>format_bold</icon></span>`);
 						//Italic
 						html_string.push(`<span class = "editor-button icon small" data-action = "italic" data-tag-name = "i" title = "Italic"><icon>format_italic</icon></span>`);
 						//Underline
@@ -46,7 +46,7 @@ ve.WYSIWYG = class extends ve.Component {
 					html_string.push(`<div class = "box">`);
 						html_string.push(`<span class = "editor-button icon has-submenu">`);
 							//Menu icon
-							html_string.push(`<icon>format_align_left</icon>`);
+							html_string.push(`<icon class = "has-submenu-icon">format_align_left</icon><icon class = "has-submenu-chevron">keyboard_arrow_down</icon>`);
 
 							//1. Submenu
 							html_string.push(`<div class = "submenu">`);
