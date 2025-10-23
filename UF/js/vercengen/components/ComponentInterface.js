@@ -37,22 +37,9 @@ ve.Interface = class veInterface extends ve.Component {
 		this.element.innerHTML = html_string.join("");
 		
 		//KEEP AT BOTTOM!
-		this.name = options.name;
+		this.name = (options.name) ? options.name : "Folder";
 		this.reserved_keys = Object.keys(this).concat(["reserved_keys", "v"]);
 		this.v = components_obj;
-	}
-	
-	get name () {
-		//Return statement
-		return this.element.querySelector(`summary#name`).innerHTML;
-	}
-	
-	set name (arg0_value) {
-		//Convert from parameters
-		let value = arg0_value;
-		
-		//Set name
-		this.element.querySelector(`summary#name`).innerHTML = (value) ? value : "Folder";
 	}
 	
 	get v () {

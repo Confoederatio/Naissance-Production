@@ -129,19 +129,6 @@ ve.Checkbox = class veCheckbox extends ve.Component {
 		return html_string;
 	}
 	
-	get name () {
-		//Return statement
-		return this.element.querySelector(`#name`).innerHTML;
-	}
-	
-	set name (arg0_value) {
-		//Convert from parameters
-		let value = arg0_value;
-		
-		//Set name
-		this.element.querySelector(`#name`).innerHTML = (value) ? value : "";
-	}
-	
 	get v () {
 		//Declare local instance variables
 		let root_el = this.element.querySelector("ul");

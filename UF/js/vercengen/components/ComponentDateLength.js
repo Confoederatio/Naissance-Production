@@ -48,19 +48,6 @@ ve.DateLength = class veDateLength extends ve.Component {
 		this.v = value;
 	}
 	
-	get name () {
-		//Return statement
-		return this.element.querySelector(`#name`).innerHTML;
-	}
-	
-	set name (arg0_value) {
-		//Convert from parameters
-		let value = arg0_value;
-		
-		//Set name
-		this.element.querySelector(`#name`).innerHTML = (value) ? value : "";
-	}
-	
 	get v () {
 		//Return statement
 		return Date.convertTimestampToDate(Date.getTimestamp({

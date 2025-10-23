@@ -64,19 +64,6 @@ ve.FileExplorer = class extends ve.Component {
 		this.refresh();
 	}
 	
-	get name () {
-		//Return statement
-		this.element.querySelector("#name").innerHTML;
-	}
-	
-	set name (arg0_value) {
-		//Convert from parameters
-		let value = arg0_value;
-		
-		//Set name
-		this.element.querySelector(`#name`).innerHTML = (value) ? value : "";
-	}
-	
 	get v () {
 		//Return statement
 		return this.value;

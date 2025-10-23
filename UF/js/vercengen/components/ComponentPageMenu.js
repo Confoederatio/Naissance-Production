@@ -112,19 +112,6 @@ ve.PageMenu = class vePageMenu extends ve.Component { //[WIP] - This should be u
 		}
 	}
 	
-	get name () {
-		//Return statement
-		return this.navbar_el.querySelector(`.tab.active`).innerHTML;
-	}
-	
-	set name (arg0_value) {
-		//Convert from parameters
-		let value = arg0_value;
-		
-		//Set name
-		this.navbar_el.querySelector(`.tab.active`).innerHTML = value;
-	}
-	
 	get v () {
 		//Return statement
 		return this.navbar_el.querySelector(`.tab.active`).id;

@@ -105,24 +105,6 @@ ve.Hierarchy = class veHierarchy extends ve.Component {
 		});
 	}
 	
-	get name () {
-		//Return statement
-		return (this.components_obj.name) ? this.components_obj.name.v : "";
-	}
-	
-	set name (arg0_value) {
-		//Convert from parameters
-		let value = arg0_value;
-		
-		//Set name
-		if (this.components_obj.name) {
-			this.components_obj.name.v = value;
-		} else {
-			this.components_obj.name = new ve.HTML(value);
-			this.v = this.components_obj;
-		}
-	}
-	
 	removeItem (arg0_hierarchy_datatype) {
 		//Convert from parameters
 		let hierarchy_datatype = arg0_hierarchy_datatype;
