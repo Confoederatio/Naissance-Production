@@ -100,6 +100,17 @@ ve.Window = class {
 			this.components_obj = components_obj;
 		}
 		this.element = document.createElement("div");
+		
+		//Iterate over all .attributes if extant to set them
+		if (typeof options.attributes === "object")
+			Object.iterate(options.attributes, (local_key, local_value) => {
+				if (local_key === "class") {
+					this.element.classList.add(...local_value.toString().split(" "));
+				} else {
+					this.element.setAttribute(local_key, local_value.toString());
+				}
+			});
+		
 		this.id = Class.generateRandomID(ve.Window);
 		this.x = options.x;
 		this.y = options.y;
@@ -114,7 +125,7 @@ ve.Window = class {
 		
 		//Populate Window element
 		this.element.instance = this;
-		this.element.setAttribute("class", `ve window`);
+		this.element.classList.add("class", `ve`, `window`);
 		this.element.id = this.id;
 		this.element.innerHTML = `
 			${(!options.headless) ? `<div id = "feature-header" class = "feature-header">
