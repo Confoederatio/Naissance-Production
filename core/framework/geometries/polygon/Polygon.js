@@ -12,7 +12,7 @@ global.Polygon = class extends ve.Class {
 		
 		//Declare local interface variables
 		this.interface = new ve.Interface({
-			information: new ve.HTML((e) => `ID: ${this.id}`),
+			information: new ve.HTML(() => `ID: ${this.id}`),
 			edit_nodes: new ve.Checkbox(false, {
 				name: "Edit Nodes",
 				onchange: (v) => {
