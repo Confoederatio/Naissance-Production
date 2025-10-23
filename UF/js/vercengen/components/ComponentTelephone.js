@@ -69,8 +69,4 @@ ve.Telephone = class veTelephone extends ve.Component {
 		this.element.querySelector("input").value = this.value;
 		this.fireFromBinding();
 	}
-	
-	remove () {
-		this.element.remove();
-	}
 };

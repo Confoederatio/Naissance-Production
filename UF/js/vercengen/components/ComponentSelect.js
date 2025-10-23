@@ -121,8 +121,4 @@ ve.Select = class veSelect extends ve.Component {
 		//Return statement
 		return html_string;
 	}
-	
-	remove () {
-		this.element.remove();
-	}
 };

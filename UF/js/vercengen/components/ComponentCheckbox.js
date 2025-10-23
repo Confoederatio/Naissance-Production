@@ -198,13 +198,4 @@ ve.Checkbox = class veCheckbox extends ve.Component {
 		}
 		this.fireFromBinding();
 	}
-	
-	/**
-	 * Removes the component/element from the DOM.
-	 *
-	 * @typedef ve.Checkbox.remove
-	 */
-	remove () {
-		this.element.remove();
-	}
 };

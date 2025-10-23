@@ -123,10 +123,6 @@ ve.Hierarchy = class veHierarchy extends ve.Component {
 		}
 	}
 	
-	remove () {
-		this.element.remove();
-	}
-	
 	removeItem (arg0_hierarchy_datatype) {
 		//Convert from parameters
 		let hierarchy_datatype = arg0_hierarchy_datatype;

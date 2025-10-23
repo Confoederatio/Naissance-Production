@@ -156,16 +156,6 @@ ve.PageMenu = class vePageMenu extends ve.Component { //[WIP] - This should be u
 	}
 	
 	/**
-	 * Removes the surface component/element from the DOM.
-	 * - Method of: {@link ve.PageMenu}
-	 * 
-	 * @typedef ve.PageMenu.remove
-	 */
-	remove () {
-		this.element.remove();
-	}
-	
-	/**
 	 * Updates the underline underneath the active tab and animates it.
 	 * - Method of: {@link ve.PageMenu}
 	 * 

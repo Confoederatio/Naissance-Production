@@ -237,6 +237,26 @@ ve.Component = class {
 		container_el.append(this.element);
 	}
 	
+	/**
+	 * Removes the component/element from the DOM.
+	 */
+	remove () {
+		//Declare local instance variables
+		let child_class_obj = ve[this.child_class.prototype.constructor.name];
+		
+		//Iterate over l instances in child_class_obj.instances if available
+		if (child_class_obj.instances && this.id)
+			for (let i = 0; i < child_class_obj.instances.length; i++)
+				if (child_class_obj.instances[i].id === this.id) {
+					child_class_obj.instances.splice(i, 1);
+					break;
+				}
+		
+		//Remove DOM element
+		if (this.element)
+			this.element.remove();
+	}
+	
 	removeComponent () {
 		if (this.element.parentElement) try {
 			if (this.element.parentElement.contains(this.element)) {

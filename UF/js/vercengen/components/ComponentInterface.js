@@ -203,10 +203,6 @@ ve.Interface = class veInterface extends ve.Component {
 		});
 	}
 	
-	remove () {
-		this.element.remove();
-	}
-	
 	removeComponent (arg0_component_obj) {
 		//Convert from parameters
 		let component_obj = arg0_component_obj;

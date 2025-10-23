@@ -27,10 +27,10 @@ ve.Map = class veMap extends ve.Component { //[WIP] - Add options for manipulati
 		
 		this.element = document.createElement("div");
 			this.element.setAttribute("component", "ve-map");
-			this.element.id = this.id;
-			this.element.instance = this;
-			HTML.setAttributesObject(this.element, options.attributes);
-			HTML.applyTelestyle(this.element, options.style);
+		this.element.id = this.id;
+		this.element.instance = this;
+		HTML.setAttributesObject(this.element, options.attributes);
+		HTML.applyTelestyle(this.element, options.style);
 		this.options = options;
 		this.map = undefined;
 		
@@ -38,7 +38,7 @@ ve.Map = class veMap extends ve.Component { //[WIP] - Add options for manipulati
 		this.v = options;
 	}
 	
-	loadDate () {
+	loadDate() {
 		
 	}
 	

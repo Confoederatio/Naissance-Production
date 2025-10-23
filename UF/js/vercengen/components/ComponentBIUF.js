@@ -50,6 +50,33 @@ ve.BIUF = class veBIUF extends ve.Component {
 		this.v = this.value;
 	}
 	
+	get name () {
+		//Return statement
+		return this.element.querySelector(`#name`).innerHTML;
+	}
+	
+	set name (arg0_value) {
+		//Convert from parameters
+		let value = arg0_value;
+		
+		//Set name
+		this.element.querySelector(`#name`).innerHTML = (value) ? value : "";
+	}
+	
+	get v () {
+		//Return statement
+		return this.element.querySelector(`#biuf-input`).innerHTML;
+	}
+	
+	set v (arg0_value) {
+		//Convert from parameters
+		let value = (arg0_value) ? arg0_value : "";
+		if (value === undefined) return; //Internal guard clause if value is undefined
+		
+		//Set #biuf-input value
+		this.element.querySelector(`#biuf-input`).innerHTML = value;
+	}
+	
 	//Internal helper functions
 	handleBIUF (arg0_biuf_el) {
 		//Convert from parameters
@@ -114,39 +141,8 @@ ve.BIUF = class veBIUF extends ve.Component {
 		});
 	}
 	
-	remove () {
-		this.element.remove();
-	}
-	
 	sendOnchangeEvent () {
 		this.value = this.v;
 		this.fireToBinding();
-	}
-	
-	get name () {
-		//Return statement
-		return this.element.querySelector(`#name`).innerHTML;
-	}
-	
-	set name (arg0_value) {
-		//Convert from parameters
-		let value = arg0_value;
-		
-		//Set name
-		this.element.querySelector(`#name`).innerHTML = (value) ? value : "";
-	}
-	
-	get v () {
-		//Return statement
-		return this.element.querySelector(`#biuf-input`).innerHTML;
-	}
-	
-	set v (arg0_value) {
-		//Convert from parameters
-		let value = (arg0_value) ? arg0_value : "";
-		if (value === undefined) return; //Internal guard clause if value is undefined
-		
-		//Set #biuf-input value
-		this.element.querySelector(`#biuf-input`).innerHTML = value;
 	}
 };

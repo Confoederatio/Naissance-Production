@@ -123,10 +123,4 @@ ve.Radio = class veRadio extends ve.Component {
 		}
 		this.fireFromBinding();
 	}
-	
-	remove () {
-		this.element.remove();
-		for (let i = 0; i < ve.Radio.instances.length; i++)
-			ve.Radio.instances.splice(i, 1);
-	}
 };

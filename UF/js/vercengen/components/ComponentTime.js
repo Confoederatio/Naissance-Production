@@ -78,8 +78,4 @@ ve.Time = class veTime extends ve.Component {
 		this.element.querySelector("input").value = `${value.hour.toString().padStart(2, "0")}:${value.minute.toString().padStart(2, "0")}`;
 		this.fireFromBinding();
 	}
-	
-	remove () {
-		this.element.remove();
-	}
 };

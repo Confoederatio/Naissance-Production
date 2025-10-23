@@ -71,8 +71,4 @@ ve.URL = class veURL extends ve.Component {
 		this.element.querySelector(`#open-link`).setAttribute("valid-url", value.isURL());
 		this.fireFromBinding();
 	}
-	
-	remove () {
-		this.element.remove();
-	}
 };

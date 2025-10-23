@@ -75,8 +75,4 @@ ve.File = class veFile extends ve.Component {
 		}
 		this.fireFromBinding();
 	}
-	
-	remove () {
-		this.element.remove();
-	}
 };

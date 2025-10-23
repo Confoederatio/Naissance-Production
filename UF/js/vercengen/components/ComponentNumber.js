@@ -70,10 +70,6 @@ ve.Number = class veNumber extends ve.Component {
 		this.fireFromBinding();
 	}
 	
-	remove () {
-		this.element.remove();
-	}
-	
 	//Class methods
 	toString () {
 		return String(this.value);

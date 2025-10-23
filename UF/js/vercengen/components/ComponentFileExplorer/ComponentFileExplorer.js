@@ -406,10 +406,6 @@ ve.FileExplorer = class extends ve.Component {
 		});
 	}
 	
-	remove () {
-		this.element.remove();
-	}
-	
 	fireSelectToggle (v, e) {
 		if (e.owners)
 			for (let i = e.owners.length - 1; i >= 0; i--)

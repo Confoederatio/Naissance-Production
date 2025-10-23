@@ -104,15 +104,6 @@ ve.Colour = class veColour extends ve.Component {
 	}
 	
 	/**
-	 * Removes the component/element from the DOM.
-	 *
-	 * @typedef ve.Colour.remove
-	 */
-	remove () {
-		this.element.remove();
-	}
-	
-	/**
 	 * Returns the 'R,G,B' value of {@link ve.Colour} as a string.
 	 * 
 	 * @returns {string}

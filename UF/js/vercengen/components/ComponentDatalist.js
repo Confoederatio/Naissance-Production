@@ -124,13 +124,4 @@ ve.Datalist = class veDatalist extends ve.Component {
 		this.value = value;
 		this.fireFromBinding();
 	}
-	
-	/**
-	 * Removes the component/element from the DOM.
-	 *
-	 * @typedef ve.Datalist.remove
-	 */
-	remove () {
-		this.element.remove();
-	}
 };

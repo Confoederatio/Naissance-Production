@@ -82,10 +82,6 @@ ve.Toggle = class veToggle extends ve.Component {
 		this.fireFromBinding();
 	}
 	
-	remove () {
-		this.element.remove();
-	}
-	
 	updateName () {
 		//Set new this.name
 		this.name = (this.v) ? this.options.on_name : this.options.off_name;

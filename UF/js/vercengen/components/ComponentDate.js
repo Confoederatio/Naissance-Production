@@ -228,13 +228,4 @@ ve.Date = class veDate extends ve.Component {
 			this.fireToBinding();
 		});
 	}
-	
-	/**
-	 * Removes the component/element from the DOM.
-	 *
-	 * @typedef ve.Date.remove
-	 */
-	remove () {
-		this.element.remove();
-	}
 };
