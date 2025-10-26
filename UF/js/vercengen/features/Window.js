@@ -27,7 +27,7 @@
  *   - `headless`: {@link boolean}
  *   - `resizeable`: {@link boolean}
  */
-ve.Window = class {
+ve.Window = class veWindow extends ve.Feature {
 	//Declare local static variables
 	static instances = [];
 	
@@ -35,6 +35,7 @@ ve.Window = class {
 		//Convert from parameters
 		let components_obj = arg0_components_obj;
 		let options = (arg1_options) ? arg1_options : {};
+			super(components_obj, options);
 		
 		//Initialise options
 		let is_coords_well_defined = (typeof options.x === "number" && typeof options.y === "number");
@@ -202,8 +203,6 @@ ve.Window = class {
 		return (!options.return_object) ? highest_z_index[0] : highest_z_index[1];
 	}
 	
-	close () { this.remove(); }
-	
 	/**
 	 * Returns the current z-index of this {@link ve.Window}.
 	 *
@@ -287,16 +286,5 @@ ve.Window = class {
 					local_value.name = local_key;
 			});
 		}
-	}
-	
-	remove () {
-		//Iterate over all instances in ve.Window.instances
-		for (let i = 0; i < ve.Window.instances.length; i++)
-			if (ve.Window.instances[i].id === this.id) {
-				ve.Window.instances.splice(i, 1);
-				break;
-			}
-		
-		this.element.remove();
 	}
 };

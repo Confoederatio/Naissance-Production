@@ -40,7 +40,7 @@ ve.DateLength = class veDateLength extends ve.Component {
 		
 		//Populate element and initialise handlers
 		this.element.innerHTML = html_string.join("");
-		let all_input_els = document.querySelectorAll(this.element);
+		let all_input_els = this.element.querySelectorAll("input");
 		
 		all_input_els.forEach((local_el) => local_el.addEventListener("change", (e) => {
 			this.fireToBinding();

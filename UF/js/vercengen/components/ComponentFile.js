@@ -31,10 +31,13 @@ ve.File = class veFile extends ve.Component {
 		}
 		
 		//Populate element and initialise handlers
+		let confirm_file_el = this.element.querySelector(`#confirm-file`);
 		this.element.innerHTML = html_string.join("");
-		this.element.querySelector(`#confirm-file`).addEventListener("click", (e) => {
-			this.fireToBinding();
-		});
+		
+		if (confirm_file_el)
+			confirm_file_el.addEventListener("click", (e) => {
+				this.fireToBinding();
+			});
 		this.v = this.value;
 	}
 	

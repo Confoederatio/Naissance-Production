@@ -50,8 +50,6 @@ global.Brush = class extends ve.Class {
 				x: 1, y: 1
 			})
 		}, { name: "Brush Options", open: true });
-		this.alert_test = new ve.Text("Hello", { onuserchange: (v) => alert(v) });
-			setTimeout(() => this.alert_test.v = "World!", 3000);
 		this.optimisation = new ve.Interface({
 			simplify: new ve.Range(0.05, {
 				name: "Simplify", x: 0, y: 0
