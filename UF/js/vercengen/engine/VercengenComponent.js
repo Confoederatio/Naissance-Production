@@ -1,5 +1,5 @@
 /**
- * <span color = "yellow">{@link ve.Component}</span>: Components represent inputs and displays that yield a value via `.v`. They are typically encapsulated by a <span color="yellow">{@link ve.Feature}</span>, but can be manually bound via <span color=00ffff>{@link ve.Component.bind|bind}</span>().
+ * <span color = "yellow">{@link ve.Component}</span>: Components represent inputs and displays that yield a value via `.v`. They are typically encapsulated by a <span color="yellow">{@link ve.Feature}</span>, but can be manually mounted via <span color=00ffff>{@link ve.Component.bind|bind}</span>(arg0_container_el:{@link HTMLElement}).
  * 
  * ##### Constructor:
  * - `arg0_options`: {@link Object}
@@ -55,7 +55,9 @@
  * - <span color=00ffff>{@link ve.Component.linter|linter}</span>() - Run at startup if {@link ve.debug_mode} is true. Lints all Vercengen components.
  * 
  * ##### Types:
- * Types are annotated by both their constructor function and what they return (`.v`). * indicates a recursive Object of that type.
+ * Types are annotated by both their constructor function and what they return after the pipe separator (`.v`). 
+ * 
+ * \* indicates a recursive Object of that type.
  * - {@link veFileExplorer|ve.ComponentFileExplorer}(arg0_value:{@link string}, arg1_options:{@link Object}) | {@link string} - The file path the File Explorer is currently navigating.
  * - {@link veHierarchy|ve.ComponentHierarchy}(arg0_value:{@link Object}<{@link ve.Component}>, arg1_options:{@link Object}) | {@link Object}<{@link ve.Component}> - Note. It is recommended to use {@link ve.HierarchyDatatype} as the specific {@link ve.Component} for `arg0_value`.
  *   - {@link veHierarchyDatatype|ve.ComponentHierarchyDatatype}({@link Object}<{@link ve.Component}>, arg1_options:{@link Object}) | {@link Object}<{@link ve.Component}> - Represents individual items in a hierarchy.
