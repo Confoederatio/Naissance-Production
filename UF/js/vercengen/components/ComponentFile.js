@@ -5,7 +5,7 @@ ve.File = class veFile extends ve.Component {
 		//Convert from parameters
 		let value = arg0_value;
 		let options = (arg1_options) ? arg1_options : {};
-		super(options);
+			super(options);
 		
 		//Initialise options
 		options.attributes = (options.attributes) ? options.attributes : {};
