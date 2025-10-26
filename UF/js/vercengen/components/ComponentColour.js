@@ -1,5 +1,5 @@
 /**
- * <span color = "yellow">{@link ve.Component}</span>:ve.Colour
+ * @augments {@link ve.Component}
  * 
  * ##### Constructor:
  * - `arg0_value`: {@link Array}<{@link number}, {@link number}, {@link number}>
@@ -33,7 +33,7 @@ ve.Colour = class veColour extends ve.Component {
 		//Convert from parameters
 		let value = (arg0_value) ? arg0_value : [255, 255, 255];
 		let options = (arg1_options) ? arg1_options : {};
-		super(options);
+			super(options);
 		
 		//Initialise options
 		options.attributes = options.attributes ? options.attributes : {};

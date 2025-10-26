@@ -1,3 +1,8 @@
+/**
+ * @augments {@link ve.Component}
+ * 
+ * @type {ve.veBIUF}
+ */
 ve.BIUF = class veBIUF extends ve.Component {
 	static demo_value = `<b>Bold</b> <i>Italic</i>, <u>Underline</u>, and regular text formatting are supported by BIUF fields.`;
 	static demo_options = {

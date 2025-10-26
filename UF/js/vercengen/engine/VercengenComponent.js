@@ -1,3 +1,67 @@
+/**
+ * <span color = "yellow">{@link ve.Component}</span>: Components represent inputs and displays that yield a value via `.v`. They are typically encapsulated by a {@link ve.Feature}, but can be manually bound via {@link ve.Component.bind|bind}().
+ * 
+ * ##### Constructor:
+ * - `arg0_options`: {@link Object}
+ *   - All bindings accept 'this'/'global'/'window' variables.
+ *   - `.attributes`: {@link Object} - Any attributes to place on the mounted `this.element`.
+ *     - `<attribute_key>`: {@link string}
+ *   - `.binding`: {@link string} - Related event: `.onchange`. Bidirectional data binding for both `.from_binding`/`.to_binding`.
+ *   - `.from_binding`: {@link string} - Related event: `.onprogramchange`. Unidirectional data binding.
+ *   - `.to_binding`: {@link string} - Related event: `.onuserchange`. Unidirectional data binding.
+ *   - 
+ *   - `.limit=true`: {@link function}(this.v)|{@link undefined} | {@link boolean} - Whether to display the current Component. Immediate mode.
+ *   - `.onload`: {@link function}(this:{@link ve.Component})
+ *   - `.tooltip`: {@link Object}<{@link ve.Component}>|{@link string}
+ *   - `.style`: {@link Object} - The CSS/Telestyle object to use for the current element. Immediate mode CSS if function is declared.
+ *     - `<selector_key>`: {@link string} - CSS query selector. :nth-parent() is acceptable.
+ *       - `<css_property>`: {@link function}|{@link string}
+ *     - `<css_property>`: {@link function}|{@link string}
+ *
+ * ##### DOM:
+ * - `.instance`: this:{@link ve.Component}
+ *
+ * ##### Instance:
+ * - `.child_class=this.constructor`: {@link ve.Component} - The constructor object of the child class.
+ * - `.is_vercengen_component=true`: {@link boolean} - Whether to mark this ve.Component as a Vercengen component.
+ * - `.parent_el`: {@link HTMLElement} - The parent element of the current component, should it exist.
+ * -
+ * - `.height=1`: {@link number}
+ * - `.width=1`: {@link number}
+ * - `.x=0`: {@link number} - Switches to an n+1 default if only `.y` is defined.
+ * - `.y=n + 1`: {@link number} - Switches to 0 if only `.x` is defined.
+ * -
+ * - The linter/engine guarantees the following fields:
+ * - `.element`: {@link HTMLElement} - The HTMLElement that the ve.Component is mounted to.
+ * - `.owner`: {@link any} - The root owner of the current ve.Component. This is typically a {@link ve.Class}, but can also be a {@link ve.Feature} or {@link global}/{@link window}.
+ * - `.owners`: {@link Array}<{@link any}> - A list of relevant owners in descending orders.
+ * - `.v`: {@link any} - The value stored by the component. Getter/setter.
+ * 
+ * ##### Methods:
+ * - <span color=00ffff>addComponent</span>() - Attempts to mount the current component on its parent_el.
+ * - <span color=00ffff>fireFromBinding</span>() - Pseudo-setter from binding. Fires only upon program-driven changes to `.v` directly.
+ * - <span color=00ffff>fireToBinding</span>() - Pseudo-setter to binding. Fires only upon user-driven changes to `.v`.
+ * - <span color=00ffff>remove</span>() - Removes the component/element from the DOM.
+ * - <span color=00ffff>removeComponent</span>() - Unmounts the current component from its parent_el.
+ * - <span color=00ffff>setOwner</span>() - Used by the reflection engine in {@link ve.Class} to set the owner hierarchy automatically.
+ * 
+ * ##### Static Methods:
+ * - <span color=00ffff>linter</span>() - Run at startup if {@link ve.debug_mode} is true. Lints all Vercengen components.
+ * 
+ * ##### Types: [WIP]
+ * Types are annotated by both their constructor function and what they return (`.v`). * indicates a recursive Object of that type.
+ * 
+ * - {@link veBIUF|ve.ComponentBIUF}(arg0_value:{@link string}, arg1_options:{@link Object}) | {@link string} - Single-line rich text input. `.v` is an HTML string.
+ * - {@link veButton|ve.ComponentButton}(arg0_value:{@link function}, arg1_options:{@link Object}) | {@link function}
+ * - {@link veCheckbox|ve.ComponentCheckbox}(arg0_value:{@link boolean}|{@link Object}<{@link boolean}>\*, arg1_options: {@link Object}) | {@link boolean}|{@link Object}<{@link boolean}>\* - A recursive list of checkboxes, or a single toggleable input.
+ * - {@link veColour|ve.ComponentColour}(arg0_value:{@link Array}<{@link number}, {@link number}, {@link number}|{@link string}, arg1_options: {@link Object}>) | {@link Array}<{@link number}, {@link number}, {@link number}> - RGB colour selector.
+ * - {@link veDatalist|ve.ComponentDatalist}(arg0_value:{@link Object}<{@link string}>, arg1_options: {@link Object})
+ * - {@link veDate|ve.ComponentDate}(arg0_value:{@link UF.Date}, arg1_options: {@link Object}) | {@link UF.Date}
+ * - {@link veDateLength|ve.ComponentDateLength}(arg0_vlaue:{@link UF.Date}, arg1_options: {@link Object}) | {@link UF.Date}
+ * - 
+ * 
+ * @type {ve.Component}
+ */
 ve.Component = class {
 	constructor (arg0_options) {
 		//Convert from parameters
