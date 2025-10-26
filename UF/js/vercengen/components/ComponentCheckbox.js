@@ -186,3 +186,9 @@ ve.Checkbox = class veCheckbox extends ve.Component {
 		this.fireFromBinding();
 	}
 };
+
+//Functional binding
+veCheckbox = function () {
+	//Return statement
+	return new ve.Checkbox(...arguments);
+};

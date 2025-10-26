@@ -1,4 +1,4 @@
-ve.FileExplorer = class extends ve.Component {
+ve.FileExplorer = class veFileExplorer extends ve.Component {
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
 		let value = (arg0_value) ? arg0_value : __dirname;
@@ -402,4 +402,10 @@ ve.FileExplorer = class extends ve.Component {
 					break;
 				} catch (e) { console.error(e); }
 	}
+};
+
+//Functional binding
+veFileExplorer = function () {
+	//Return statement
+	return new ve.FileExplorer(...arguments);
 };

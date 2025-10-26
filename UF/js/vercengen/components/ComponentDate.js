@@ -216,3 +216,9 @@ ve.Date = class veDate extends ve.Component {
 		});
 	}
 };
+
+//Functional binding
+veDate = function () {
+	//Return statement
+	return new ve.Date(...arguments);
+};

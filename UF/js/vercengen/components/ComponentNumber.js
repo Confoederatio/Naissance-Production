@@ -66,3 +66,9 @@ ve.Number = class veNumber extends ve.Component {
 		return this.value;
 	}
 };
+
+//Functional binding
+veNumber = function () {
+	//Return statement
+	return new ve.Number(...arguments);
+};

@@ -53,3 +53,9 @@ ve.Password = class vePassword extends ve.Component {
 		this.fireFromBinding();
 	}
 };
+
+//Functional binding
+vePassword = function () {
+	//Return statement
+	return new ve.Password(...arguments);
+};

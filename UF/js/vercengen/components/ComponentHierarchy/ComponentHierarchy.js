@@ -148,3 +148,9 @@ ve.Hierarchy = class veHierarchy extends ve.Component {
 		this.fireFromBinding();
 	}
 };
+
+//Functional binding
+veHierarchy = function () {
+	//Return statement
+	return new ve.Hierarchy(...arguments);
+};

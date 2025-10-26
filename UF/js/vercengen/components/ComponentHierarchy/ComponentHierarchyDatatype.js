@@ -144,3 +144,9 @@ ve.HierarchyDatatype = class veHierarchyDatatype extends ve.Component {
 		}
 	}
 };
+
+//Functional binding
+veHierarchyDatatype = function () {
+	//Return statement
+	return new ve.HierarchyDatatype(...arguments);
+};

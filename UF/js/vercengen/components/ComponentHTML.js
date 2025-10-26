@@ -62,3 +62,9 @@ ve.HTML = class veHTML extends ve.Component {
 		return String(this.element.innerHTML);
 	}
 };
+
+//Functional binding
+veHTML = function () {
+	//Return statement
+	return new ve.HTML(...arguments);
+};

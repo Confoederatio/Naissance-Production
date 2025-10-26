@@ -68,3 +68,9 @@ ve.Range = class veRange extends ve.Component {
 		return this.value;
 	}
 };
+
+//Functional binding
+veRange = function () {
+	//Return statement
+	return new ve.Range(...arguments);
+};

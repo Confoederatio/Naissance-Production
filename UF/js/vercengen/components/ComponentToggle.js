@@ -77,3 +77,9 @@ ve.Toggle = class veToggle extends ve.Component {
 		this.name = (this.v) ? this.options.on_name : this.options.off_name;
 	}
 };
+
+//Functional binding
+veToggle = function () {
+	//Return statement
+	return new ve.Toggle(...arguments);
+};

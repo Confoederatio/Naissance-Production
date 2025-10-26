@@ -58,3 +58,9 @@ ve.Text = class veText extends ve.Component {
 		this.fireFromBinding();
 	}
 };
+
+//Functional binding
+veText = function () {
+	//Return statement
+	return new ve.Text(...arguments);
+};

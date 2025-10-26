@@ -55,3 +55,9 @@ ve.Map = class veMap extends ve.Component { //[WIP] - Add options for manipulati
 		this.map = new maptalks.Map(this.element, value);
 	}
 }
+
+//Functional binding
+veMap = function () {
+	//Return statement
+	return new ve.Map(...arguments);
+};

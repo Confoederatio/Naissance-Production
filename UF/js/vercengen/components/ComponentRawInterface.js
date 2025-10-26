@@ -79,3 +79,9 @@ ve.RawInterface = class veRawInterface extends ve.Component {
 		if (this.options.onchange) this.options.onchange(this);
 	}
 };
+
+//Functional binding
+veRawInterface = function () {
+	//Return statement
+	return new ve.RawInterface(...arguments);
+};

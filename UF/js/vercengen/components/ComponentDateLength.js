@@ -72,3 +72,9 @@ ve.DateLength = class veDateLength extends ve.Component {
 		this.fireFromBinding();
 	}
 }
+
+//Functional binding
+veDateLength = function () {
+	//Return statement
+	return new ve.DateLength(...arguments);
+};

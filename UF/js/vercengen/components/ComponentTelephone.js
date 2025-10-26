@@ -57,3 +57,9 @@ ve.Telephone = class veTelephone extends ve.Component {
 		this.fireFromBinding();
 	}
 };
+
+//Functional binding
+veTelephone = function () {
+	//Return statement
+	return new ve.Telephone(...arguments);
+};

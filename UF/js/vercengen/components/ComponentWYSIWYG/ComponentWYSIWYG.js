@@ -1,4 +1,4 @@
-ve.WYSIWYG = class extends ve.Component {
+ve.WYSIWYG = class veWYSIWYG extends ve.Component {
 	static demo_value = `This is an immediate test for WYSIWYG editors being ported.`;
 	static demo_options = {
 		onchange: (e) => {
@@ -249,6 +249,12 @@ ve.WYSIWYG = class extends ve.Component {
 		this.element.querySelector(`.visual-view`).innerHTML = value;
 		this.fireFromBinding();
 	}
+};
+
+//Functional binding
+veWYSIWYG = function () {
+	//Return statement
+	return new ve.WYSIWYG(...arguments);
 };
 
 //Initialise functions

@@ -59,3 +59,9 @@ ve.URL = class veURL extends ve.Component {
 		this.fireFromBinding();
 	}
 };
+
+//Functional binding
+veURL = function () {
+	//Return statement
+	return new ve.URL(...arguments);
+};

@@ -466,8 +466,8 @@ ve.Component = class {
 							//Return statement
 							return new ve[local_key](...arguments);
 						};
-					} else {
-						console.error(`ve.${local_key} cannot have its functional binding registered, since it is already reserved elsewhere. Use Ctrl + F to find where it has been reserved in your codebase.`);
+					} else if (typeof global[`ve${local_key}`] !== "function") {
+						console.error(`ve.${local_key} cannot have its functional binding registered, since it is already reserved elsewhere as a non-function. Use Ctrl + F to find where it has been reserved in your codebase.`);
 					}
 					
 					if (ve.debug_mode)

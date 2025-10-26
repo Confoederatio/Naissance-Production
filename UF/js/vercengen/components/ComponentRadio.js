@@ -111,3 +111,9 @@ ve.Radio = class veRadio extends ve.Component {
 		this.fireFromBinding();
 	}
 };
+
+//Functional binding
+veRadio = function () {
+	//Return statement
+	return new ve.Radio(...arguments);
+};

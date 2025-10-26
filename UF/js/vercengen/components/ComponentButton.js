@@ -81,3 +81,9 @@ ve.Button = class veButton extends ve.Component {
 		this.fireFromBinding();
 	}
 };
+
+//Functional binding
+veButton = function () {
+	//Return statement
+	return new ve.Button(...arguments);
+};

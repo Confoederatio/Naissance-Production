@@ -109,3 +109,9 @@ ve.Select = class veSelect extends ve.Component {
 		return html_string;
 	}
 };
+
+//Functional binding
+veSelect = function () {
+	//Return statement
+	return new ve.Select(...arguments);
+};

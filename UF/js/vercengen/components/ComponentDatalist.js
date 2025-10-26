@@ -112,3 +112,9 @@ ve.Datalist = class veDatalist extends ve.Component {
 		this.fireFromBinding();
 	}
 };
+
+//Functional binding
+veDatalist = function () {
+	//Return statement
+	return new ve.Datalist(...arguments);
+};

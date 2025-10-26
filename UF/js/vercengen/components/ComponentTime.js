@@ -66,3 +66,9 @@ ve.Time = class veTime extends ve.Component {
 		this.fireFromBinding();
 	}
 };
+
+//Functional binding
+veTime = function () {
+	//Return statement
+	return new ve.Time(...arguments);
+};

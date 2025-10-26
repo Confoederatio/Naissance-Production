@@ -139,3 +139,9 @@ ve.BIUF = class veBIUF extends ve.Component {
 		this.fireToBinding();
 	}
 };
+
+//Functional binding
+veBIUF = function () {
+	//Return statement
+	return new ve.BIUF(...arguments);
+};

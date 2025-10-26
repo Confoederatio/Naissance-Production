@@ -66,3 +66,9 @@ ve.File = class veFile extends ve.Component {
 		this.fireFromBinding();
 	}
 };
+
+//Functional binding
+veFile = function () {
+	//Return statement
+	return new ve.File(...arguments);
+};

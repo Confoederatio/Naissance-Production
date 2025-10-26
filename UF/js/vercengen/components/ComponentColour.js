@@ -99,3 +99,9 @@ ve.Colour = class veColour extends ve.Component {
 		return this.value.join(",");
 	}
 };
+
+//Functional binding
+veColour = function () {
+	//Return statement
+	return new ve.Colour(...arguments);
+};

@@ -169,3 +169,9 @@ ve.PageMenu = class vePageMenu extends ve.Component { //[WIP] - This should be u
 		});
 	}
 };
+
+//Functional binding
+vePageMenu = function () {
+	//Return statement
+	return new ve.PageMenu(...arguments);
+};

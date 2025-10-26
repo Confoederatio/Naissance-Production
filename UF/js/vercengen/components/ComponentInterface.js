@@ -252,3 +252,9 @@ ve.Interface = class veInterface extends ve.Component {
 				table_el.rows[i].cells[x].id = `${x}-${i}`;
 	}
 };
+
+//Functional binding
+veInterface = function () {
+	//Return statement
+	return new ve.Interface(...arguments);
+};
