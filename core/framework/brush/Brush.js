@@ -12,8 +12,12 @@ global.Brush = class extends ve.Class {
 			//interactive: true,
 			zIndex: 99
 		}).addTo(map);
-		this.radius = 50000;
+		this.properties = {
+			radius: 50000,
+			simplify: 0.05
+		};
 		this.selected_geometry = undefined;
+		this.symbol = {};
 		this.type = "polygon"; //Either 'none'/'polygon'/'line'/'point'
 		
 		//Declare local interface variables
@@ -52,6 +56,7 @@ global.Brush = class extends ve.Class {
 		}, { name: "Brush Options", open: true });
 		this.optimisation = new ve.Interface({
 			simplify: new ve.Range(0.05, {
+				binding: "this.properties.simplify", 
 				name: "Simplify", x: 0, y: 0
 			}),
 			simplify_applies_to_brush: new ve.Checkbox(false, {
@@ -71,11 +76,11 @@ global.Brush = class extends ve.Class {
 			let cursor_coordinates = this.cursor.getCoordinates();
 			
 			//Return HTML
-			return `X: ${String.formatNumber(cursor_coordinates.x, 2)}; Y: ${String.formatNumber(cursor_coordinates.y, 2)} | Size: ${String.formatNumber(this.radius/1000, 2)}km`;
+			return `X: ${String.formatNumber(cursor_coordinates.x, 2)}; Y: ${String.formatNumber(cursor_coordinates.y, 2)} | Size: ${String.formatNumber(this.properties.radius/1000, 2)}km`;
 		});
 		
 		//Set brush event handlers
-		this.cursor = new maptalks.Circle([0, 0], this.radius, {
+		this.cursor = new maptalks.Circle([0, 0], this.properties.radius, {
 			symbol: {
 				lineColor: Colour.convertRGBAToHex([0, 0, 0]),
 				lineDasharray: [4, 4],
@@ -165,10 +170,10 @@ global.Brush = class extends ve.Class {
 			
 			if (HTML.ctrl_pressed) {
 				if (delta_y < 0)
-					this.radius *= 1.1;
+					this.properties.radius *= 1.1;
 				if (delta_y > 0)
-					this.radius *= 0.9;
-				this.cursor.setRadius(this.radius);
+					this.properties.radius *= 0.9;
+				this.cursor.setRadius(this.properties.radius);
 			}
 		});
 	}
