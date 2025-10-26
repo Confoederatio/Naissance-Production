@@ -2,6 +2,16 @@
 if (!global.DALS) global.DALS = {};
 if (!global.main) global.main = {};
 
+//Define DALS.timeline as DALS.Timeline.current_timeline
+Object.defineProperty(DALS, "timeline", {
+	get () {
+		return DALS.Timeline.current_timeline;
+	},
+	set (v) {
+		DALS.Timeline.current_timeline.v = v;
+	}
+});
+
 DALS.Timeline = class {
 	//Declare local static variables
 	static current_timeline;
@@ -27,11 +37,11 @@ DALS.Timeline = class {
 		DALS.Timeline.instances.push(this);
 	}
 	
-	get () {
+	get v () {
 		return this.value;
 	}
 	
-	set (arg0_options) {
+	set v (arg0_options) {
 		//Convert from parameters
 		let options = (arg0_options) ? arg0_options : {};
 		
