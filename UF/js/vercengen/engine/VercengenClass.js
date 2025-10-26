@@ -1,7 +1,6 @@
 if (!global.ve) global.ve = {};
 
 /**
- * [WIP Documentation]
  * <span color = "yellow">{@link ve.Class}</span>: Classes that extend this are parsed by the reflection engine, with UIs treated as being a subset of state via <span color = "yellow">{@link ve.Component}</span> type declarations.
  *
  * UIs can be opened via super.<span color=00ffff>open</span>(arg0_mode:"class"/"instance", arg1_options:{@link Object}), and closed using <span color=00ffff>close</span>(arg0_mode:"class"/"instance").
@@ -15,9 +14,11 @@ if (!global.ve) global.ve = {};
  * ##### Methods:
  * - <span color=00ffff>{@link ve.Class.close|close}</span>(arg0_mode:"class"/"instance")
  * - <span color=00ffff>{@link ve.Class.draw|draw}</span>(arg0_function:{@link function}(this:{@link ve.Class}), arg1_interval=0:{@link number}) - The draw function intended to make non-UI related draw calls to browser/process.
- * - <span color=00ffff>{@link ve.Class.isClosed|isClosed}</span>(arg0_mode:"class"/"instance") ¦ {@link boolean} - Whether the selected window is closed.
- * - <span color=00ffff>{@link ve.Class.isOpen|isOpen}</span>(arg0_mode:"class"/"instance") ¦ {@link boolean} - Whether the selected window is open.
- * - 
+ * - <span color=00ffff>{@link ve.Class.getState|getState}</span>() | {@link Object}
+ * - <span color=00ffff>{@link ve.Class.isClosed|isClosed}</span>(arg0_mode:"class"/"instance") | {@link boolean} - Whether the selected window is closed.
+ * - <span color=00ffff>{@link ve.Class.isOpen|isOpen}</span>(arg0_mode:"class"/"instance") | {@link boolean} - Whether the selected window is open.
+ * - <span color=00ffff>{@link ve.Class.open|open}</span>(arg0_mode:"class"/"instance") - Opens the UI bound to the current ve.Class.
+ * - <span color=00ffff>{@link ve.Class.updateOwner|updateOwner}()</span> - Updates the `.owner`/`.owners` field attached to {@link ve.Component}s.
  * 
  * ##### Static Fields:
  * - `.instances`: {@link Array}<this:{@link ve.Class}>
@@ -26,6 +27,10 @@ if (!global.ve) global.ve = {};
  */
 ve.Class = class {
 	//Declare local static variables
+	
+	/**
+	 * @type ve.Class[]
+	 */
 	static instances = [];
 	
 	//Constructor/getter/setter
@@ -41,6 +46,13 @@ ve.Class = class {
 	}
 	
 	//Class methods
+	
+	/**
+	 * Closes any open UI currently associated with ve.Class, either its class (static) or instance.
+	 * - Method of: {@link ve.Class}
+	 * 
+	 * @param {string} arg0_mode - Either 'class'/'instance'.
+	 */
 	close (arg0_mode) {
 		//Convert from parameters
 		let mode = arg0_mode;
@@ -52,6 +64,13 @@ ve.Class = class {
 		delete this[`${mode}_window`];
 	}
 	
+	/**
+	 * Draws the current element on the screen based on a constant loop that can be cleared by the process.
+	 * - Method of: {@link ve.Class}
+	 * 
+	 * @param {function|undefined} arg0_function
+	 * @param {number} [arg1_interval=0]
+	 */
 	draw (arg0_function, arg1_interval) {
 		//Convert from parameters
 		let local_function = arg0_function;
@@ -61,11 +80,27 @@ ve.Class = class {
 		this.draw_loop = setInterval(() => { local_function(this); }, interval);
 	}
 	
+	/**
+	 * Whether the bound UI for the current mode is closed.
+	 * - Method of: {@link ve.Class}
+	 * 
+	 * @param {string} arg0_mode - Either 'class'/'instance'.
+	 * 
+	 * @returns {boolean}
+	 */
 	isClosed (arg0_mode) {
 		//Return statement
 		return (!(this.class_window || this.instance_window));
 	}
 	
+	/**
+	 * Whether the bound UI for the current mode is open.
+	 * - Method of: {@link ve.Class}
+	 *
+	 * @param {string} arg0_mode - Either 'class'/'instance'.
+	 *
+	 * @returns {boolean}
+	 */
 	isOpen (arg0_mode) {
 		//Return statement
 		return (this.class_window || this.instance_window);
@@ -73,6 +108,7 @@ ve.Class = class {
 	
 	/**
 	 * Opens the relevant {@link ve.Window} or other Feature responsible for containing either class or instance variables.
+	 * - Method of: {@link ve.Class}
 	 *
 	 * @param {string} [arg0_mode="instance"] - Whether the UI is bound to 'class'/'instance'. If 'class', it displays all static Vercengen fields.
 	 * @param {Object} [arg1_options]
@@ -83,8 +119,8 @@ ve.Class = class {
 	 *  @param {string} [arg1_options.anchor="top_left"] - Either 'bottom_left'/'bottom_right'/'top_left'/'top_right'. If neither this nor .x/.y are defined, the UI is spawned at the cursor position.
 	 *  @param {number|string} [arg1_options.height]
 	 *  @param {number|string} [arg1_options.width]
-	 *  @param {number|string} [arg1_options.x] - Mouse coordinates if undefined.
-	 *  @param {number|string} [arg1_options.y] - Mouse coordinates if undefined.
+	 *  @param {number|string} [arg1_options.x=HTML.mouse_x] - Mouse coordinates if undefined.
+	 *  @param {number|string} [arg1_options.y=HTML.mouse_y] - Mouse coordinates if undefined.
 	 */
 	open (arg0_mode, arg1_options) {
 		//Convert from parameters
@@ -121,6 +157,12 @@ ve.Class = class {
 	}
 	
 	//State methods
+	
+	/**
+	 * Returns the values of all bound {@link ve.Component}s as a destructured object.
+	 * 
+	 * @returns {{"<variable_key>": ve.Component}}
+	 */
 	getState () {
 		//Declare local instance variables
 		let child_class = this.constructor;
@@ -158,6 +200,12 @@ ve.Class = class {
 		return state_obj;
 	}
 	
+	/**
+	 * Updates the `.owner`/`.owners` field(s) for any attached {@link ve.Component}s to the current ve.Class.
+	 * - Method of: {@link ve.Class}
+	 * 
+	 * @returns {{class_components_obj: {"variable_key": ve.Component}, instance_components_obj: {"variable_key": ve.Component}}}
+	 */
 	updateOwner () {
 		//Declare local instance variables
 		let state_obj = this.getState();
