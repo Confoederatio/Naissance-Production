@@ -69,9 +69,15 @@ global.Polygon = class extends ve.Class {
 		//Declare local instance variables
 		if (this.geometry)
 			if (value === true) {
+				main.brush.disabled = true;
 				this.geometry.startEdit();
+				this.geometry.addEventListener("editrecord editstart", (e) => {
+					console.log(e);
+				});
 			} else {
+				main.brush.disabled = false;
 				this.geometry.endEdit();
+				this.geometry.removeEventListener("editrecord");
 				this.update();
 			}
 	}
