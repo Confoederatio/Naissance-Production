@@ -17,9 +17,9 @@ global.Brush = class extends ve.Class {
 		this.type = "polygon"; //Either 'none'/'polygon'/'line'/'point'
 		
 		//Declare local interface variables
-		this.interface = new ve.Interface({
+		this.brush_options = new ve.Interface({
 			//Row 0: Enable/Disable
-			disabled: new ve.Checkbox(false, {
+			disabled: new ve.Toggle(false, {
 				binding: "this.disabled",
 				onchange: (v) => { //Bidirectionally bound to this.disabled, use .onprogramchange/.onuserchange otherwise
 					if (this.cursor)
@@ -93,10 +93,6 @@ global.Brush = class extends ve.Class {
 		
 		//Open UI
 		this.openUI();
-		
-		setTimeout(() => { //[WIP] - Debug statement. Remove at a later date, automatically invokes onchange
-			this.interface.disabled.v = true;
-		}, 3000);
 	}
 	
 	//Backend functions
