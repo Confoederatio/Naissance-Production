@@ -1,5 +1,13 @@
 //Initialise class
-if (!global.DALS) global.DALS = {};
+if (!global.DALS) global.DALS = {
+	/**
+	 * This is an example of how to declare documentation for a specific variable.
+	 *
+	 * @type {DALS.Timeline}
+	 * @typedef {DALS.timeline}
+	 */
+	timeline: undefined
+};
 if (!global.main) global.main = {};
 
 //Define DALS.timeline as DALS.Timeline.current_timeline
