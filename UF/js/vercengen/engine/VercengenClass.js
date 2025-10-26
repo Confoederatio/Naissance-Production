@@ -1,14 +1,35 @@
 if (!global.ve) global.ve = {};
 
+/**
+ * [WIP Documentation]
+ * <span color = "yellow">{@link ve.Class}</span>: Classes that extend this are parsed by the reflection engine, with UIs treated as being a subset of state via <span color = "yellow">{@link ve.Component}</span> type declarations.
+ *
+ * UIs can be opened via super.<span color=00ffff>open</span>(arg0_mode:"class"/"instance", arg1_options:{@link Object}), and closed using <span color=00ffff>close</span>(arg0_mode:"class"/"instance").
+ * 
+ * ##### Instance:
+ * - `.id=Class.generateRandomID(ve.Class)`
+ * - 
+ * - `.class_window`: {@link ve.Window} - The class window any static components are bound to.
+ * - `.instance_window`: {@link ve.Window} - The instance window non-static components is bound to.
+ * 
+ * ##### Methods:
+ * - <span color=00ffff>{@link ve.Class.close|close}</span>(arg0_mode:"class"/"instance")
+ * - <span color=00ffff>{@link ve.Class.draw|draw}</span>(arg0_function:{@link function}(this:{@link ve.Class}), arg1_interval=0:{@link number}) - The draw function intended to make non-UI related draw calls to browser/process.
+ * - <span color=00ffff>{@link ve.Class.isClosed|isClosed}</span>(arg0_mode:"class"/"instance") ¦ {@link boolean} - Whether the selected window is closed.
+ * - <span color=00ffff>{@link ve.Class.isOpen|isOpen}</span>(arg0_mode:"class"/"instance") ¦ {@link boolean} - Whether the selected window is open.
+ * - 
+ * 
+ * ##### Static Fields:
+ * - `.instances`: {@link Array}<this:{@link ve.Class}>
+ * 
+ * @type {ve.Class}
+ */
 ve.Class = class {
 	//Declare local static variables
 	static instances = [];
 	
 	//Constructor/getter/setter
-	constructor (arg0_options) {
-		//Convert from parameters
-		let options = (arg0_options) ? arg0_options : {};
-		
+	constructor () {
 		//Declare local instance variables
 		this.id = Class.generateRandomID(ve.Class); //Non-Vercengen objects can be used freely
 		
@@ -65,7 +86,7 @@ ve.Class = class {
 	 *  @param {number|string} [arg1_options.x] - Mouse coordinates if undefined.
 	 *  @param {number|string} [arg1_options.y] - Mouse coordinates if undefined.
 	 */
-	open (arg0_mode, arg1_options) { //[WIP] - Finish function body
+	open (arg0_mode, arg1_options) {
 		//Convert from parameters
 		let mode = (arg0_mode) ? arg0_mode : "instance";
 		let options = (arg1_options) ? arg1_options : {};
