@@ -23,10 +23,10 @@
  * 
  * ##### Methods:
  * - <span color=00ffff>{@link ve.FileExplorer.clearClipboard|clearClipboard}</span>()
- * - <span color=00ffff>{@link ve.FileExplorer.deselect|deselect}</span>(arg0_file_path:{@link string}, arg1_options:{do_not_modify_classes: {@link boolean}})
+ * - <span color=00ffff>{@link ve.FileExplorer.deselect|deselect}</span>(arg0_file_path:{@link string}, arg1_options:{do_not_modify_classes: {@link boolean}}) | {@link Array}<{@link string}>
  * - <span color=00ffff>{@link ve.FileExplorer.deselectAll|deselectAll}</span>()
  * - <span color=00ffff>{@link ve.FileExplorer.fireSelectToggle|fireSelectToggle}(v:{@link boolean}, e:{@link ve.Toggle}) - Internal handler for toggling file/folder selection.
- * - <span color=00ffff>{@link ve.FileExplorer.select|select}</span>(arg0_file_path:{@link string})
+ * - <span color=00ffff>{@link ve.FileExplorer.select|select}</span>(arg0_file_path:{@link string}) | {@link Array}<{@link string}>
  * - <span color=00ffff>{@link ve.FileExplorer.selectAll|selectAll}</span>()
  * - <span color=00ffff>{@link ve.FileExplorer.setClipboard|setClipboard}</span>() - Sets the clipboard to currently selected file paths.
  * - <span color=00ffff>{@link ve.FileExplorer.refresh|refresh}</span>() - Refreshes the current ve.FileExplorer display. Handled automatically.
