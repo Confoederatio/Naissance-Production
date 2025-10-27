@@ -1,3 +1,12 @@
+/**
+ * @augments {@link ve.Component}
+ * 
+ * ##### Constructor:
+ * ##### Instance:
+ * ##### Methods:
+ * 
+ * @type {ve.veFileExplorer}
+ */
 ve.FileExplorer = class veFileExplorer extends ve.Component {
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
