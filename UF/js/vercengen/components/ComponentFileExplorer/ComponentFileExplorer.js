@@ -1,13 +1,32 @@
 /**
- * @augments {@link ve.Component}
+ * Refer to <span color = "yellow">{@link ve.Component}</span> for methods or fields inherited from this Component's parent such as `.options.attributes` or `.element`.
+ * 
+ * File explorer used either for navigation (i.e. saving/loading) or as a generic file explorer primitive.
  * 
  * ##### Constructor:
+ * - `arg0_value`: {@link string} - The file path in which the FileExplorer should be initialised.
+ * - `arg1_options`: {@link Object}
+ *   - `.file_components_obj={select: ...}`: {@link Object}<{@link ve.Component}>
+ *   - `.file_icon="<icon>description</icon>"`: {@link string}
+ *   - `.file_options`: {@link Object}
+ *   - `.folder_components_obj={select: ...}`: {@link Object}<{@link ve.Component}>
+ *   - `.folder_icon="<icon>folder</icon>"`: {@link string}
+ *   - `.folder_options`: {@link Object}
+ *   - `.name`: {@link string}
+ *   - `.navigation_only=false`: {@link boolean}
+ *   
  * ##### Instance:
- * ##### Methods:
+ * - `.clipboard`: {@link Array}<{@link string}> - The list of full file paths currently stored in the clipboard.
+ * - `.selected`: {@link Array}<{@link string}> - The list of selected file paths.
+ * - `.v`: {@link string} - The current file path.
  * 
- * @type {ve.veFileExplorer}
+ * ##### Methods:
+ * - <span color=00ffff>{@link ve.FileExplorer.clearClipboard|clearClipboard}</span>()
+ *
+ * @augments {@link ve.Component}
+ * @type {ve.FileExplorer}
  */
-ve.FileExplorer = class veFileExplorer extends ve.Component {
+ve.FileExplorer = class extends ve.Component {
 	constructor (arg0_value, arg1_options) {
 		//Convert from parameters
 		let value = (arg0_value) ? arg0_value : __dirname;
