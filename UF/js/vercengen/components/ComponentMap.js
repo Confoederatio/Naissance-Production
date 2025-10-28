@@ -15,7 +15,7 @@
  * @augments {@link ve.Component}
  * @type {ve.Map}
  */
-ve.Map = class extends ve.Component { //[WIP] - Add options for manipulating projection/base layer
+ve.Map = class extends ve.Component {
 	static instances = [];
 	
 	constructor (arg0_value, arg1_options) {
