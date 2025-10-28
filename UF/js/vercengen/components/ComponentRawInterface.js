@@ -1,31 +1,10 @@
 /**
- * <span color = "yellow">{@link ve.Component}</span>:ve.RawInterface
+ * Refer to <span color = "yellow">{@link ve.Component}</span> for methods or fields inherited from this Component's parent such as `.options.attributes` or `.element`.
  * 
- * ##### Constructor:
- * - `arg0_components_obj`: {@link Object}<{@link ve.Component}>
- * - `arg1_options`: {@link Object}
- *   - `.attributes`: {@link Object}
- *     - `<attribute_key>`: {@link string}
- *   - `.name`: {@link string}
- *   - `.onchange`: {@link function}(this:{@link ve.HierarchyDatatype})
- *   - `.style`: {@link Object}
- *     - `<style_key>`: {@link string}
- *     
- * ##### DOM:
- * - `.instance`: this:{@link ve.RawInterface}
- * 
- * ##### Instance:
- * - `.element`: {@link HTMLElement}
- * - `.name`: {@link string}
- * - `.v`: {@link Object}<{@link ve.Component}>
- * 
- * ##### Methods:
- * - <span color=00ffff>{@link ve.RawInterface.remove|remove}</span>()
- * 
- * @function veRawInterface
- * @type {ve.veRawInterface}
+ * @augments {@link ve.Component}
+ * @type {ve.RawInterface}
  */
-ve.RawInterface = class veRawInterface extends ve.Component {
+ve.RawInterface = class extends ve.Component {
 	constructor (arg0_components_obj, arg1_options) {
 		//Convert from parameters
 		let components_obj = (arg0_components_obj) ? arg0_components_obj : {};
