@@ -3,7 +3,7 @@
  * 
  * ##### Constructor:
  * - `arg0_options`: {@link Object}
- *   - All bindings accept 'this'/'global'/'window' variables.
+ *   - All bindings accept 'this'/'global'/'window' variables. Bindings propagate recursively upwards (i.e. a userchange at a lower level will register as a userchange in an upper level).
  *   - `.binding`: {@link string} - Related event: `.onchange`. Bidirectional data binding for both `.from_binding`/`.to_binding`.
  *   - `.from_binding`: {@link string} - Related event: `.onprogramchange`. Unidirectional data binding.
  *   - `.to_binding`: {@link string} - Related event: `.onuserchange`. Unidirectional data binding.
@@ -58,35 +58,38 @@
  * Types are annotated by both their constructor function and what they return after the pipe separator (`.v`). 
  * 
  * \* indicates a recursive Object of that type.
- * - {@link ve.FileExplorer|veFileExplorer}(arg0_value:{@link string}, arg1_options:{@link Object}) | {@link string} - The file path the File Explorer is currently navigating.
- * - {@link ve.Hierarchy|veHierarchy}(arg0_value:{@link Object}<{@link ve.Component}>, arg1_options:{@link Object}) | {@link Object}<{@link ve.Component}> - Note. It is recommended to use {@link ve.HierarchyDatatype} as the specific {@link ve.Component} for `arg0_value`.
- *   - {@link ve.HierarchyDatatype|veHierarchyDatatype}({@link Object}<{@link ve.Component}>, arg1_options:{@link Object}) | {@link Object}<{@link ve.Component}> - Represents individual items in a hierarchy.
+ * - {@link ve.Component.ve.FileExplorer|veFileExplorer}(arg0_value:{@link string}, arg1_options:{@link Object}) | {@link string} - The file path the File Explorer is currently navigating.
+ * - {@link ve.Component.ve.Hierarchy|veHierarchy}(arg0_value:{@link Object}<{@link ve.Component}>, arg1_options:{@link Object}) | {@link Object}<{@link ve.Component}> - Note. It is recommended to use {@link ve.HierarchyDatatype} as the specific {@link ve.Component} for `arg0_value`.
+ *   - {@link ve.Component.ve.HierarchyDatatype|veHierarchyDatatype}({@link Object}<{@link ve.Component}>, arg1_options:{@link Object}) | {@link Object}<{@link ve.Component}> - Represents individual items in a hierarchy.
  * 
- * - {@link ve.BIUF|veBIUF}(arg0_value:{@link string}, arg1_options:{@link Object}) | {@link string} - Single-line rich text input. `.v` is an HTML string.
- * - {@link ve.Button|veButton}(arg0_value:{@link function}, arg1_options:{@link Object}) | {@link function}
- * - {@link ve.Checkbox|veCheckbox}(arg0_value:{@link boolean}|{@link Object}<{@link boolean}>\*, arg1_options: {@link Object}) | {@link boolean}|{@link Object}<{@link boolean}>\* - A recursive list of checkboxes, or a single toggleable input.
- * - {@link ve.Colour|veColour}(arg0_value:{@link Array}<{@link number}, {@link number}, {@link number}|{@link string}, arg1_options: {@link Object}>) | {@link Array}<{@link number}, {@link number}, {@link number}> - RGB colour selector.
- * - {@link ve.Datalist|veDatalist}(arg0_value:{@link Object}<{@link string}>, arg1_options: {@link Object})
- * - {@link ve.Date|veDate}(arg0_value:{@link UF.Date}, arg1_options: {@link Object}) | {@link UF.Date}
- * - {@link ve.DateLength|veDateLength}(arg0_value:{@link UF.Date}, arg1_options: {@link Object}) | {@link UF.Date}
- * - {@link ve.File|veFile}(arg0_value:{@link string}, arg1_options:{@link Object}) | {@link string} - The file/folder path selected by the user.
- * - {@link ve.HTML|veHTML}(arg0_value:{@link function}|{@link HTMLElement}|{@link string}, arg1_options: {@link Object}) | {@link string}
- * - {@link ve.Interface|veInterface}(arg0_value:{@link Object}<{@link ve.Component}>, arg1_options:{@link Object}) | {@link Object}<{@link ve.Component}>
- * - {@link ve.Map|veMap}(arg0_value:{@link maptalks.Map}, arg1_options:{@link Object}) | {@link maptalks.Map}
- * - {@link ve.Number|veNumber}(arg0_value:{@link number}, arg1_options:{@link Object}) | {@link number}
- * - {@link ve.PageMenu|vePageMenu}(arg0_value:{@link Object}, arg1_options:{@link Object}) | {@link string} - The `.page` key currently displayed.
- * - {@link ve.Password|vePassword}(arg0_value:{@link string}, arg1_options:{@link Object}) | {@link string}
- * - {@link ve.Radio|veRadio}(arg0_value:{@link Object}<{@link boolean}>\* | {@link Object}<{@link boolean}>\*
- * - {@link ve.Range|veRange}(arg0_value:{@link number}, arg1_options: {@link Object}) | {@link number}
- * - {@link ve.RawInterface|veRawInterface}(arg0_components_obj:{@link Object}<{@link ve.Component}>, arg1_options:{@link Object}) | {@link Object}<{@link ve.Component}>
- * - {@link ve.Select|veSelect}(arg0_value:{@link ve.Object}<{@link string}>, arg1_options:{@link Object}) | {@link string} - The key of the selected option.
- * - {@link ve.Telephone|veTelephone}(arg0_value:{@link string}, arg1_options:{@link Object}) | {@link string}
- * - {@link ve.Text|veText}(arg0_value:{@link string}, arg1_options: {@link Object}) | {@link string}
- * - {@link ve.Time|veTime}(arg0_value:{hour:{@link number}, minute:{@link number}}, arg1_options:{@link Object}) | {hour:{@link number}, minute:{@link number}}
- * - {@link ve.Toggle|veToggle}(arg0_value:{@link boolean}, arg1_options:{@link Object}) | {@link boolean}
- * - {@link ve.UndoRedo|veUndoRedo}(arg0_value:{@link string}, arg1_options:{@link Object}) | {@link string} - The {@link DALS.Timeline} ID that the UndoRedo component is currently navigating.
- * - {@link ve.URL|veURL}(arg0_value:{@link string}, arg1_options:{@link Object}) | {@link string}
+ * - {@link ve.Component.ve.BIUF|veBIUF}(arg0_value:{@link string}, arg1_options:{@link Object}) | {@link string} - Single-line rich text input. `.v` is an HTML string.
+ * - {@link ve.Component.ve.Button|veButton}(arg0_value:{@link function}, arg1_options:{@link Object}) | {@link function}
+ * - {@link ve.Component.ve.Checkbox|veCheckbox}(arg0_value:{@link boolean}|{@link Object}<{@link boolean}>\*, arg1_options: {@link Object}) | {@link boolean}|{@link Object}<{@link boolean}>\* - A recursive list of checkboxes, or a single toggleable input.
+ * - {@link ve.Component.ve.Colour|veColour}(arg0_value:{@link Array}<{@link number}, {@link number}, {@link number}|{@link string}, arg1_options: {@link Object}>) | {@link Array}<{@link number}, {@link number}, {@link number}> - RGB colour selector.
+ * - {@link ve.Component.ve.Datalist|veDatalist}(arg0_value:{@link Object}<{@link string}>, arg1_options: {@link Object})
+ * - {@link ve.Component.ve.Date|veDate}(arg0_value:{@link UF.Date}, arg1_options: {@link Object}) | {@link UF.Date}
+ * - {@link ve.Component.ve.DateLength|veDateLength}(arg0_value:{@link UF.Date}, arg1_options: {@link Object}) | {@link UF.Date}
+ * - {@link ve.Component.ve.File|veFile}(arg0_value:{@link string}, arg1_options:{@link Object}) | {@link string} - The file/folder path selected by the user.
+ * - {@link ve.Component.ve.HTML|veHTML}(arg0_value:{@link function}|{@link HTMLElement}|{@link string}, arg1_options: {@link Object}) | {@link string}
+ * - {@link ve.Component.ve.Interface|veInterface}(arg0_value:{@link Object}<{@link ve.Component}>, arg1_options:{@link Object}) | {@link Object}<{@link ve.Component}>
+ * - {@link ve.Component.ve.Map|veMap}(arg0_value:{@link maptalks.Map}, arg1_options:{@link Object}) | {@link maptalks.Map}
+ * - {@link ve.Component.ve.Number|veNumber}(arg0_value:{@link number}, arg1_options:{@link Object}) | {@link number}
+ * - {@link ve.Component.ve.PageMenu|vePageMenu}(arg0_value:{@link Object}, arg1_options:{@link Object}) | {@link string} - The `.page` key currently displayed.
+ * - {@link ve.Component.ve.Password|vePassword}(arg0_value:{@link string}, arg1_options:{@link Object}) | {@link string}
+ * - {@link ve.Component.ve.Radio|veRadio}(arg0_value:{@link Object}<{@link boolean}>\* | {@link Object}<{@link boolean}>\*
+ * - {@link ve.Component.ve.Range|veRange}(arg0_value:{@link number}, arg1_options: {@link Object}) | {@link number}
+ * - {@link ve.Component.ve.RawInterface|veRawInterface}(arg0_components_obj:{@link Object}<{@link ve.Component}>, arg1_options:{@link Object}) | {@link Object}<{@link ve.Component}>
+ * - {@link ve.Component.ve.Select|veSelect}(arg0_value:{@link ve.Object}<{@link string}>, arg1_options:{@link Object}) | {@link string} - The key of the selected option.
+ * - {@link ve.Component.ve.Telephone|veTelephone}(arg0_value:{@link string}, arg1_options:{@link Object}) | {@link string}
+ * - {@link ve.Component.ve.Text|veText}(arg0_value:{@link string}, arg1_options: {@link Object}) | {@link string}
+ * - {@link ve.Component.ve.Time|veTime}(arg0_value:{hour:{@link number}, minute:{@link number}}, arg1_options:{@link Object}) | {hour:{@link number}, minute:{@link number}}
+ * - {@link ve.Component.ve.Toggle|veToggle}(arg0_value:{@link boolean}, arg1_options:{@link Object}) | {@link boolean}
+ * - {@link ve.Component.ve.UndoRedo|veUndoRedo}(arg0_value:{@link string}, arg1_options:{@link Object}) | {@link string} - The {@link DALS.Timeline} ID that the UndoRedo component is currently navigating.
+ * - {@link ve.Component.ve.URL|veURL}(arg0_value:{@link string}, arg1_options:{@link Object}) | {@link string}
  * 
+ * @class
+ * @memberof ve
+ * @namespace ve.Component
  * @type {ve.Component}
  */
 ve.Component = class {
@@ -288,7 +291,18 @@ ve.Component = class {
 		
 		//Set value of to object by fetching this.v
 		let local_value = this.v; //Because this is a getter, run it once
-		//console.log(initial_object, variable_string, local_value);
+		
+		//Traverse up the .owners tree and fire onchange/onuserchange
+		if (this.owners) 
+			for (let i = this.owners.length - 1; i >= 0; i--)
+				if (this.owners[i].options) {
+					let local_options = this.owners[i].options;
+					
+					if (typeof local_options.onchange === "function")
+						local_options.onchange(this.owners[i].v, this.owners[i]);
+					if (typeof local_options.onuserchange === "function") //Fire onuserchange (unidirectional)
+						local_options.onuserchange(this.owners[i].v, this.owners[i]);
+				}
 		
 		if (typeof this.options.onchange === "function") //Fire onchange (bidirectional)
 			this.options.onchange(local_value, this);
@@ -340,6 +354,18 @@ ve.Component = class {
 					//Declare local instance variables
 					let is_same_value = Boolean.strictEquality(local_value, this.v);
 					if (is_same_value) return;
+					
+					//Traverse up the .owners tree and fire onchange/onprogramchange
+					if (this.owners)
+						for (let i = this.owners.length - 1; i >= 0; i--)
+							if (this.owners[i].options) {
+								let local_options = this.owners[i].options;
+								
+								if (typeof local_options.onchange === "function") //Fire onchange (bidirectional)
+									local_options.onchange(this.owners[i].v, this.owners[i]);
+								if (typeof local_options.onprogramchange === "function") //Fire onprogramchange (unidirectional)
+									local_options.onprogramchange(this.owners[i].v, this.owners[i]);
+							}
 					
 					if (typeof this.options.onchange === "function") //Fire onchange (bidirectional)
 						this.options.onchange(local_value, this);

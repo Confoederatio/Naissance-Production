@@ -19,10 +19,12 @@
  * - <span color=00ffff>{@link ve.BIUF.initBIUFToolbar|initBIUFToolbar}</span>()
  * - <span color=00ffff>{@link ve.BIUF.sendOnchangeEvent|sendOnchangeEvent}</span>()
  * 
+ * @augments ve.Component
  * @augments {@link ve.Component}
- * @type {ve.ComponentBIUF}
+ * @memberof ve.Component
+ * @type {ve.BIUF}
  */
-ve.ComponentBIUF = class extends ve.Component {
+ve.BIUF = class extends ve.Component {
 	static demo_value = `<b>Bold</b> <i>Italic</i>, <u>Underline</u>, and regular text formatting are supported by BIUF fields.`;
 	static demo_options = {
 		onchange: (e) => {
@@ -193,5 +195,5 @@ ve.ComponentBIUF = class extends ve.Component {
  */
 veBIUF = function () {
 	//Return statement
-	return new ve.ComponentBIUF(...arguments);
+	return new ve.BIUF(...arguments);
 };
