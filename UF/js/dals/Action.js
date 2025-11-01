@@ -18,6 +18,7 @@ DALS.Action = class {
 		this.options = (json.options) ? json.options : {};
 			this.name = (json.options.name) ? json.options.name : "New Action";
 		this.timeline = undefined; //Populated upon .addAction()
+		this.value = json;
 		
 		//Assign Action to DALS.Timeline
 		if (!this.options.timeline) {
@@ -44,7 +45,7 @@ DALS.Action = class {
 			}
 		if (!options.removed_from_timeline)
 			if (this.timeline)
-				this.timeline.removeAction(this);
+				this.timeline.removeAction(this.id);
 	}
 	
 	jumpTo () {

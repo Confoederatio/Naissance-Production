@@ -23,6 +23,7 @@ Object.defineProperty(DALS, "timeline", {
 //[WIP] - Place DALS.Timeline on a JSON footing
 DALS.Timeline = class {
 	//Declare local static variables
+	static current_index = 0;
 	static current_timeline;
 	static instances = [];
 	
@@ -57,6 +58,7 @@ DALS.Timeline = class {
 			new_action.timeline = this.id;
 		
 		//Push action to timeline
+		DALS.Timeline.current_index++;
 		this.value.push(new_action);
 	}
 	
@@ -66,23 +68,56 @@ DALS.Timeline = class {
 		
 		//Declare local instance variables
 		let new_timeline = new DALS.Timeline(options);
-			new_timeline.parent_timeline = this.id;
+			new_timeline.parent_timeline = [this.id, this.value.length - 1];
 		
 		//Return statement
 		return new_timeline;
 	}
 	
 	delete () {
-		
+		if (DALS.Timeline.instances.length <= 1) {
+			//Simply clear the entire state since the last timeline is being removed
+			this.value = [];
+			delete DALS.Timeline.current_timeline;
+			DALS.Timeline.instances = [];
+			DALS.Timeline.loadState({});
+		} else {
+			//1. Reassign all branched timelines to this timeline's .parent_timeline
+			for (let i = 0; i < DALS.Timeline.instances.length; i++) {
+				let local_timeline = DALS.Timeline.instances[i];
+				
+				if (local_timeline.parent_timeline === this.id)
+					local_timeline.parent_timeline = this.parent_timeline;
+			}
+			
+			//2. If the current timeline is being removed, jump to this.parent_timeline index
+			if (DALS.Timeline.current_timeline === this.id) {
+				let parent_timeline_obj = DALS.Timeline.getTimeline(this.parent_timeline[0]);
+					parent_timeline_obj.jumpToAction(this.parent_timeline[1]);
+			}
+			
+			//3. Iterate over DALS.Timeline.instances; delete from DALS.Timeline.instances
+			for (let i = 0; i < DALS.Timeline.instances.length; i++)
+				if (DALS.Timeline.instances[i].id === this.id) {
+					DALS.Timeline.instances.splice(i, 1);
+					break;
+				}
+		}
 	}
 	
 	/**
 	 * Jumps to a specific action ID in the timeline, starting from its head, utilising .parseAction()
 	 * 
-	 * @param arg0_action_id
+	 * @param {number|string} arg0_action_id
 	 */
 	jumpToAction (arg0_action_id) {
+		//Convert from parameters
 		
+		//1. Cast index to action_id if typeof number, assuming that it is valid
+		
+		//2. Load initial state at head
+		
+		//3. Redo actions starting from the state head using DALS.Timeline.parseAction() until we hit the target action ID
 	}
 	
 	jumpToEnd () {
@@ -90,11 +125,16 @@ DALS.Timeline = class {
 	}
 	
 	jumpToStart () {
-		
+		//Load initial state
+		DALS.Timeline.loadState(this.value[0]);
 	}
 	
 	removeAction (arg0_action_id) {
+		//Convert from parameters
 		
+		//1. Go over all DALS.Timeline instances that branch from this timeline at an index greater or equal to the action being removed and set their new .parent_timeline to the end of the present timeline
+		
+		//2. Splice all actions at and after the index from the current timeline
 	}
 	
 	static getTimeline (arg0_timeline_id) {
