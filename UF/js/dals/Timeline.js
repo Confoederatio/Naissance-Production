@@ -16,7 +16,7 @@ Object.defineProperty(DALS, "timeline", {
 		return DALS.Timeline.current_timeline;
 	},
 	set (v) {
-		DALS.Timeline.current_timeline.v = v;
+		DALS.Timeline.current_timeline = v;
 	}
 });
 
