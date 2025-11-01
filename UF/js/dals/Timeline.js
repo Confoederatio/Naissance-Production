@@ -178,11 +178,31 @@ DALS.Timeline = class {
 	}
 	
 	static getTimeline (arg0_timeline_id) {
+		//Convert from parameters
+		let timeline_id = arg0_timeline_id;
 		
+		//Internal guard clause if timeline_id is of type object
+		if (typeof timeline_id === "object") return timeline_id;
+		
+		//Iterate over all .instances otherwise and return if the timeline ID is a match
+		for (let i = 0; i < DALS.Timeline.instances.length; i++)
+			if (DALS.Timeline.instances[i].id === timeline_id)
+				//Return statement
+				return DALS.Timeline.instances[i];
 	}
 	
 	static load (arg0_file_path) {
+		//Convert from parameters
+		let file_path = arg0_file_path.toString();
 		
+		//Read file, then attempt to call DALS.Timeline.loadState() with it
+		fs.readFile(file_path, "utf8", (err, data) => {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			DALS.Timeline.loadState(data);
+		})
 	}
 	
 	static loadState (arg0_json) {
@@ -190,7 +210,11 @@ DALS.Timeline = class {
 	}
 	
 	static jumpToTimeline (arg0_timeline_id) {
+		//Convert from parameters
+		let timeline_id = arg0_timeline_id;
 		
+		//jumpToStart of target timeline
+		DALS.Timeline.getTimeline(timeline_id).jumpTo();
 	}
 	
 	static parseAction (arg0_json) {
@@ -198,7 +222,13 @@ DALS.Timeline = class {
 	}
 	
 	static save (arg0_file_path) {
+		//Convert from parameters
+		let file_path = arg0_file_path.toString();
 		
+		//Declare local instance variables
+		fs.writeFile(file_path, JSON.stringify(DALS.Timeline.saveState()), (err) => {
+			if (err) console.error(err);
+		});
 	}
 	
 	static saveState () {
