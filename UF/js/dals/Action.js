@@ -5,37 +5,31 @@ DALS.Action = class {
 	//Declare local static variables
 	static instances = [];
 	
-	//Constructor/getter/setter
-	constructor (arg0_redo_function, arg1_options) {
+	constructor (arg0_json) {
 		//Convert from parameters
-		let redo_function = arg0_redo_function;
-		let options = (arg1_options) ? arg1_options : {};
+		let json = arg0_json;
 		
-		//Internal guard clauses
-		if (typeof redo_function !== "function")
-			throw new Error(`arg0_redo_function must be of type 'function' for DALS.Action.`);
+		//Serialise/deserialise to JSON to ensure syntactic correctness
+		if (typeof json !== "string") json = JSON.stringify(json);
+		if (json === "string") json = JSON.parse(json);
 		
 		//Declare local instance variables
 		this.id = Class.generateRandomID(DALS.Action);
-		this.options = options;
-		this.name = (this.options.name) ? this.options.name : "New Action";
-		this.redo_function = redo_function;
+		this.options = (json.options) ? json.options : {};
+			this.name = (json.options.name) ? json.options.name : "New Action";
 		this.timeline = undefined; //Populated upon .addAction()
 		
 		//Assign Action to DALS.Timeline
-		if (!options.timeline) {
+		if (!this.options.timeline) {
 			//Assign to current_timeline
 			DALS.Timeline.current_timeline.addAction(this);
 		} else {
 			//Assign to specified timeline
-			DALS.Timeline.getTimeline(options.timeline)
-				.addAction(this);
+			DALS.Timeline.getTimeline(this.options.timeline).addAction(this);
 		}
-		
 		DALS.Action.instances.push(this);
 	}
 	
-	//Class methods
 	delete (arg0_options) {
 		//Declare local instance variables
 		let options = (arg0_options) ? arg0_options : {
