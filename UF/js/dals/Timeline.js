@@ -29,7 +29,7 @@ DALS.Timeline = class {
 	
 	/**
 	 * @param [arg0_options]
-	 *  @param {string} [arg0_options.parent_timeline]
+	 *  @param {[string, number]} [arg0_options.parent_timeline]
 	 */
 	constructor (arg0_options) {
 		//Convert from parameters
@@ -45,21 +45,19 @@ DALS.Timeline = class {
 		
 		//Ensure that the current timeline is always the last timeline created/split off
 		if (options.current_timeline !== false)
-			DALS.Timeline.current_timeline = this;
+			DALS.Timeline.current_timeline = this.id;
 		DALS.Timeline.instances.push(this);
 	}
 	
 	addAction (arg0_json) {
 		//Convert from parameters
-		let json = JSON.stringify(arg0_json);
+		let json = (typeof arg0_json !== "string") ? JSON.stringify(arg0_json) : arg0_json;
 		
 		//Declare local instance variables
-		let new_action = new DALS.Action(json);
-			new_action.timeline = this.id;
-		
-		//Push action to timeline
-		DALS.Timeline.current_index++;
-		this.value.push(new_action);
+		let json_obj = JSON.parse(json);
+			if (json_obj.options === undefined) json_obj.options = {};
+				if (json_obj.options.timeline === undefined) json_obj.options.timeline = this.id;
+		new DALS.Action(json_obj);
 	}
 	
 	branch (arg0_options) {
@@ -125,6 +123,7 @@ DALS.Timeline = class {
 		//3. Redo actions starting from the state head using DALS.Timeline.parseAction() until we hit the target action ID
 		for (let i = 1; i < this.value.length; i++) {
 			DALS.Timeline.parseAction(this.value[i].value);
+			DALS.Timeline.current_index = i;
 			if (this.value[i].id === action_id) break;
 		}
 	}
@@ -140,6 +139,7 @@ DALS.Timeline = class {
 	
 	jumpToStart () {
 		//Load initial state
+		DALS.Timeline.current_timeline = this.id;
 		DALS.Timeline.loadState(this.value[0]);
 	}
 	
@@ -205,20 +205,12 @@ DALS.Timeline = class {
 		})
 	}
 	
-	static loadState (arg0_json) {
-		
-	}
-	
 	static jumpToTimeline (arg0_timeline_id) {
 		//Convert from parameters
 		let timeline_id = arg0_timeline_id;
 		
 		//jumpToStart of target timeline
-		DALS.Timeline.getTimeline(timeline_id).jumpTo();
-	}
-	
-	static parseAction (arg0_json) {
-		
+		DALS.Timeline.getTimeline(timeline_id).jumpToStart();
 	}
 	
 	static save (arg0_file_path) {
@@ -229,9 +221,5 @@ DALS.Timeline = class {
 		fs.writeFile(file_path, JSON.stringify(DALS.Timeline.saveState()), (err) => {
 			if (err) console.error(err);
 		});
-	}
-	
-	static saveState () {
-		
 	}
 };

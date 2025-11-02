@@ -11,7 +11,7 @@ DALS.Action = class {
 		
 		//Serialise/deserialise to JSON to ensure syntactic correctness
 		if (typeof json !== "string") json = JSON.stringify(json);
-		if (json === "string") json = JSON.parse(json);
+		if (typeof json === "string") json = JSON.parse(json);
 		
 		//Declare local instance variables
 		this.id = Class.generateRandomID(DALS.Action);
@@ -23,10 +23,11 @@ DALS.Action = class {
 		//Assign Action to DALS.Timeline
 		if (!this.options.timeline) {
 			//Assign to current_timeline
-			DALS.Timeline.current_timeline.addAction(this);
+			DALS.Timeline.getTimeline(DALS.Timeline.current_timeline).value.push(this);
+			DALS.Timeline.current_index++;
 		} else {
 			//Assign to specified timeline
-			DALS.Timeline.getTimeline(this.options.timeline).addAction(this);
+			DALS.Timeline.getTimeline(this.options.timeline).value.push(this);
 		}
 		DALS.Action.instances.push(this);
 	}
