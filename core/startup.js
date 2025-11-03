@@ -15,18 +15,60 @@ global.path = require("path");
 		
     //Declare global variables
     global.main = {
-			brush: undefined, //new Brush(),
 			date: Date.getCurrentDate(),
 			hierarchy: {},
 			interfaces: {
 				//Topbar
 				date_ui: new UI_DateMenu()
 			},
-			layers: {},
-			map: map
+			layers: {
+				//Foreground layers
+				overlay_layer: new maptalks.VectorLayer("overlay_layer", [], { zIndex: 99 }),
+				cursor_layer: new maptalks.VectorLayer("cursor_layer", [], { zIndex: 98 }),
+				label_layer: new maptalks.VectorLayer("label_layer", [], { zIndex: 97 }),
+				
+				//Background layers
+				selection_layer: new maptalks.VectorLayer("selection_layer", [], { zIndex: 2 }),
+				entity_layer: new maptalks.VectorLayer("entity_layer", [], {
+					hitDetect: true,
+					interactive: true,
+					zIndex: 1 
+				})
+			},
+			map: map,
+			user: {
+				
+			},
+			
+			//Aliases
+			brush: undefined,
     };
 		if (!global.naissance)
 			global.naissance = {};
+		
+		//1.1. Append all layers to map
+		Object.iterate(main.layers, (local_key, local_value) => local_value.addTo(map));
+		
+		//1.2. Add event handlers to map
+		//onleftclick
+		/*
+		map.addEventListener("click", (e) => {
+			if (Map.brush_context_menu)
+				Map.brush_context_menu.remove();
+		});
+		 */
+		
+		//onrightclick
+		/*
+		map.addEventListener("contextmenu", (e) => {
+			if (Map.brush_context_menu)
+				Map.brush_context_menu.remove();
+			Map.brush_context_menu = new MapContextMenu();
+		});
+		 */
+		
+		//2. Set aliases
+		main.brush = main.user.brush;
   }
 
   function trackPerformance () {
