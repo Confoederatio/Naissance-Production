@@ -15,7 +15,7 @@ global.path = require("path");
 		
     //Declare global variables
     global.main = {
-			brush: new Brush(),
+			brush: undefined, //new Brush(),
 			get date () {
 				return main.interfaces.date_ui.interface.date.v;
 			},
@@ -28,13 +28,16 @@ global.path = require("path");
 			},
 			hierarchy: {},
 			interfaces: {
-				date_ui: new DateMenu()
+				//Topbar
+				date_ui: new UI_DateMenu()
 			},
 			layers: {},
 			map: map
     };
+		if (!global.naissance)
+			global.naissance = {};
 		
-		Map.initialise();
+		//Map.initialise();
   }
 
   function trackPerformance () {
@@ -72,6 +75,7 @@ global.path = require("path");
 		//Accepts wildcards (*), exclusionary patterns (!), and folders/file paths
 		load_files: [
 			"!core/startup.js",
+			"!core/archives",
 			"core"
 		],
 		special_function: function () {
