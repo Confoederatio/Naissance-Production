@@ -7,9 +7,9 @@ global.UI_DateMenu = class extends ve.Class {
 		
 		this.interface = new ve.Interface({
 			date: new ve.Date(undefined, {
-				binding: "global.date",
-				onchange: (e) => {
-					History.loadDate(e.v);
+				binding: "main.date",
+				onchange: (v) => {
+					
 				}
 			})
 		}, { name: "Date", open: true });
