@@ -50,6 +50,9 @@ global.path = require("path");
 		Object.iterate(main.layers, (local_key, local_value) => local_value.addTo(map));
 		
 		//1.2. Add event handlers to map
+		//mousedown
+		//mouseup
+		
 		//onleftclick
 		/*
 		map.addEventListener("click", (e) => {
