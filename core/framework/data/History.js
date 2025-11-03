@@ -3,6 +3,7 @@ naissance.History = class extends ve.Class {
 	constructor (arg0_keyframes_obj, arg1_options) {
 		//Convert from parameters
 		super();
+		this.do_not_draw = false;
 		this.keyframes = (arg0_keyframes_obj) ? arg0_keyframes_obj : {};
 		
 		//Declare local instance variables
@@ -15,19 +16,19 @@ naissance.History = class extends ve.Class {
 	
 	addKeyframe (arg0_date, ...argn_arguments) {
 		//Convert from parameters
-		let date = (arg0_date) ? arg0_date : {};
+		let date = (arg0_date) ? Date.convertTimestampToDate(arg0_date) : main.date;
 		
 		//Declare local instance variables
 		let timestamp = Date.getTimestamp(date);
 		
 		//Create a new keyframe, otherwise concatenate with existing options if history is already defined
 		if (this.keyframes[timestamp] === undefined) {
-			this.keyframes[timestamp] = new naissance.HistoryKeyframe(...argn_arguments);
+			this.keyframes[timestamp] = new naissance.HistoryKeyframe(date, ...argn_arguments);
 		} else {
 			let local_keyframe = this.keyframes[timestamp];
 				local_keyframe.addData(...argn_arguments);
 		}
-		this.draw();
+		if (!this.do_not_draw) this.draw();
 		
 		//Return statement
 		return this.keyframes[timestamp];
@@ -73,6 +74,7 @@ naissance.History = class extends ve.Class {
 		if (json.keyframes) {
 			let all_keyframes = Object.keys(json.keyframes).sort().reverse();
 			
+			this.do_not_draw = true;
 			this.keyframes = {};
 			for (let i = 0; i < all_keyframes.length; i++) {
 				let local_date = Date.convertTimestampToDate(all_keyframes[i]);
@@ -80,6 +82,7 @@ naissance.History = class extends ve.Class {
 				
 				this.addKeyframe(local_date, ...local_keyframe.value);
 			}
+			this.do_not_draw = false;
 			this.draw();
 		} else {
 			console.error(`naissance.History.fromJSON() requires arg0_json to have a .keyframes Array<Object>.`, json);
@@ -119,13 +122,29 @@ naissance.History = class extends ve.Class {
 				value: []
 			};
 			for (let i = 0; i < all_keyframes.length; i++)
-				if (parseFloat(all_keyframes[i]) <)
+				if (parseFloat(all_keyframes[i]) <= timestamp) {
+					let local_keyframe = this.keyframes[all_keyframes[i]];
+					
+					for (let x = 0; x < local_keyframe.value.length; x++)
+						if (typeof local_keyframe.value[x] === "object") {
+							return_keyframe.value[x] = {
+								...(return_keyframe.value[x] ? return_keyframe.value[x] : {}),
+								...local_keyframe.value[x]
+							};
+						} else {
+							return_keyframe.value[x] = local_keyframe.value[x];
+						}
+				}
+			//Return statement
+			return return_keyframe;
 		}
 	}
 	
 	toJSON () {
 		//Convert from parameters
-		let json_obj = {};
+		let json_obj = {
+			keyframes: {}
+		};
 		
 		//Iterate over all this.keyframes and parse them to a minimal JSON contract
 		let all_keyframes = Object.keys(this.keyframes).sort().reverse();
@@ -133,7 +152,7 @@ naissance.History = class extends ve.Class {
 		for (let i = 0; i < all_keyframes.length; i++) {
 			let local_keyframe = this.keyframes[all_keyframes[i]];
 			
-			json_obj[all_keyframes[i]] = { value: local_keyframe.value };
+			json_obj.keyframes[all_keyframes[i]] = { value: local_keyframe.value };
 		}
 		
 		//Return statement
