@@ -140,6 +140,17 @@ naissance.History = class extends ve.Class {
 		}
 	}
 	
+	removeKeyframe (arg0_date) {
+		//Convert from parameters
+		let date = (arg0_date) ? Date.convertTimestampToDate(arg0_date) : main.date;
+		
+		//Declare local instance variables
+		let timestamp = Date.getTimestamp(date);
+		
+		//Delete target keyframe 
+		delete this.keyframes[timestamp];
+	}
+	
 	toJSON () {
 		//Convert from parameters
 		let json_obj = {

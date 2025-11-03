@@ -7,19 +7,28 @@ naissance.Geometry = class extends ve.Class {
 		super();
 		this.history = new naissance.History();
 		this.id = Class.generateRandomID(naissance.Geometry);
+		this.is_naissance_geometry = true; //Identifier flag for Naissance-bound reflection engine
 		
 		//Define naissance.Geometry contract
 		
-		/** @type {maptalks.Geometry|undefined} */
-		this.geometry = undefined;
-		/** @type {maptalks.Label|undefined} */
-		this.label = undefined;
-		this.selected = false;
-		/**
-		 * Mirror of: {@link this.geometry}
+		/** 
+		 * The current geometry as rendered on {@link global.map}.
 		 * @type {maptalks.Geometry|undefined} 
 		 */
-		this.selected_geometry = undefined;
+		this.geometry = undefined;
+		/** 
+		 * Renders any assigned name to the geometry/label.
+		 * @type {maptalks.Label|undefined}
+		 */
+		this.label = undefined;
+		/** @type {boolean} */
+		this.selected = false; //Should be overridden by a getter/setter that attempts to render this.selected_geometry
+		/**
+		 * Selected geometry overlay.
+		 * - Mirror of: {@link this.geometry}
+		 * @type {maptalks.Geometry|undefined} 
+		 */
+		this.selected_geometry = undefined; //
 		/**
 		 * Holds the currently rendered keyframe at this date.
 		 * @type {naissance.HistoryKeyframe.value|undefined}
