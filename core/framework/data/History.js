@@ -1,3 +1,4 @@
+if (!global.naissance) global.naissance = {};
 naissance.History = class extends ve.Class {
 	constructor (arg0_keyframes_obj, arg1_options) {
 		//Convert from parameters
@@ -12,23 +13,130 @@ naissance.History = class extends ve.Class {
 		this.interface = new ve.Interface({}, { name: "Keyframes", width: 99 });
 	}
 	
-	addKeyframe (argn_arguments) {
+	addKeyframe (arg0_date, ...argn_arguments) {
+		//Convert from parameters
+		let date = (arg0_date) ? arg0_date : {};
 		
+		//Declare local instance variables
+		let timestamp = Date.getTimestamp(date);
+		
+		//Create a new keyframe, otherwise concatenate with existing options if history is already defined
+		if (this.keyframes[timestamp] === undefined) {
+			this.keyframes[timestamp] = new naissance.HistoryKeyframe(...argn_arguments);
+		} else {
+			let local_keyframe = this.keyframes[timestamp];
+				local_keyframe.addData(...argn_arguments);
+		}
+		this.draw();
+		
+		//Return statement
+		return this.keyframes[timestamp];
 	}
 	
 	draw () {
+		//Declare local instance variables
+		let components_obj = {};
 		
+		//Iterate over all_keyframes and push it to components_obj
+		let all_keyframes = Object.keys(this.keyframes).sort().reverse();
+		
+		for (let i = 0; i < all_keyframes.length; i++) {
+			let local_key = all_keyframes[i];
+			let local_value = this.keyframes[all_keyframes[i]];
+			
+			//Set components_obj
+			components_obj[local_key] = new ve.RawInterface({
+				date_info: new ve.HTML((e) => `${local_value.timestamp}`, { x: 0, y: 0 }),
+				jump_to_date: new ve.HTML((e) => {
+					let icon_el = document.createElement("icon");
+					icon_el.innerHTML = `arrow_forward`;
+					icon_el.addEventListener("click", (e) => {
+						console.log(e);
+					});
+					return icon_el;
+				}, { tooltip: "Jump to Date", style: { cursor: "pointer" } })
+			}, {
+				name: String.formatDate(local_value.date),
+				style: {
+					display: "flex"
+				}
+			});
+		}
+		this.interface.v = components_obj;
 	}
 	
-	fromJSON () {
+	fromJSON (arg0_json) {
+		//Convert from parameters
+		let json = JSON.parse(arg0_json);
 		
+		//Iterate over all_json_keys and assume them as keyframes
+		if (json.keyframes) {
+			let all_keyframes = Object.keys(json.keyframes).sort().reverse();
+			
+			this.keyframes = {};
+			for (let i = 0; i < all_keyframes.length; i++) {
+				let local_date = Date.convertTimestampToDate(all_keyframes[i]);
+				let local_keyframe = json.keyframes[all_keyframes[i]];
+				
+				this.addKeyframe(local_date, ...local_keyframe.value);
+			}
+			this.draw();
+		} else {
+			console.error(`naissance.History.fromJSON() requires arg0_json to have a .keyframes Array<Object>.`, json);
+		}
 	}
 	
 	getKeyframe (arg0_options) {
+		//Convert from parameters
+		let options = (arg0_options) ? arg0_options : {};
 		
+		//Initialise options
+		if (options.date === undefined) options.date = main.date;
+		
+		//Declare local instance variables
+		let return_keyframe = {};
+		let timestamp = Date.getTimestamp(options.date);
+		
+		//1. If options.absolute_keyframe = true, iterate over all keyframes in this.keyframes, and return the most recent one
+		let all_keyframes = Object.keys(this.keyframes).sort().reverse();
+		
+		if (options.absolute_keyframe) {
+			for (let i = 0; i < all_keyframes.length; i++)
+				if (parseFloat(all_keyframes[i]) <= timestamp) {
+					return_keyframe = this.keyframes[all_keyframes[i]];
+				} else {
+					break;
+				}
+			//Return statement
+			return return_keyframe;
+		}
+		
+		//2. If options.absolute_keyframe = false, iterate over all keyframes in this.keyframes, and concatenate the .value of the relative keyframe
+		if (!options.absolute_keyframe) {
+			return_keyframe = {
+				date: options.date,
+				timestamp: timestamp,
+				value: []
+			};
+			for (let i = 0; i < all_keyframes.length; i++)
+				if (parseFloat(all_keyframes[i]) <)
+		}
 	}
 	
 	toJSON () {
+		//Convert from parameters
+		let json_obj = {};
 		
+		//Iterate over all this.keyframes and parse them to a minimal JSON contract
+		let all_keyframes = Object.keys(this.keyframes).sort().reverse();
+		
+		for (let i = 0; i < all_keyframes.length; i++) {
+			let local_keyframe = this.keyframes[all_keyframes[i]];
+			
+			json_obj[all_keyframes[i]] = { value: local_keyframe.value };
+		}
+		
+		//Return statement
+		return JSON.stringify(json_obj);
 	}
 };

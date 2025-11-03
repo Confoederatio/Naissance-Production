@@ -1,3 +1,4 @@
+if (!global.naissance) global.naissance = {};
 naissance.HistoryKeyframe = class extends ve.Class {
 	constructor (arg0_date, ...argn_arguments) {
 		//Convert from parameters
