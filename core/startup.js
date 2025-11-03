@@ -27,14 +27,11 @@ global.path = require("path");
     };
 		if (!global.naissance)
 			global.naissance = {};
-		
-		//Map.initialise();
   }
 
   function trackPerformance () {
     //Declare local instance variables
 		let { ipcRenderer } = require('electron');
-
     let frame_count = 0;
 		let last_time = performance.now();
 

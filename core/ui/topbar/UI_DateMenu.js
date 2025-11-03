@@ -4,7 +4,6 @@ global.UI_DateMenu = class extends ve.Class {
 		
 		//Declare local instance variables
 		let navbar_el = document.querySelector(".ve.navbar");
-		
 		this.interface = new ve.Interface({
 			date: new ve.Date(undefined, {
 				binding: "main.date",
@@ -13,6 +12,8 @@ global.UI_DateMenu = class extends ve.Class {
 				}
 			})
 		}, { name: "Date", open: true });
+		
+		//Open UI
 		super.open("instance", {
 			anchor: "top_right",
 			mode: "static_window",
