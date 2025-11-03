@@ -110,10 +110,60 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 	 *   - `<data_key>`: {@link any}
 	 */
 	static parseAction (arg0_json) {
-		//add_to_polygon
-		//remove_from_polygon
-		//set_symbol
+		//Convert from parameters
+		let json = (typeof arg0_json === "string") ? JSON.parse(arg0_json) : arg0_json;
 		
-		//set_data
+		//Declare local instance variables
+		let polygon_obj = naissance.Geometry.instances[json.polygon_id];
+		
+		//Parse commands for polygon_obj
+		if (polygon_obj) {
+			//add_to_polygon
+			if (json.add_to_polygon) {
+				let geometry = polygon_obj.geometry;
+				let ot_geometry = maptalks.Geometry.fromJSON(json.add_to_polygon.geometry);
+				
+				//Union with existing geometry if defined, if undefined replace geometry
+				if (polygon_obj.geometry) {
+					geometry = Geospatiale.convertMaptalksToTurf(geometry);
+					ot_geometry = Geospatiale.convertMaptalksToTurf(ot_geometry);
+					polygon_obj.addKeyframe(main.date, Geospatiale.convertTurfToMaptalks(
+						turf.union(turf.featureCollection([geometry, ot_geometry]))
+					));
+				} else {
+					polygon_obj.addKeyframe(main.date, ot_geometry.toJSON());
+				}
+			}
+			
+			//remove_from_polygon
+			if (json.remove_from_polygon) {
+				let geometry = polygon_obj.geometry;
+				let ot_geometry = maptalks.Geometry.fromJSON(json.remove_from_polygon.geometry);
+				
+				//Difference with existing geometry, if return value is null replace geometry
+				if (polygon_obj.geometry) {
+					let turf_difference = turf.difference(turf.featureCollection([
+						Geospatiale.convertMaptalksToTurf(geometry),
+						Geospatiale.convertMaptalksToTurf(ot_geometry)
+					]));
+					polygon_obj.addKeyframe(main.date, (turf_difference) ? 
+						Geospatiale.convertTurfToMaptalks(turf_difference).toJSON() : null);
+				}
+			}
+			
+			//set_symbol
+			if (json.set_symbol) {
+				polygon_obj.addKeyframe(main.date, undefined, json.set_symbol);
+			} else if (json.set_symbol === null) { //[WIP] - Implement clear symbol ability later
+				
+			}
+			
+			//set_data
+			if (json.set_data) {
+				polygon_obj.addKeyframe(main.date, undefined, undefined, json.set_data);
+			} else if (json.set_data === null) { //[WIP] - Implement clear data ability later
+				
+			}
+		}
 	}
 };
