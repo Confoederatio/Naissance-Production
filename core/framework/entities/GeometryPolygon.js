@@ -54,7 +54,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		//2. Draw this.geometry, this.label from this.value onto map
 		if (this.value && this.value[0] === null) derender_geometry = true; //Coords are null, derender geometry
 		try {
-			console.log(`Attempting to render keyframe:`, this.value);
+			//console.log(`naissance.GeometryPolygon, render keyframe:`, this.value);
 			if (this.geometry) this.geometry.remove();
 			if (this.value[0]) {
 				this.geometry = maptalks.Geometry.fromJSON(this.value[0]);
