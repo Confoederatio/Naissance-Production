@@ -8,7 +8,7 @@ global.UI_DateMenu = class extends ve.Class {
 			date: new ve.Date(undefined, {
 				binding: "main.date",
 				onchange: (v) => {
-					
+					naissance.Geometry.instances.forEach((local_geometry) => local_geometry.draw());
 				}
 			})
 		}, { name: "Date", open: true });

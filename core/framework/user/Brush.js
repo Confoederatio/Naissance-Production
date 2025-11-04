@@ -55,6 +55,7 @@ naissance.Brush = class extends ve.Class {
 				x: 1, y: 1
 			})
 		}, { name: "Brush Options:", open: true });
+		
 		this.optimisation = veInterface({
 			simplify: veRange(0.05, {
 				binding: "this.simplify",
@@ -93,7 +94,7 @@ naissance.Brush = class extends ve.Class {
 		//Return statement
 		return {
 			polygonFill: this.brush_options.colour.getHex(), //[WIP] - Using this.colour doesn't work for now because Proxy<Array> does not have a getter
-			polygonOpacity: this.opacity
+			polygonOpacity: this.brush_options.opacity.v
 		}
 	}
 	

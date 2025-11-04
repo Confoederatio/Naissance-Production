@@ -1,29 +1,30 @@
+if (!ve) ve = {};
 /**
  * Refer to <span color = "yellow">{@link ve.Component}</span> for methods or fields inherited from this Component's parent such as `.options.attributes` or `.element`.
- * 
- * Single-line rich text editor with bold, italic, underline, and clear text formatting options. 
- * 
+ *
+ * Single-line rich text editor with bold, italic, underline, and clear text formatting options.
+ *
  * Stands for Bold, Italic, Underline, Formatting.
  * - Functional binding: <span color=00ffff>veBIUF</span>().
- * 
+ *
  * ##### Constructor:
  * - `arg0_value`: {@link string} - The HTML content to initialise the component with.
  * - `arg1_options`: {@link Object}
  *   - `.disabled=false`: {@link boolean} - Controls the .readonly attribute.
- * 
+ *
  * ##### Instance:
  * - `.v`: {@link string} - Returns an HTML string.
- * 
+ *
  * ##### Methods:
  * - <span color=00ffff>{@link ve.BIUF.handleBIUF|handleBIUF}</span>(arg0_biuf_el:{@link HTMLElement})
  * - <span color=00ffff>{@link ve.BIUF.initBIUFToolbar|initBIUFToolbar}</span>()
  * - <span color=00ffff>{@link ve.BIUF.sendOnchangeEvent|sendOnchangeEvent}</span>()
- * 
+ *
  * @augments ve.Component
  * @augments {@link ve.Component}
- * @memberof ve.Component
  * @type {ve.BIUF}
  */
+ve.BIUF = undefined;
 ve.BIUF = class extends ve.Component {
 	static demo_value = `<b>Bold</b> <i>Italic</i>, <u>Underline</u>, and regular text formatting are supported by BIUF fields.`;
 	static demo_options = {
