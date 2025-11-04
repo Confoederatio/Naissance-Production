@@ -4,14 +4,12 @@ global.UI_DateMenu = class extends ve.Class {
 		
 		//Declare local instance variables
 		let navbar_el = document.querySelector(".ve.navbar");
-		this.interface = new ve.Interface({
-			date: new ve.Date(undefined, {
-				binding: "main.date",
-				onchange: (v) => {
-					naissance.Geometry.instances.forEach((local_geometry) => local_geometry.draw());
-				}
-			})
-		}, { name: "Date", open: true });
+		this.date = veDate(undefined, {
+			binding: "main.date",
+			onchange: (v) => {
+				naissance.Geometry.instances.forEach((local_geometry) => local_geometry.draw());
+			}
+		});
 		
 		//Open UI
 		super.open("instance", {

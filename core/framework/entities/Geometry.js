@@ -28,7 +28,7 @@ naissance.Geometry = class extends ve.Class {
 		 * - Mirror of: {@link this.geometry}
 		 * @type {maptalks.Geometry|undefined} 
 		 */
-		this.selected_geometry = undefined; //
+		this.selected_geometry = undefined;
 		/**
 		 * Holds the currently rendered keyframe at this date.
 		 * @type {naissance.HistoryKeyframe.value|undefined}

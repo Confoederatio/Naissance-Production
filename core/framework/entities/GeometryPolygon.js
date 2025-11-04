@@ -71,7 +71,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 			if (this.selected_geometry) this.selected_geometry.remove();
 			this.selected_geometry = undefined;
 			
-			if (this._selected) {
+			if (this.selected) {
 				this.selected_geometry = this.geometry.copy();
 				this.selected_geometry.setSymbol({
 					lineColor: `rgb(255, 255, 0)`,

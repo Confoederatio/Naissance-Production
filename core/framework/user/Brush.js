@@ -5,7 +5,7 @@ naissance.Brush = class extends ve.Class {
 		
 		//Declare local instance variables
 		this.radius = 50000;
-		this.selected_geometry = undefined;
+		this._selected_geometry = undefined;
 		this.symbol = {};
 		
 		//Draw
@@ -90,6 +90,17 @@ naissance.Brush = class extends ve.Class {
 		this.handleEvents();
 	}
 	
+	get selected_geometry () {
+		//Return statement
+		return this._selected_geometry;
+	}
+	
+	set selected_geometry (v) {
+		let old_selected_geometry = this._selected_geometry;
+		this._selected_geometry = v;
+		if (old_selected_geometry) old_selected_geometry.draw(); //Update draw
+	}
+	
 	getBrushSymbol () {
 		//Return statement
 		return {
@@ -102,6 +113,7 @@ naissance.Brush = class extends ve.Class {
 		//Map event handlers
 		map.on("mousedown", () => {
 			setTimeout(() =>{
+				if (this.disabled) return;
 				if (HTML.left_click || HTML.right_click) map.config("draggable", false);
 			});			
 		});
@@ -119,18 +131,18 @@ naissance.Brush = class extends ve.Class {
 			if (this.disabled) return;
 			this.cursor.setCoordinates(e.coordinate);
 			
-			if (this.selected_geometry instanceof naissance.GeometryPolygon && (HTML.left_click || HTML.right_click)) {
+			if (this._selected_geometry instanceof naissance.GeometryPolygon && (HTML.left_click || HTML.right_click)) {
 				let turf_cursor_geometry = Geospatiale.convertMaptalksToTurf(this.cursor);
 				let processed_geometry = Geospatiale.convertTurfToMaptalks(turf_cursor_geometry);
 				
 				if (HTML.left_click) {
 					naissance.GeometryPolygon.parseAction({
-						geometry_id: this.selected_geometry.id,
+						geometry_id: this._selected_geometry.id,
 						add_to_polygon: { geometry: processed_geometry.toJSON() }
 					});
 				} else if (HTML.right_click) {
 					naissance.GeometryPolygon.parseAction({
-						geometry_id: this.selected_geometry.id,
+						geometry_id: this._selected_geometry.id,
 						remove_from_polygon: { geometry: processed_geometry.toJSON() }
 					});
 				}
