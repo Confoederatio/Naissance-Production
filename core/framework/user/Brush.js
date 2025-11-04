@@ -94,7 +94,7 @@ naissance.Brush = class extends ve.Class {
 		//Return statement
 		return {
 			polygonFill: this.brush_options.colour.getHex(), //[WIP] - Using this.colour doesn't work for now because Proxy<Array> does not have a getter
-			polygonOpacity: this.brush_options.opacity.v
+			polygonOpacity: this.opacity
 		}
 	}
 	
