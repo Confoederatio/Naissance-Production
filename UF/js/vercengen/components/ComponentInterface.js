@@ -103,6 +103,8 @@ ve.Interface = class extends ve.Component {
 		//1. Reset old destructured bindings for components_obj by deleting their addresses
 		Object.iterate(components_obj, (local_key, local_value) => {
 			if (!this.reserved_keys.includes(local_key)) delete this[local_key];
+			if (this.components_obj[local_key])
+				this.removeComponent(this.components_obj[local_key]);
 		});
 		this.components_obj = components_obj;
 		//2. Set new destructured bindings for components_obj by deleting their addresses

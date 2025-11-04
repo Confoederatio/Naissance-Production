@@ -12,10 +12,23 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		super();
 		this.class_name = "GeometryPolygon";
 		
+		//Declare UI
+		this.interface = veInterface({
+			information: veHTML(() => `ID: ${this.id}`),
+			keyframes: new ve.Interface({}, {
+				name: "Keyframes",
+				open: true,
+				width: 99
+			})
+		}, { is_folder: false });
+		
 		//Add keyframe with default brush symbol upon instantiation
 		let brush_symbol = main.brush.getBrushSymbol();
 		if (brush_symbol)
 			this.addKeyframe(main.date, undefined, brush_symbol);
+		
+		//KEEP AT BOTTOM!
+		this.updateOwner();
 	}
 	
 	get selected () {
@@ -83,7 +96,15 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 			}
 		} catch (e) { console.error(e); }
 		
-		//4. Derender geometry handler
+		//4. Add bindings
+		if (this.geometry) {
+			this.interface.keyframes.v = this.history.interface.v;
+			this.geometry.addEventListener("click", (e) => {
+				super.open("instance", { name: "Polygon" });
+			});
+		}
+		
+		//5. Derender geometry handler
 		if (derender_geometry) {
 			if (this.geometry) this.geometry.remove();
 			if (this.label) this.label.remove();
