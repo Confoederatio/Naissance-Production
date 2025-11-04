@@ -58,7 +58,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 			if (this.geometry) this.geometry.remove();
 			if (this.value[0]) {
 				this.geometry = maptalks.Geometry.fromJSON(this.value[0]);
-				if (this.value[1]) this.geometry.setSymbol(this.value[1]);
+				if (this.value[1] && this.geometry) this.geometry.setSymbol(this.value[1]);
 				main.layers.entity_layer.addGeometry(this.geometry);
 			}
 			if (this.value[2]) { //[WIP] - Finish backend for label rendering
