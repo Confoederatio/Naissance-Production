@@ -14,20 +14,19 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		
 		//Declare UI
 		this.interface = veInterface({
-			information: veHTML(() => `ID: ${this.id}`),
+			information: veHTML(() => `ID: ${this.id}`, { x: 0, y: 0 }),
 			move_to_brush: veButton(() => DALS.Timeline.parseAction({
 				options: { name: "Select Geometry" },
 				value: [{ type: "Brush", selected_geometry_id: this.id }]
-			}), { name: "Move To Brush" }),
+			}), { name: "Move To Brush", x: 0, y: 1 }),
 			selected: veCheckbox(this.selected, {
-				onuserchange: (v) => this.selected = v
+				onuserchange: (v) => this.selected = v,
+				x: 1, y: 1
 			}),
-			keyframes: veInterface({}, {
-				name: "Keyframes",
-				open: true,
-				width: 99
-			})
 		}, { is_folder: false });
+		this.keyframes_ui = veInterface({}, {
+			name: "Keyframes", open: true
+		});
 		
 		//Add keyframe with default brush symbol upon instantiation
 		let brush_symbol = main.brush.getBrushSymbol();
@@ -115,9 +114,9 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		
 		//4. Add bindings
 		if (this.geometry) {
-			this.interface.keyframes.v = this.history.interface.v;
+			this.keyframes_ui.v = this.history.interface.v;
 			this.geometry.addEventListener("click", (e) => {
-				super.open("instance", { name: "Polygon" });
+				super.open("instance", { name: "Polygon", width: "20rem" });
 			});
 		}
 		

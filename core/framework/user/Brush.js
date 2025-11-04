@@ -66,12 +66,6 @@ naissance.Brush = class extends ve.Class {
 				name: "Applies to Brush [WIP]",
 				tooltip: "Whether the simplification should apply to the brush only instead of the selected polygon.",
 				x: 1, y: 0
-			}),
-			persistent_selection: veCheckbox(true, {
-				to_binding: "this.persistent_selection",
-				name: "Persistent Selection [WIP]",
-				tooltip: "Selections should be persistent, even when jumping between dates.",
-				x: 2, y: 0
 			})
 		}, { name: "Brush Optimisation:", open: true });
 		this.information_display = veHTML(() => {
