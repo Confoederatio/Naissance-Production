@@ -1,0 +1,33 @@
+global.UI_MapContextMenu = class UI_MapContextMenu extends ve.Class {
+	constructor () {
+		super();
+		this.interface = new veContextMenu({
+			//New Polygon/Line/Point
+			new_polygon: veButton(() => {
+				let new_polygon_interface = this.interface.addContextMenu({
+					polygon_name: veText("New Polygon", { name: "Name" }),
+					colour: veColour(Colour.convertHexToRGBA(main.brush.brush_options.colour.v), {
+						attributes: { "data-brush-colour": true },
+						name: "Colour",
+						onuserchange: (v) => main.brush.colour = v
+					}),
+					create_polygon: veButton(() => {
+						new veToast(`Created ${new_polygon_interface.polygon_name.v}`);
+						main.brush.selected_geometry = new naissance.GeometryPolygon();
+						this.interface.close();
+					}, { name: "Create Polygon" })
+				}, { id: "brush_map_context_menu_new_polygon" })
+			}, {
+				name: "New Polygon"
+			}),
+			
+			new_line: veButton(() => {
+				
+			}, { name: "New Line" }),
+			
+			new_point: veButton(() => {
+				
+			}, { name: "New Point" })
+		}, { id: "ui_map_context_menu" })
+	}
+};

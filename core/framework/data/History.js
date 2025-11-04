@@ -122,7 +122,7 @@ naissance.History = class extends ve.Class {
 				value: []
 			};
 			for (let i = 0; i < all_keyframes.length; i++)
-				if (parseFloat(all_keyframes[i]) <= timestamp) {
+				if (Date.convertTimestampToInt(all_keyframes[i]) <= Date.convertTimestampToInt(timestamp)) {
 					let local_keyframe = this.keyframes[all_keyframes[i]];
 					
 					for (let x = 0; x < local_keyframe.value.length; x++)

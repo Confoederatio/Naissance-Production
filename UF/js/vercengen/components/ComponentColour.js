@@ -92,7 +92,8 @@ ve.Colour = class extends ve.Component {
 	 * @returns {string}
 	 */
 	getHex () {
-		return this.value;
+		console.log(this.v, this.value);
+		return Colour.convertRGBToHex(this.value);
 	}
 	
 	/**

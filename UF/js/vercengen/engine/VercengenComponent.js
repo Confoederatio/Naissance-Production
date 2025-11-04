@@ -99,6 +99,7 @@ ve.Component = class {
 		
 		//Declare local instance variables
 		this.child_class = this.constructor;
+		this.do_not_fire_to_binding = false;
 		this.is_vercengen_component = true;
 		
 		this.height = options.height;
@@ -269,6 +270,9 @@ ve.Component = class {
 		//Declare local instance variables
 		let initial_object = global;
 		let variable_string = this.to_binding;
+		
+		//Internal guard clause if this.do_not_fire_to_binding is active
+		if (this.do_not_fire_to_binding) return;
 		
 		//Internal guard clause if this.to_binding is not defined
 		if (this.to_binding) {

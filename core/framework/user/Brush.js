@@ -36,17 +36,21 @@ naissance.Brush = class extends ve.Class {
 			}),
 			//Row 1: Colour
 			colour: veColour("#1bbc9b", {
-				onchange: (v) => {
-					try { naissance.Brush.setSelectedSymbol({ polygonFill: v.getHex() }); } 
-						catch (e) { console.error(e); }
+				binding: "this.colour",
+				onuserchange: (v, e) => {
+					try {
+						naissance.Brush.setSelectedSymbol({ polygonFill: e.getHex() }); 
+					} catch (e) { console.error(e); }
 				},
 				x: 0, y: 1
 			}),
 			opacity: veRange(0.70, {
 				name: "Opacity",
-				onchange: (v) => {
-					try { naissance.Brush.setSelectedSymbol({ polygonOpacity: v }); }
-						catch (e) { console.error(e); }
+				binding: "this.opacity",
+				onuserchange: (v) => {
+					try { 
+						naissance.Brush.setSelectedSymbol({ polygonOpacity: v }); 
+					} catch (e) { console.error(e); }
 				},
 				x: 1, y: 1
 			})
@@ -85,6 +89,13 @@ naissance.Brush = class extends ve.Class {
 		this.handleEvents();
 	}
 	
+	getBrushSymbol () {
+		return {
+			polygonFill: this.brush_options.colour.getHex(),
+			polygonOpacity: this.brush_options.opacity.v
+		}
+	}
+	
 	handleEvents () {
 		//Map event handlers
 		map.on("mousedown", () => {
@@ -96,11 +107,32 @@ naissance.Brush = class extends ve.Class {
 			map.config("draggable", true);
 		});
 		
+		//Context menu handler
+		map.on("contextmenu", (e) => {
+			main.interfaces.ui_map_context_menu = new UI_MapContextMenu();
+		});
+		
 		//Cursor handler
 		map.on("mousemove", (e) => {
 			if (this.disabled) return;
-			
 			this.cursor.setCoordinates(e.coordinate);
+			
+			if (this.selected_geometry instanceof naissance.GeometryPolygon && (HTML.left_click || HTML.right_click)) {
+				let turf_cursor_geometry = Geospatiale.convertMaptalksToTurf(this.cursor);
+				let processed_geometry = Geospatiale.convertTurfToMaptalks(turf_cursor_geometry);
+				
+				if (HTML.left_click) {
+					naissance.GeometryPolygon.parseAction({
+						geometry_id: this.selected_geometry.id,
+						add_to_polygon: { geometry: processed_geometry.toJSON() }
+					});
+				} else if (HTML.right_click) {
+					naissance.GeometryPolygon.parseAction({
+						geometry_id: this.selected_geometry.id,
+						remove_from_polygon: { geometry: processed_geometry.toJSON() }
+					});
+				}
+			}
 		});
 		map.getContainer().addEventListener("wheel", (e) => {
 			if (this.disabled) return;

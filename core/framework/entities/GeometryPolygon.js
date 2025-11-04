@@ -10,11 +10,18 @@ if (!global.naissance) global.naissance = {};
 naissance.GeometryPolygon = class extends naissance.Geometry {
 	constructor () {
 		super();
-		this.class_name = "naissance.GeometryPolygon";
+		this.class_name = "GeometryPolygon";
+		
+		//Add keyframe with default brush symbol upon instantiation
+		let brush_symbol = main.brush.getBrushSymbol();
+		if (brush_symbol)
+			this.addKeyframe(main.date, undefined, brush_symbol);
 	}
 	
 	get selected () {
 		//Return statement
+		if (main.brush && main.brush.selected_geometry && main.brush.selected_geometry.id === this.id)
+			return true;
 		return this._selected;
 	}
 	set selected (v) {
@@ -31,6 +38,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		let data = arg3_data;
 		
 		//Declare local instance variables
+		//if (coords !== undefined) coords = coords;
 		this.history.addKeyframe(date, coords, symbol, data);
 		this.draw();
 	}
@@ -40,12 +48,13 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		let derender_geometry = false;
 		
 		//1. Set this.value from current relative keyframe
-		this.value = this.history.getKeyframe({ date: main.date });
-		if (this.value === undefined) derender_geometry = true;
+		this.value = this.history.getKeyframe({ date: main.date }).value;
+		if (this.value === undefined || this.value.length === 0) derender_geometry = true;
 			
 		//2. Draw this.geometry, this.label from this.value onto map
 		if (this.value && this.value[0] === null) derender_geometry = true; //Coords are null, derender geometry
 		try {
+			console.log(`Attempting to render keyframe:`, this.value);
 			if (this.geometry) this.geometry.remove();
 			if (this.value[0]) {
 				this.geometry = maptalks.Geometry.fromJSON(this.value[0]);
@@ -114,7 +123,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		let json = (typeof arg0_json === "string") ? JSON.parse(arg0_json) : arg0_json;
 		
 		//Declare local instance variables
-		let polygon_obj = naissance.Geometry.instances[json.geometry_id];
+		let polygon_obj = naissance.Geometry.instances.filter((v) => v.id === json.geometry_id)[0];
 		
 		//Parse commands for polygon_obj
 		if (polygon_obj) {
@@ -129,7 +138,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 					ot_geometry = Geospatiale.convertMaptalksToTurf(ot_geometry);
 					polygon_obj.addKeyframe(main.date, Geospatiale.convertTurfToMaptalks(
 						turf.union(turf.featureCollection([geometry, ot_geometry]))
-					));
+					).toJSON());
 				} else {
 					polygon_obj.addKeyframe(main.date, ot_geometry.toJSON());
 				}

@@ -21,14 +21,15 @@ naissance.HistoryKeyframe = class extends ve.Class {
 	addData (...argn_arguments) {
 		//Iterate over all arguments and add it to .value, concatenating any objects if they exist
 		for (let i = 0; i < argn_arguments.length; i++)
-			if (typeof argn_arguments[i] === "object" && argn_arguments[i] !== null) {
-				this.value[i] = {
-					...this.value[i],
-					...argn_arguments[i]
-				};
-			} else if (typeof argn_arguments[i] !== undefined) {
-				this.value[i] = argn_arguments[i];
-			}
+			if (argn_arguments[i] !== undefined)
+				if (typeof argn_arguments[i] === "object" && argn_arguments[i] !== null) {
+					this.value[i] = {
+						...this.value[i],
+						...argn_arguments[i]
+					};
+				} else {
+					this.value[i] = argn_arguments[i];
+				}
 	}
 	
 	/**
