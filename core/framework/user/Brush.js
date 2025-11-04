@@ -57,18 +57,18 @@ naissance.Brush = class extends ve.Class {
 				name: "Simplify", x: 0, y: 0
 			}),
 			simplify_applies_to_brush: veCheckbox(false, {
-				binding: "this.simplify_applies_to_brush",
+				to_binding: "this.simplify_applies_to_brush",
 				name: "Applies to Brush [WIP]",
 				tooltip: "Whether the simplification should apply to the brush only instead of the selected polygon.",
 				x: 1, y: 0
 			}),
 			persistent_selection: veCheckbox(true, {
-				binding: "this.persistent_selection",
+				to_binding: "this.persistent_selection",
 				name: "Persistent Selection [WIP]",
 				tooltip: "Selections should be persistent, even when jumping between dates.",
 				x: 2, y: 0
 			})
-		});
+		}, { name: "Brush Optimisation:", open: true });
 		this.information_display = veHTML(() => {
 			let cursor_coordinates = this.cursor.getCoordinates();
 			

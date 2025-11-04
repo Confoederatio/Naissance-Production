@@ -342,7 +342,9 @@ ve.Component = class {
 			}
 			
 			//Set init value if applicable
-			this.v = Object.getValue(initial_object, variable_string);
+			let from_value = Object.getValue(initial_object, variable_string);
+			if (!(this.options.binding && from_value === undefined))
+				this.v = from_value;
 			
 			//Add getter/setter
 			Object.addGetterSetter(initial_object, variable_string, {
