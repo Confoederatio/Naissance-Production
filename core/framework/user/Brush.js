@@ -172,6 +172,7 @@ naissance.Brush = class extends ve.Class {
 			let geometry_obj = naissance.Geometry.instances.filter((v) => v.id === json.selected_geometry_id);
 				if (geometry_obj) geometry_obj = geometry_obj[0];
 			main.brush.selected_geometry = geometry_obj;
+			main.brush.selected_geometry.draw();
 		} else if (json.selected_geometry_id === null) {
 			main.brush.selected_geometry = undefined;
 		}

@@ -15,7 +15,14 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		//Declare UI
 		this.interface = veInterface({
 			information: veHTML(() => `ID: ${this.id}`),
-			keyframes: new ve.Interface({}, {
+			move_to_brush: veButton(() => DALS.Timeline.parseAction({
+				options: { name: "Select Geometry" },
+				value: [{ type: "Brush", selected_geometry_id: this.id }]
+			}), { name: "Move To Brush" }),
+			selected: veCheckbox(this.selected, {
+				onuserchange: (v) => this.selected = v
+			}),
+			keyframes: veInterface({}, {
 				name: "Keyframes",
 				open: true,
 				width: 99
@@ -32,10 +39,20 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 	}
 	
 	get selected () {
+		//Declare local instance variables
+		let is_selected;
+		
+		//Fetch is_selected
+		if (main.brush && main.brush.selected_geometry && main.brush.selected_geometry.id === this.id) {
+			is_selected = true;
+		} else {
+			is_selected = this._selected;
+		}
+		if (this.interface && this.interface.selected)
+			this.interface.selected.v = is_selected;
+		
 		//Return statement
-		if (main.brush && main.brush.selected_geometry && main.brush.selected_geometry.id === this.id)
-			return true;
-		return this._selected;
+		return is_selected;
 	}
 	set selected (v) {
 		//Set selected, then update draw
@@ -84,13 +101,13 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 			if (this.selected_geometry) this.selected_geometry.remove();
 			this.selected_geometry = undefined;
 			
-			if (this.selected) {
+			if (this.geometry && this.selected) {
 				this.selected_geometry = this.geometry.copy();
 				this.selected_geometry.setSymbol({
 					lineColor: `rgb(255, 255, 0)`,
-					lineDasharray : (!this.is_geometry_selected) ? [10, 10, 10] : undefined,
+					lineDasharray : (main.brush.selected_geometry.id !== this.id) ? [10, 10, 10] : undefined,
+					lineOpacity: 0.5,
 					lineWidth: 4,
-					polygonOpacity: 1
 				});
 				main.layers.selection_layer.addGeometry(this.selected_geometry);
 			}

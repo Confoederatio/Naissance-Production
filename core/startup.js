@@ -23,12 +23,12 @@ global.path = require("path");
 			},
 			layers: {
 				//Foreground layers
-				overlay_layer: new maptalks.VectorLayer("overlay_layer", [], { zIndex: 99 }),
-				cursor_layer: new maptalks.VectorLayer("cursor_layer", [], { zIndex: 98 }),
-				label_layer: new maptalks.VectorLayer("label_layer", [], { zIndex: 97 }),
+				overlay_layer: new maptalks.VectorLayer("overlay_layer", [], { hitDetect: true, interactive: true, zIndex: 99 }),
+				cursor_layer: new maptalks.VectorLayer("cursor_layer", [], { hitDetect: false, interactive: false, zIndex: 98 }),
+				label_layer: new maptalks.VectorLayer("label_layer", [], { hitDetect: false, interactive: false, zIndex: 97 }),
 				
 				//Background layers
-				selection_layer: new maptalks.VectorLayer("selection_layer", [], { zIndex: 2 }),
+				selection_layer: new maptalks.VectorLayer("selection_layer", [], { hitDetect: false, interactive: false, zIndex: 2 }),
 				entity_layer: new maptalks.VectorLayer("entity_layer", [], {
 					hitDetect: true,
 					interactive: true,
