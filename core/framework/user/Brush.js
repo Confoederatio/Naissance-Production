@@ -164,6 +164,19 @@ naissance.Brush = class extends ve.Class {
 		});
 	}
 	
+	static parseAction (arg0_json) {
+		//Convert from parameters
+		let json = (typeof arg0_json === "string") ? JSON.parse(arg0_json) : arg0_json;
+		
+		if (typeof json.selected_geometry_id === "string") {
+			let geometry_obj = naissance.Geometry.instances.filter((v) => v.id === json.selected_geometry_id);
+				if (geometry_obj) geometry_obj = geometry_obj[0];
+			main.brush.selected_geometry = geometry_obj;
+		} else if (json.selected_geometry_id === null) {
+			main.brush.selected_geometry = undefined;
+		}
+	}
+	
 	static setSelectedSymbol (arg0_symbol_obj) {
 		//Convert from parameters
 		let symbol_obj = (arg0_symbol_obj) ? arg0_symbol_obj : {};

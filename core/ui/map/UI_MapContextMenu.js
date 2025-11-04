@@ -13,7 +13,13 @@ global.UI_MapContextMenu = class UI_MapContextMenu extends ve.Class {
 					}),
 					create_polygon: veButton(() => {
 						new veToast(`Created ${new_polygon_interface.polygon_name.v}`);
-						main.brush.selected_geometry = new naissance.GeometryPolygon();
+						
+						let selected_geometry = new naissance.GeometryPolygon();
+						DALS.Timeline.parseAction({
+							options: { name: "Select Geometry" },
+							value: [{ type: "Brush", selected_geometry_id: selected_geometry.id }]
+						});
+						
 						this.interface.close();
 					}, { name: "Create Polygon" })
 				}, { id: "brush_map_context_menu_new_polygon" })
