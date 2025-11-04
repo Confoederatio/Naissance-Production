@@ -10,6 +10,7 @@ if (!global.naissance) global.naissance = {};
 naissance.GeometryPolygon = class extends naissance.Geometry {
 	constructor () {
 		super();
+		this.class_name = "naissance.GeometryPolygon";
 	}
 	
 	get selected () {
@@ -39,7 +40,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		let derender_geometry = false;
 		
 		//1. Set this.value from current relative keyframe
-		this.value = this.history.getKeyframe({ date; main.date });
+		this.value = this.history.getKeyframe({ date: main.date });
 		if (this.value === undefined) derender_geometry = true;
 			
 		//2. Draw this.geometry, this.label from this.value onto map
@@ -95,7 +96,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 	 * - Static method of: {@link naissance.GeometryPolygon}
 	 * 
 	 * `arg0_json`: {@link Object|string}
-	 * - `.polygon_id`: {@link string} - Identifier. The {@link naissance.GeometryPolygon ID} to target changes for.
+	 * - `.geometry_id`: {@link string} - Identifier. The {@link naissance.Geometry ID} to target changes for.
 	 * - 
 	 * - `.add_to_polygon`: {@link Object}
 	 *   - `.geometry`: {@link string}
@@ -113,7 +114,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		let json = (typeof arg0_json === "string") ? JSON.parse(arg0_json) : arg0_json;
 		
 		//Declare local instance variables
-		let polygon_obj = naissance.Geometry.instances[json.polygon_id];
+		let polygon_obj = naissance.Geometry.instances[json.geometry_id];
 		
 		//Parse commands for polygon_obj
 		if (polygon_obj) {

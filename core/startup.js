@@ -36,39 +36,28 @@ global.path = require("path");
 				})
 			},
 			map: map,
-			user: {
-				
-			},
-			
-			//Aliases
-			brush: undefined,
+			user: {}
     };
-		if (!global.naissance)
-			global.naissance = {};
+		if (!global.naissance) global.naissance = {};
+			main.user.brush = new naissance.Brush();
 		
 		//1.1. Append all layers to map
 		Object.iterate(main.layers, (local_key, local_value) => local_value.addTo(map));
 		
 		//1.2. Add event handlers to map
 		//mousedown
+		let mousedown_dictionary = ["left_click", "middle_click", "right_click"];
+		map.on("mousedown", (e) => {
+			for (let i = 0; i < mousedown_dictionary.length; i++)
+				delete HTML[mousedown_dictionary[i]];
+			HTML[mousedown_dictionary[e.domEvent.which - 1]] = true;
+		});
+		
 		//mouseup
-		
-		//onleftclick
-		/*
-		map.addEventListener("click", (e) => {
-			if (Map.brush_context_menu)
-				Map.brush_context_menu.remove();
+		map.on("mouseup", (e) => {
+			for (let i = 0; i < mousedown_dictionary.length; i++)
+				delete HTML[mousedown_dictionary[i]];
 		});
-		 */
-		
-		//onrightclick
-		/*
-		map.addEventListener("contextmenu", (e) => {
-			if (Map.brush_context_menu)
-				Map.brush_context_menu.remove();
-			Map.brush_context_menu = new MapContextMenu();
-		});
-		 */
 		
 		//2. Set aliases
 		main.brush = main.user.brush;
