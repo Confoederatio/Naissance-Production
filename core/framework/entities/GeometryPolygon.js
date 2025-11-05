@@ -146,6 +146,8 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 	 * - 
 	 * - `.add_to_polygon`: {@link Object}
 	 *   - `.geometry`: {@link string}
+	 * - `.create_polygon`: {@link Object}
+	 *   - `.id`: {@link string}
 	 * - `.remove_from_polygon`: {@link Object}
 	 *   - `.geometry`: {@link string}
 	 * - `.set_symbol`: {@link Object}
@@ -161,6 +163,14 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		
 		//Declare local instance variables
 		let polygon_obj = naissance.Geometry.instances.filter((v) => v.id === json.geometry_id)[0];
+		
+		//Parse extraneous commands
+		//create_polygon
+		if (json.create_polygon)
+			if (json.create_polygon.id) {
+				let new_polygon = new naissance.GeometryPolygon();
+				new_polygon.id = json.create_polygon.id;
+			}
 		
 		//Parse commands for polygon_obj
 		if (polygon_obj) {

@@ -5,9 +5,12 @@ global.UI_DateMenu = class extends ve.Class {
 		//Declare local instance variables
 		let navbar_el = document.querySelector(".ve.navbar");
 		this.date = veDate(undefined, {
-			binding: "main.date",
-			onchange: (v) => {
-				naissance.Geometry.instances.forEach((local_geometry) => local_geometry.draw());
+			from_binding: "main.date",
+			onuserchange: (v) => {
+				DALS.Timeline.parseAction({
+					options: { name: "Load Date", key: "load_date" },
+					value: [{ type: "global", load_date: v }]
+				});
 			}
 		});
 		

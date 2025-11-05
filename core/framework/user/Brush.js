@@ -38,7 +38,7 @@ naissance.Brush = class extends ve.Class {
 			colour: veColour("#1bbc9b", {
 				binding: "this.colour",
 				onuserchange: (v, e) => {
-					try {
+					try {console.log(`Changed from user ${v}`);
 						naissance.Brush.setSelectedSymbol({ polygonFill: e.getHex() }); 
 					} catch (e) { console.error(e); }
 				},
@@ -130,14 +130,24 @@ naissance.Brush = class extends ve.Class {
 				let processed_geometry = Geospatiale.convertTurfToMaptalks(turf_cursor_geometry);
 				
 				if (HTML.left_click) {
-					naissance.GeometryPolygon.parseAction({
-						geometry_id: this._selected_geometry.id,
-						add_to_polygon: { geometry: processed_geometry.toJSON() }
+					DALS.Timeline.parseAction({
+						options: { name: "Add to Polygon", key: "add_to_polygon" },
+						value: [{
+							type: "GeometryPolygon",
+							
+							geometry_id: this._selected_geometry.id,
+							add_to_polygon: { geometry: processed_geometry.toJSON() }
+						}]
 					});
 				} else if (HTML.right_click) {
-					naissance.GeometryPolygon.parseAction({
-						geometry_id: this._selected_geometry.id,
-						remove_from_polygon: { geometry: processed_geometry.toJSON() }
+					DALS.Timeline.parseAction({
+						options: { name: "Remove from Polygon", key: "remove_from_polygon" },
+						value: [{
+							type: "GeometryPolygon",
+							
+							geometry_id: this._selected_geometry.id,
+							remove_from_polygon: { geometry: processed_geometry.toJSON() }
+						}]
 					});
 				}
 			}
@@ -178,7 +188,7 @@ naissance.Brush = class extends ve.Class {
 		
 		//Declare local instance variables
 		let json_obj = {
-			options: { name: "Set Selected Symbol" },
+			options: { name: "Set Selected Symbol", key: "set_selected_symbol" },
 			value: []
 		};
 		
