@@ -18,6 +18,9 @@ global.path = require("path");
 			date: Date.getCurrentDate(),
 			hierarchy: {},
 			interfaces: {
+				//Leftbar
+				leftbar_ui: new UI_Leftbar(),
+				
 				//Topbar
 				date_ui: new UI_DateMenu()
 			},
