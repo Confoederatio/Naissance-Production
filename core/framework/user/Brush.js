@@ -37,7 +37,7 @@ naissance.Brush = class extends ve.Class {
 			//Row 1: Colour
 			colour: veColour("#1bbc9b", {
 				binding: "this.colour",
-				onuserchange: (v, e) => {
+				onchange: (v, e) => {
 					try {console.log(`Changed from user ${v}`);
 						naissance.Brush.setSelectedSymbol({ polygonFill: e.getHex() }); 
 					} catch (e) { console.error(e); }
@@ -47,7 +47,7 @@ naissance.Brush = class extends ve.Class {
 			opacity: veRange(0.70, {
 				name: "Opacity",
 				binding: "this.opacity",
-				onuserchange: (v) => {
+				onchange: (v) => {
 					try { 
 						naissance.Brush.setSelectedSymbol({ polygonOpacity: v }); 
 					} catch (e) { console.error(e); }

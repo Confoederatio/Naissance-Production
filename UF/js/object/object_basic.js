@@ -29,11 +29,16 @@
 		} catch (e) {}
 		
 		let internal_value = old_value;
+		let proxied_objects = new WeakSet();
 		let setter_context;
 		
-		//Helper function to wrap objects/arrays with a Proxy for deep mutation tracking
 		function createDeepProxy(target, rootOnChange) {
 			if (typeof target !== "object" || target === null) return target;
+			
+			// Check if this object is already proxied
+			if (proxied_objects.has(target)) {
+				return target;
+			}
 			
 			let handler = {
 				set(obj, prop, value, receiver) {
@@ -67,7 +72,13 @@
 				}
 			}
 			
-			return new Proxy(target, handler);
+			const proxy = new Proxy(target, handler);
+			
+			// Mark both the original object and proxy as proxied
+			proxied_objects.add(target);
+			proxied_objects.add(proxy);
+			
+			return proxy;
 		}
 		
 		//Add getter/setter

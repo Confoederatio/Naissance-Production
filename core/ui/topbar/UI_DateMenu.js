@@ -5,11 +5,22 @@ global.UI_DateMenu = class extends ve.Class {
 		//Declare local instance variables
 		let navbar_el = document.querySelector(".ve.navbar");
 		this.date = veDate(undefined, {
-			from_binding: "main.date",
+			binding: "main.date",
+			//Split up directional flows to prevent accessor race conditions
+			onprogramchange: (v) => {
+				//console.trace("date, onprogramchange");
+				DALS.Timeline.parseAction({
+					options: { name: "Refresh Date", key: "load_date" },
+					value: [{ type: "global", refresh_date: true }]
+				})
+			},
 			onuserchange: (v) => {
 				DALS.Timeline.parseAction({
-					options: { name: "Load Date", key: "load_date" },
-					value: [{ type: "global", load_date: v }]
+					options: { name: "Set Date", key: "load_date" },
+					value: [
+						{ type: "global", set_date: v },
+						{ type: "global", refresh_date: true }
+					]
 				});
 			}
 		});

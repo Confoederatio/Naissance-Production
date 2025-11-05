@@ -10,8 +10,9 @@ DALS.Timeline.parseAction = function (arg0_json) {
 	console.log(json.value);
 	for (let i = 0; i < json.value.length; i++) {
 		if (json.value[i].type === "global") {
-			if (json.value[i].load_date) {
-				main.date = json.value[i].load_date;
+			if (json.value[i].set_date) {
+				main.date = json.value[i].set_date;
+			} else if (json.value[i].refresh_date === true) {
 				naissance.Geometry.instances.forEach((local_geometry) => local_geometry.draw());
 			}
 			continue;
