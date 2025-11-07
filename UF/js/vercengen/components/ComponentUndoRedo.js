@@ -17,10 +17,15 @@ ve.UndoRedo = class extends ve.Component {
 		this.value = value; //Stores timeline_id
 		
 		//Add HTML list, canvas
-		this.canvas_el = document.createElement("canvas");
+		this.canvas_container_el = document.createElement("div");
+			this.canvas_el = document.createElement("canvas");
+			this.canvas_container_el.appendChild(this.canvas_el);
 		this.html_list_el = document.createElement("div");
 		
-		//Create a ve.PageMenu with this.html_list_el, this.canvas_el, and mount it to this.element
+		//Create a ve.PageMenu with this.html_list_el, this.canvas_container_el, and mount it to this.element
+		
+		//KEEP AT BOTTOM!
+		this.handleEvents();
 	}
 	
 	draw () { //[WIP] - Finish function body
@@ -187,7 +192,57 @@ ve.UndoRedo = class extends ve.Component {
 	}
 	
 	handleEvents () {
+		//Declare local instance variables
+		this.is_panning = false;
+		this.scale = 0;
+		this.start_x = 0;
+		this.start_y = 0;
+		this.translate_x = 0;
+		this.translate_y = 0;
 		
+		//Add drag/pan options
+		this.canvas_container_el.addEventListener("mousedown", (e) => {
+			if (e.button === 1) { //Middle Mouse Button (MMB)
+				this.is_panning = true;
+				this.start_x = e.clientX - this.translate_x;
+				this.start_y = e.clientY - this.translate_y;
+				e.preventDefault(); //Prevent scrolling
+			}
+		});
+		this.canvas_container_el.addEventListener("mouseleave", () => this.is_panning = false); //Mouseleave (stop panning)
+		this.canvas_container_el.addEventListener("mousemove", (e) => {
+			if (this.is_panning) {
+				this.translate_x = e.clientX - this.start_x;
+				this.translate_y = e.clientY - this.start_y;
+				internalHelperUndoRedoUITransform();
+			}
+		}); //Mousemove (only when panning)
+		this.canvas_container_el.addEventListener("mouseup", () => this.is_panning = false); //Mouseup (stop panning)
+		
+		//Zoom handling (scroll to zoom)
+		this.canvas_container_el.addEventListener("wheel", (e) => {
+			e.preventDefault();
+			let zoom_factor = 1.1;
+			
+			//Limit new_scale to a reasonable range
+			let new_scale = (e.deltaY < 0) ? this.scale*zoom_factor : this.scale/zoom_factor;
+				new_scale = Math.max(0.5, Math.min(new_scale, 5));
+			let current_rect = this.canvas_container_el.getBoundingClientRect();
+			let offset_x = (e.clientX - current_rect.left)/current_rect.width;
+			let offset_y = (e.clientY - current_rect.top)/current_rect.height;
+			
+			//Adjust translation based on zoom centre
+			this.scale = new_scale;
+			this.translate_x -= (offset_x - 0.5)*current_rect.width*(new_scale - scale);
+			this.translate_y -= (offset_y - 0.5)*current_rect.height*(new_scale - scale);
+			
+			internalHelperUndoRedoUITransform();
+		});
+		this.undo_redo_loop = setInterval(() => this.draw(), 100);
+		
+		function internalHelperUndoRedoUITransform () {
+			this.canvas_container_el.style.transform = `translate(${this.translate_x}px, ${this.translate_y}px) scale(${this.scale})`;
+		}
 	}
 	
 	get v () {
