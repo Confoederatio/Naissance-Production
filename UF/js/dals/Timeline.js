@@ -179,6 +179,21 @@ DALS.Timeline = class {
 		}
 	}
 	
+	generateGraph (arg0_options) {
+		//Convert from parameters
+		let options = (arg0_options) ? arg0_options : {};
+		
+		//Declare local instance variables
+		/**
+		 * Object list of UI elements.
+		 * - `.connections`: ({@link Array}<{@link Array}<x:{@link number}, y:{@link number}>>
+		 * @type {{x: number, y: number, name: string, connections: [[number, number]]}}
+		 */
+		let timeline_graph = {};
+		let x_offset = Math.returnSafeNumber(options.x_offset);
+		let y_offset = Math.returnSafeNumber(options.y_offset);
+	}
+	
 	/**
 	 * Jumps to a specific action ID in the timeline, starting from its head, utilising .parseAction()
 	 * - Method of: {@link DALS.Timeline}

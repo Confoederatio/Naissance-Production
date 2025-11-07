@@ -9,14 +9,16 @@ global.UI_Leftbar = class extends ve.Class {
 				name: "Hierarchy",
 				components_obj: {
 					hierarchy: veHierarchy({
-						layer: new ve.HierarchyDatatype(undefined, { name: "Test" })
+						layer: new ve.HierarchyDatatype({
+							sample_button: veButton(() => { console.trace("Clicked!"); }, { name: `<icon>close</icon>` })
+						}, { name: "Test" })
 					})
 				}
 			},
 			undo_redo: {
 				name: "Undo/Redo",
 				components_obj: {
-					html: veHTML("This is a test")
+					undo_redo: new ve.UndoRedo()
 				}
 			}
 		});
