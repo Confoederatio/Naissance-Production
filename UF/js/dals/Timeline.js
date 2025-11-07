@@ -223,7 +223,7 @@ DALS.Timeline = class {
 		return timeline_graph;
 	}
 	
-	generateGraph (arg0_options) {
+	generateGraph (arg0_options) { //[WIP] - This needs to group together actions with the same key in Stage 3
 		//Convert from parameters
 		let options = (arg0_options) ? arg0_options : {};
 		
@@ -262,7 +262,7 @@ DALS.Timeline = class {
 				});
 			}
 			
-		//3. Parse connections
+		//3. Parse connections - [WIP] - This needs to group together actions with the same .key value. It currently does not
 		let last_id = "";
 		
 		//Iterate over current timeline .value; parse connection IDs

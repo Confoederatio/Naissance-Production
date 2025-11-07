@@ -1,6 +1,6 @@
 //Work on ve.ComponentUndoRedo as DALS Timelines become available via Naissance
 ve.UndoRedo = class extends ve.Component {
-	constructor (arg0_value, arg1_options) {
+	constructor (arg0_value, arg1_options) { //[WIP] - Finish constructor function
 		let value = arg0_value;
 		let options = (arg1_options) ? arg1_options : {};
 			super(options);
@@ -19,6 +19,8 @@ ve.UndoRedo = class extends ve.Component {
 		//Add HTML list, canvas
 		this.canvas_el = document.createElement("canvas");
 		this.html_list_el = document.createElement("div");
+		
+		//Create a ve.PageMenu with this.html_list_el, this.canvas_el, and mount it to this.element
 	}
 	
 	draw () { //[WIP] - Finish function body
@@ -90,10 +92,57 @@ ve.UndoRedo = class extends ve.Component {
 		});
 		
 		//2. Calculate canvas.height, canvas.width
+		Object.iterate(node_positions, (local_key, local_value) => {
+			canvas_height = Math.max(canvas_height, Math.returnSafeNumber(local_value.y + local_value.height));
+			canvas_width = Math.max(canvas_width, Math.returnSafeNumber(local_value.x + local_value.width));
+		});
+		this.canvas_el.setAttribute("height", canvas_height);
+		this.canvas_el.setAttribute("width", canvas_width);
 		
 		//3. Draw DALS.Action nodes
+		Object.iterate(node_positions, (local_key, local_value) => {
+			if (local_value.is_selected) {
+				ctx.fillStyle = `rgb(235, 235, 235)`;
+				ctx.fillRect(local_value.x - local_value.width/2 - local_value.height/2, local_value.y - local_value.height, local_value.width + local_value.height, local_value.height*2);
+			}
+			ctx.fillStyle = (!local_value.is_selected) ? "white" : "black";
+			ctx.font = `${node_height}px Karla Light`;
+			ctx.textAlign = "center";
+			ctx.textBaseline = "middle";
+			ctx.fillText(local_value.name, local_value.x, local_value.y);
+		});
 		
 		//4. Draw horizontal lines
+		Object.iterate(row_tracker, (local_key, local_value) => {
+			local_value = local_value.sort((a, b) => node_positions[a].x - node_positions[b].x); //Sort nodes by X position
+			
+			for (let x = 0; x < local_value.length - 1; x++) {
+				let local_end_key = local_value[x + 1];
+				let local_start_key = local_value[x];
+				
+				let local_end_node = node_positions[local_end_key];
+				let local_end_x = local_end_node.x - local_end_node.width - local_end_node.height;
+				let local_end_y = local_end_node.y;
+				let local_start_node = node_positions[local_start_key];
+				let local_start_x = local_start_node.x + local_start_node.width/2 + local_start_node.height/2;
+					if (x >= 1) local_start_x += local_start_node.height*2 + 4;
+				let local_start_y = local_start_node.y;
+				
+				//Check if line should be drawn
+				let local_node_timeline = DALS.Timeline.getTimeline(local_end_node.timeline_id);
+				
+				if (local_node_timeline.parent_timeline) {
+					//Draw line between nodes
+					ctx.beginPath();
+					ctx.moveTo(local_start_x, local_start_y);
+					ctx.lineTo(local_end_x, local_end_y);
+					ctx.strokeStyle = "white";
+					ctx.lineWidth = 2;
+					ctx.stroke();
+					ctx.closePath();
+				}
+			}
+		});
 		
 		//5. Draw vertical lines
 		
