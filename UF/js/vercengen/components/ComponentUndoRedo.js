@@ -116,16 +116,16 @@ ve.UndoRedo = class extends ve.Component {
 		Object.iterate(row_tracker, (local_key, local_value) => {
 			local_value = local_value.sort((a, b) => node_positions[a].x - node_positions[b].x); //Sort nodes by X position
 			
-			for (let x = 0; x < local_value.length - 1; x++) {
-				let local_end_key = local_value[x + 1];
-				let local_start_key = local_value[x];
+			for (let i = 0; i < local_value.length - 1; i++) {
+				let local_end_key = local_value[i + 1];
+				let local_start_key = local_value[i];
 				
 				let local_end_node = node_positions[local_end_key];
 				let local_end_x = local_end_node.x - local_end_node.width - local_end_node.height;
 				let local_end_y = local_end_node.y;
 				let local_start_node = node_positions[local_start_key];
 				let local_start_x = local_start_node.x + local_start_node.width/2 + local_start_node.height/2;
-					if (x >= 1) local_start_x += local_start_node.height*2 + 4;
+					if (i >= 1) local_start_x += local_start_node.height*2 + 4;
 				let local_start_y = local_start_node.y;
 				
 				//Check if line should be drawn
@@ -145,8 +145,49 @@ ve.UndoRedo = class extends ve.Component {
 		});
 		
 		//5. Draw vertical lines
+		Object.iterate(timeline_graph, (local_key, local_value) => {
+			let local_node = node_positions[local_key];
+			let local_start_x = local_node.x;
+			let local_start_y = local_node.y - local_node.height;
+			
+			if (local_value.connection_ids)
+				for (let i = 0; i < local_value.connection_ids.length; i++)
+					if (node_positions[local_value.connection_ids[i]]) {
+						let local_connecting_node = node_positions[local_value.connection_ids[i]];
+						let local_end_x = local_connecting_node.x;
+						let local_end_y = local_connecting_node.y + local_node.height;
+						
+						//Draw line between nodes
+						ctx.beginPath();
+						ctx.moveTo(local_start_x, local_start_y);
+						ctx.lineTo(local_end_x, local_end_y);
+						ctx.strokeStyle = "white";
+						ctx.lineWidth = 2;
+						ctx.stroke();
+						ctx.closePath();
+					}
+		});
 		
 		//6. Add click event listener to detect node clicks
+		this.canvas_el.onclick = (e) => {
+			let canvas_el_rect = this.canvas_el.getBoundingClientRect();
+			let scale = HTML.getCanvasScale(this.canvas_el);
+			
+			let click_x = (e.clientX - canvas_el_rect.left)/scale;
+			let click_y = (e.clientY - canvas_el_rect.top)/scale;
+			
+			//Iterate over all node_positions
+			Object.iterate(node_positions, (local_key, local_value) => {
+				if (click_x >= local_value.x - local_value.width/2 && click_x <= local_value.x + local_value.width && click_y >= local_value.y - local_value.height/2 && click_y <= local_value.y + local_value.height/2) {
+					let local_timeline = DALS.Timeline.getTimeline(local_value.id);
+						local_timeline.jumpToAction(local_value.timeline_index); //Jump to specific action in timeline
+				}
+			});
+		};
+	}
+	
+	handleEvents () {
+		
 	}
 	
 	get v () {
