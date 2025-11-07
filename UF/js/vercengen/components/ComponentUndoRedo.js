@@ -4,6 +4,9 @@ ve.UndoRedo = class extends ve.Component {
 		let value = arg0_value;
 		let options = (arg1_options) ? arg1_options : {};
 			super(options);
+			
+		//Initialise options
+		if (options.flipped !== false) options.flipped = true;
 		
 		//Declare local instance variables
 		this.element = document.createElement("div");
@@ -16,6 +19,85 @@ ve.UndoRedo = class extends ve.Component {
 		//Add HTML list, canvas
 		this.canvas_el = document.createElement("canvas");
 		this.html_list_el = document.createElement("div");
+	}
+	
+	draw () { //[WIP] - Finish function body
+		//Declare local instance variables
+		let ctx = this.canvas_el.getContext("2d");
+		let timeline_graph;
+			if (!options.flipped) {
+				timeline_graph = DALS.Timeline.generateGraph();
+			} else {
+				for (let i = 0; i < DALS.Timeline.instances.length; i++)
+					if (DALS.Timeline.instances[i].initial_timeline) {
+						timeline_graph = DALS.Timeline.instances[i].generateFlippedGraph();
+						break;
+					}
+			}
+		
+		let canvas_height = 0;
+		let canvas_width = 0;
+		let node_height = 14;
+		let spacing_x = 140;
+		let spacing_y = 60;
+		
+		//Store node positions for event handling
+		let node_positions = {};
+		let row_tracker = {};
+		
+		//Clear previous render
+		ctx.clearRect(0, 0, this.canvas_el.width, this.canvas_el.height);
+		
+		//1. Iterate over timeline_graph keys and render nodes
+		Object.iterate(timeline_graph, (local_key, local_value) => {
+			let local_x = local_value.x*spacing_x - 50;
+			let local_y = local_value.y*spacing_y + 10;
+			
+			//Initialise row_tracker
+			if (!row_tracker[local_value.y]) row_tracker[local_value.y] = [];
+				row_tracker[local_value.y].push(local_key);
+			
+			//Measure text width and define node height
+			let is_selected = false;
+				if (local_value.timeline_id === DALS.Timeline.current_timeline && local_value.timeline_index === DALS.Timeline.current_index)
+					is_selected = true;
+			let node_text;
+				if (local_value.value.options && local_value.value.options.name)
+					node_text = local_value.value.options.name;
+				if (node_text === undefined) node_text = "Unlisted";
+				if (local_value.child_timelines && local_value.x === 1)
+					node_text = "S. Init";
+				if (local_value.parent_timeline)
+					node_text = "Split From Timeline";
+			let text_height = node_text.split("\n").length*node_height;
+			let text_width = ctx.measureText(node_text).width;
+				
+			//Store position for click detection
+			node_positions[local_key] = {
+				id: `${local_value.x}-${local_value.y}`,
+				name: node_text,
+				
+				is_selected: is_selected,
+				timeline_id: local_value.timeline_id,
+				timeline_index: local_value.timeline_index,
+				value: local_value.value,
+				
+				height: text_height,
+				width: text_width,
+				x: local_x,
+				y: local_y
+			};
+		});
+		
+		//2. Calculate canvas.height, canvas.width
+		
+		//3. Draw DALS.Action nodes
+		
+		//4. Draw horizontal lines
+		
+		//5. Draw vertical lines
+		
+		//6. Add click event listener to detect node clicks
 	}
 	
 	get v () {
@@ -85,7 +167,7 @@ ve.UndoRedo = class extends ve.Component {
 		
 		//Render Canvas list; scavenge code from old Naissance
 		{
-			
+			this.draw();
 		}
 	}
 };
