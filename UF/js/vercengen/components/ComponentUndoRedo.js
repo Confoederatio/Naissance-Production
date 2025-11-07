@@ -23,12 +23,28 @@ ve.UndoRedo = class extends ve.Component {
 		this.html_list_el = document.createElement("div");
 		
 		//Create a ve.PageMenu with this.html_list_el, this.canvas_container_el, and mount it to this.element
+		this.page_menu = new ve.PageMenu({
+			current_timeline: {
+				name: "Current Timeline",
+				components_obj: {
+					html: new ve.HTML(this.html_list_el)
+				}
+			},
+			timeline_map: {
+				name: "Map",
+				components_obj: {
+					html: new ve.HTML(this.canvas_container_el)
+				}
+			}
+		});
+		this.element.appendChild(this.page_menu.element);
 		
 		//KEEP AT BOTTOM!
+		this.draw();
 		this.handleEvents();
 	}
 	
-	draw () { //[WIP] - Finish function body
+	draw () {
 		//Declare local instance variables
 		let ctx = this.canvas_el.getContext("2d");
 		let timeline_graph;
