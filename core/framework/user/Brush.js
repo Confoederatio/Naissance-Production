@@ -63,7 +63,7 @@ naissance.Brush = class extends ve.Class {
 			}),
 			simplify_applies_to_brush: veCheckbox(false, {
 				to_binding: "this.simplify_applies_to_brush",
-				name: "Applies to Brush [WIP]",
+				name: "Applies to Brush<br>[WIP]",
 				tooltip: "Whether the simplification should apply to the brush only instead of the selected polygon.",
 				x: 1, y: 0
 			})
