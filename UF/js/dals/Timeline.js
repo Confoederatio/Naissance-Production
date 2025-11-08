@@ -152,7 +152,7 @@ DALS.Timeline = class {
 	 * Branches off a new timeline from the current timeline. If the current timeline is not selected, the branch node is automatically placed at the end of the timeline.
 	 * - Method of: {@link DALS.Timeline}
 	 * 
-	 * @param {Object} arg0_options - Refer to {@link DALS.Timeline}.options for information on what options are acceptable.
+	 * @param {Object} [arg0_options={}] - Refer to {@link DALS.Timeline}.options for information on what options are acceptable.
 	 * 
 	 * @returns {DALS.Timeline}
 	 */

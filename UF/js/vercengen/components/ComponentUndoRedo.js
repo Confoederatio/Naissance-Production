@@ -281,7 +281,8 @@ ve.UndoRedo = class extends ve.Component {
 						click_y >= local_value.y - local_value.height && click_y <= local_value.y + local_value.height
 					) {
 						let local_timeline = DALS.Timeline.getTimeline(local_value.timeline_id);
-						console.log(`[WIP] - Would call local_timeline.jumpToAction(${Math.returnSafeNumber(local_value.value.options.domain[1]) + 1})`);
+						//console.log(`[WIP] - Would call local_timeline.jumpToAction(${Math.returnSafeNumber(local_value.value.options.domain[1]) + 1})`);
+						local_timeline.jumpToAction(local_value.value.options.domain[1] + 1);
 						
 						if (local_timeline.id !== DALS.Timeline.current_timeline) {
 							this.from_binding_fire_silently = true;
@@ -331,10 +332,11 @@ ve.UndoRedo = class extends ve.Component {
 				this.html_list_el.appendChild(this.html_select.element);
 				
 				//Iterate over timeline_groups, and add list items depending on the length
+				let current_index = 1;
 				let timeline_groups = timeline_obj.getGroups();
 				let ul_el = document.createElement("ul");
 				
-				for (let i = 0; i < timeline_groups.length; i++) { //[WIP] - Finish header_el
+				for (let i = 0; i < timeline_groups.length; i++) {
 					//Create header_el with Jump To/Branch buttons
 					let group_el = document.createElement("li");
 					let local_name = `New Action`;
@@ -342,18 +344,25 @@ ve.UndoRedo = class extends ve.Component {
 						local_name = timeline_groups[i][0].name;
 					let header_el = new ve.RawInterface({
 						action_name: new ve.HTML(`${local_name} (${String.formatNumber(timeline_groups[i].length)})`),
-						
+							
 						jump_to_button: new ve.Button(() => {
-							
+							timeline_obj.jumpToAction(current_index + timeline_groups[i].length - 1);
 						}, { name: `<icon>arrow_right_alt</icon>`, tooltip: `Jump To` }),
-						branch: new ve.Button(() => {
-							
+						branch: new ve.Button(() => { //[WIP] - This needs to be reworked to branch at this node specifically by setting DALS.Timeline.current_index before branching
+							DALS.Timeline.current_index = current_index + timeline_groups[i].length - 1;
+							let new_timeline = timeline_obj.branch();
+								DALS.Timeline.current_timeline = new_timeline.id;
+								DALS.Timeline.current_index = 0;
+								new_timeline.jumpToStart();
 						}, { name: `<icon>alt_route</icon>`, tooltip: `Branch Timeline` })
 					});
 					
 					//Append main header in div; don't split it up to prevent DOM lag
 					group_el.appendChild(header_el.element);
 					ul_el.appendChild(group_el);
+					
+					//Keep track of current_index
+					current_index += timeline_groups[i].length;
 				}
 				
 				this.html_list_el.appendChild(ul_el);
