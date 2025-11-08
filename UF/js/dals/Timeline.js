@@ -544,8 +544,45 @@ DALS.Timeline = class {
 		DALS.Timeline.getTimeline(timeline_id).jumpToStart();
 	}
 	
-	static redo () { //[WIP] - Finish function body
+	/**
+	 * Redoes an action group in the current timeline. Returns the jumped to index.
+	 * - Static method of: {@link DALS.Timeline}
+	 * 
+	 * @returns {number}
+	 */
+	static redo () {
+		//Declare local instance variables
+		let timeline_obj = DALS.Timeline.getTimeline(DALS.Timeline.current_timeline);
 		
+		//Iterate over all timeline_groups and figure out the last_group to rewind to
+		let current_index = 1;
+		let next_index = 1;
+		let timeline_groups = timeline_obj.getGroups();
+		
+		for (let i = 0; i < timeline_groups.length; i++) {
+			let local_domain = [current_index, current_index + timeline_groups[i].length];
+			
+			//Check if DALS.Timeline.current_index is within local_domain
+			if (DALS.Timeline.current_index > local_domain[0] && DALS.Timeline.current_index <= local_domain[1]) {
+				let next_group = timeline_groups[i + 1];
+				if (next_group) {
+					next_index = local_domain[1] + next_group.length; 
+				} else {
+					next_index = local_domain[1];
+				}
+				
+				break;
+			}
+			
+			//Increment current_index to keep track of things
+			current_index += timeline_groups[i].length;
+		}
+		
+		//Jump to next_index
+		timeline_obj.jumpToAction(next_index);
+		
+		//Return statement
+		return next_index;
 	}
 	
 	/**
@@ -564,7 +601,44 @@ DALS.Timeline = class {
 		});
 	}
 	
-	static undo () { //[WIP] - Finish function body
+	/**
+	 * Undoes an action group in the current timeline. Returns the jumped to index.
+	 * - Static method of: {@link DALS.Timeline}
+	 * 
+	 * @returns {number}
+	 */
+	static undo () {
+		//Declare local instance variables
+		let timeline_obj = DALS.Timeline.getTimeline(DALS.Timeline.current_timeline);
 		
+		//Iterate over all timeline_groups and figure out the last_group to rewind to
+		let current_index = 1;
+		let last_index = 1;
+		let timeline_groups = timeline_obj.getGroups();
+		
+		for (let i = 0; i < timeline_groups.length; i++) {
+			let local_domain = [current_index, current_index + timeline_groups[i].length];
+			
+			//Check if DALS.Timeline.current_index is within local_domain
+			if (DALS.Timeline.current_index > local_domain[0] && DALS.Timeline.current_index <= local_domain[1]) {
+				let last_group = timeline_groups[i - 1];
+				if (last_group) {
+					last_index = local_domain[0] - 1;
+				} else {
+					last_index = local_domain[1];
+				}
+				
+				break;
+			}
+			
+			//Increment current_index to keep track of things
+			current_index += timeline_groups[i].length;
+		}
+		
+		//Jump to next_index
+		timeline_obj.jumpToAction(last_index);
+		
+		//Return statement
+		return last_index;
 	}
 };
