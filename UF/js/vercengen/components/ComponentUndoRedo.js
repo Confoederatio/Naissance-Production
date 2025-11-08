@@ -346,10 +346,10 @@ ve.UndoRedo = class extends ve.Component {
 						action_name: new ve.HTML(`${local_name} (${String.formatNumber(timeline_groups[i].length)})`),
 							
 						jump_to_button: new ve.Button(() => {
-							timeline_obj.jumpToAction(current_index + timeline_groups[i].length - 1);
+							timeline_obj.jumpToAction(current_index + timeline_groups[i].length);
 						}, { name: `<icon>arrow_right_alt</icon>`, tooltip: `Jump To` }),
 						branch: new ve.Button(() => { //[WIP] - This needs to be reworked to branch at this node specifically by setting DALS.Timeline.current_index before branching
-							DALS.Timeline.current_index = current_index + timeline_groups[i].length - 1;
+							DALS.Timeline.current_index = current_index + timeline_groups[i].length;
 							let new_timeline = timeline_obj.branch();
 								DALS.Timeline.current_timeline = new_timeline.id;
 								DALS.Timeline.current_index = 0;
