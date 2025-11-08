@@ -32,7 +32,7 @@ ve.UndoRedo = class extends ve.Component {
 				}
 			},
 			timeline_map: {
-				name: "Map",
+				name: "Actions Map",
 				components_obj: {
 					html: new ve.HTML(this.canvas_container_el),
 					coords_display: new ve.HTML(() => `X: ${String.formatNumber(this.translate_x, 2)}, Y: ${String.formatNumber(this.translate_y, 2)} | Scale: ${String.formatNumber(this.scale, 2)}`)
@@ -229,10 +229,13 @@ ve.UndoRedo = class extends ve.Component {
 				
 				//Iterate over all node_positions
 				Object.iterate(node_positions, (local_key, local_value) => {
-					if (click_x >= local_value.x - local_value.width/2 && click_x <= local_value.x + local_value.width && click_y >= local_value.y - local_value.height/2 && click_y <= local_value.y + local_value.height/2) {
+					if (
+						click_x >= local_value.x - local_value.width/2 && click_x <= local_value.x + local_value.width && 
+						click_y >= local_value.y - local_value.height && click_y <= local_value.y + local_value.height
+					) {
 						let local_timeline = DALS.Timeline.getTimeline(local_value.id);
 						
-						console.log(`[WIP] - Would call local_timeline.jumpToAction(${local_value.timeline_index})`);
+						console.log(`[WIP] - Would call local_timeline.jumpToAction(${Math.returnSafeNumber(local_value.value.options.domain[1]) + 1})`);
 					}
 				});
 			};
