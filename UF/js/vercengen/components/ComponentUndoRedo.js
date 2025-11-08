@@ -20,7 +20,7 @@
  * @type {ve.UndoRedo}
  */
 ve.UndoRedo = class extends ve.Component {
-	constructor (arg0_value, arg1_options) { //[WIP] - Finish constructor function
+	constructor (arg0_value, arg1_options) {
 		let value = arg0_value;
 		let options = (arg1_options) ? arg1_options : {};
 			super(options);
@@ -348,6 +348,7 @@ ve.UndoRedo = class extends ve.Component {
 							
 						jump_to_button: new ve.Button(() => {
 							timeline_obj.jumpToAction(current_index + timeline_groups[i].length);
+							this.fireToBinding();
 						}, { name: `<icon>arrow_right_alt</icon>`, tooltip: `Jump To` }),
 						branch: new ve.Button(() => {
 							DALS.Timeline.current_index = current_index + timeline_groups[i].length;
@@ -355,6 +356,7 @@ ve.UndoRedo = class extends ve.Component {
 								DALS.Timeline.current_timeline = new_timeline.id;
 								DALS.Timeline.current_index = 0;
 								new_timeline.jumpToStart();
+							this.fireToBinding();
 						}, { name: `<icon>alt_route</icon>`, tooltip: `Branch Timeline` })
 					});
 					
