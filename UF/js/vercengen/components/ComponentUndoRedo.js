@@ -227,15 +227,22 @@ ve.UndoRedo = class extends ve.Component {
 				let click_x = (e.clientX - canvas_el_rect.left)/scale;
 				let click_y = (e.clientY - canvas_el_rect.top)/scale;
 				
-				//Iterate over all node_positions
+				//Iterate over all node_positions - [WIP] - Finish implementing .jumpToAction()
 				Object.iterate(node_positions, (local_key, local_value) => {
 					if (
 						click_x >= local_value.x - local_value.width/2 && click_x <= local_value.x + local_value.width && 
 						click_y >= local_value.y - local_value.height && click_y <= local_value.y + local_value.height
 					) {
-						let local_timeline = DALS.Timeline.getTimeline(local_value.id);
-						
+						let local_timeline = DALS.Timeline.getTimeline(local_value.timeline_id);
 						console.log(`[WIP] - Would call local_timeline.jumpToAction(${Math.returnSafeNumber(local_value.value.options.domain[1]) + 1})`);
+						
+						if (local_timeline.id !== DALS.Timeline.current_timeline) {
+							this.from_binding_fire_silently = true;
+								DALS.Timeline.current_timeline = local_timeline.id;
+								this.v = local_timeline.id;
+								this.fireToBinding();
+							delete this.from_binding_fire_silently;
+						}
 					}
 				});
 			};

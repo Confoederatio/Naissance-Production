@@ -544,6 +544,10 @@ DALS.Timeline = class {
 		DALS.Timeline.getTimeline(timeline_id).jumpToStart();
 	}
 	
+	static redo () { //[WIP] - Finish function body
+		
+	}
+	
 	/**
 	 * Saves the present state as JSON to a new file path.
 	 * - Static method of: {@link DALS.Timeline}
@@ -558,5 +562,9 @@ DALS.Timeline = class {
 		fs.writeFile(file_path, JSON.stringify(DALS.Timeline.saveState()), (err) => {
 			if (err) console.error(err);
 		});
+	}
+	
+	static undo () { //[WIP] - Finish function body
+		
 	}
 };
