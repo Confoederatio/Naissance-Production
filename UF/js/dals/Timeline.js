@@ -264,27 +264,31 @@ DALS.Timeline = class {
 			
 		//3. Parse connections - [WIP] - This needs to group together actions with the same .key value. It currently does not
 		let last_id = "";
+		let timeline_groups = this.getGroups.call(timeline_obj);
 		
-		//Iterate over current timeline .value; parse connection IDs
-		for (let i = 1; i < timeline_obj.value.length; i++) {
-			let local_connection_ids = [];
+		for (let i = 0; i < timeline_groups.length; i++) {
+			let group = timeline_groups[i];
 			let local_id = Object.generateRandomID(timeline_graph);
 				timeline_graph[local_id] = {};
+				
+			let first_action = group[0];
 			
-			//.x_original/.y_original handler
-			local_connection_ids.push(last_id);
+			//Connect to previous group
+			if (last_id) timeline_graph[local_id].connection_ids = [last_id];
 			
-			//Connections handler
-			if (local_connection_ids.length > 0)
-				timeline_graph[local_id].connection_ids = local_connection_ids;
-			//Add .value field
 			timeline_graph[local_id].timeline_id = timeline_obj.id;
-			timeline_graph[local_id].timeline_index = i;
-			timeline_graph[local_id].value = timeline_obj.value[i];
+			timeline_graph[local_id].timeline_index = first_action.options.timeline_index;
+			timeline_graph[local_id].timeline_group_index = i;
+			timeline_graph[local_id].value = group;
+				timeline_graph[local_id].value.options = first_action.value.options;
+					timeline_graph[local_id].value.options.domain = [
+						first_action.options.timeline_index,
+						group[group.length - 1].options.timeline_index
+					];
+					timeline_graph[local_id].value.options.length = group.length;
 			timeline_graph[local_id].x = i;
 			timeline_graph[local_id].y = current_y_offset;
 			
-			//Set last_id
 			last_id = local_id;
 		}
 			
@@ -292,20 +296,43 @@ DALS.Timeline = class {
 		Object.iterate(timeline_graph, (local_key, local_value) => {
 			local_value.x += x_offset;
 			local_value.y++;
-			
-			//[WIP] - Originally, this didn't execute, so check if this code block is logically flawed
-			if (local_value.connection_ids)
-				for (let x = 0; x < local_value.connection_ids.length; x++) {
-					let local_connection = timeline_graph[local_value.connection_ids[x]];
-					if (local_connection === undefined) continue;
-					
-					local_connection.x += x_offset;
-					local_connection.y++;
-				}
 		});
 		
 		//Return statement
 		return timeline_graph;
+	}
+	
+	getGroups () {
+		//Declare local instance variables
+		let current_group = [];
+		let timeline_groups = [];
+		
+		if (this.value.length > 1) {
+			//Start with first action after state head
+			current_group.push(this.value[1]);
+			
+			//Iterate over remaining mutations in timeline
+			for (let i = 2; i < this.value.length; i++) {
+				let current_action = this.value[i];
+				let previous_action = this.value[i - 1];
+				
+				//Continue the same group if .key is the same
+				current_action.options.timeline_index = i;
+				if (current_action.options.key === previous_action.options.key) {
+					current_group.push(current_action);
+				} else {
+					//Different .key, push finished group, start new one
+					timeline_groups.push(current_group);
+					current_group = [current_action];
+				}
+			}
+		}
+		
+		//Push the final group after loop
+		if (current_group.length > 0) timeline_groups.push(current_group);
+		
+		//Return statement
+		return timeline_groups;
 	}
 	
 	getTimelineWidth () {
