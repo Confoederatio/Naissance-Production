@@ -77,7 +77,7 @@ naissance.Brush = class extends ve.Class {
 			anchor: "bottom_right",
 			mode: "static_window",
 			name: "Brush",
-			width: "24rem",
+			width: "26rem",
 			x: 8,
 			y: 8
 		});

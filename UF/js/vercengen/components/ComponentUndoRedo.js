@@ -1,4 +1,25 @@
 //Work on ve.ComponentUndoRedo as DALS Timelines become available via Naissance
+/**
+ * Refer to <span color = "yellow">{@link ve.Component}</span> for methods or fields inherited from this Component's parent such as `.options.attributes` or `.element`.
+ * 
+ * Undo/Redo interface with the ability for users to navigate between different {@link DALS.Timeline} instances. Undo/Redo tree by default with both a canvas interface and HTML list.
+ * 
+ * ##### Constructor:
+ * - `arg0_value=DALS.Timeline.current_timeline`: {@link string} - The timeline ID the initial value should be set to.
+ * - `arg1_options`: {@link Object}
+ * 
+ * ##### Instance:
+ * - `.v`: {@link string}
+ * 
+ * ##### Methods:
+ * - <span color=00ffff>{@link ve.UndoRedo.draw|draw}</span>() - Redraws both HTML/canvas-side elements.
+ * - <span color=00ffff>{@link ve.UndoRedo.handleEvents|handleEvents}</span>() - Handles events for zooming/panning around canvas.
+ * 
+ * @augments ve.Component
+ * @augments {@link ve.Component}
+ * @memberof ve.Component
+ * @type {ve.UndoRedo}
+ */
 ve.UndoRedo = class extends ve.Component {
 	constructor (arg0_value, arg1_options) { //[WIP] - Finish constructor function
 		let value = arg0_value;
@@ -55,15 +76,31 @@ ve.UndoRedo = class extends ve.Component {
 		this.v = DALS.Timeline.current_timeline;
 	}
 	
-	//[WIP] - Accessors require fireFromBinding/fireToBinding as well as setting this.value
+	/**
+	 * Returns the current {@link DALS.Timeline} object of the present Component.
+	 * - Accessor of: {@link ve.UndoRedo}
+	 * 
+	 * @returns {DALS.Timeline}
+	 */
 	get v () {
 		//Return statement
 		return DALS.Timeline.getTimeline(this.value);
 	}
 	
+	/**
+	 * Sets the new {@link DALS.Timeline} from a timeline ID.
+	 * - Method of: {@link ve.UndoRedo}
+	 * 
+	 * @param arg0_value
+	 */
 	set v (arg0_value) {
 		//Convert from parameters
-		let value = (arg0_value) ? arg0_value : DALS.Timeline.current_timeline;
+		let value = DALS.Timeline.current_timeline;
+			if (arg0_value instanceof DALS.Timeline) value = arg0_value.id;
+			if (typeof arg0_value === "string") value = arg0_value;
+			if (arg0_value === undefined) value = DALS.Timeline.current_timeline;
+		
+		//Declare local instance variables
 		this.value = value;
 		
 		//Render Canvas list; scavenge code from old Naissance
@@ -73,6 +110,10 @@ ve.UndoRedo = class extends ve.Component {
 		}
 	}
 	
+	/**
+	 * Redraws the current interface.
+	 * - Method of: {@link ve.Interface}
+	 */
 	draw () {
 		//Render canvas
 		{
@@ -320,6 +361,10 @@ ve.UndoRedo = class extends ve.Component {
 		}
 	}
 	
+	/**
+	 * Handles events for {@link this.canvas_container_el}.
+	 * - Method of: {@link ve.Interface}
+	 */
 	handleEvents () {
 		//Declare local instance variables
 		this.is_panning = false;
