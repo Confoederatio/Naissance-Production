@@ -336,7 +336,7 @@ ve.UndoRedo = class extends ve.Component {
 				let timeline_groups = timeline_obj.getGroups();
 				let ul_el = document.createElement("ul");
 				
-				for (let i = 0; i < timeline_groups.length; i++) {
+				for (let i = 0; i < timeline_groups.length; i++) { //[WIP] - Worth checking if we need a +/-1 offset later
 					//Create header_el with Jump To/Branch buttons
 					let group_el = document.createElement("li");
 					let local_name = `New Action`;
@@ -348,7 +348,7 @@ ve.UndoRedo = class extends ve.Component {
 						jump_to_button: new ve.Button(() => {
 							timeline_obj.jumpToAction(current_index + timeline_groups[i].length);
 						}, { name: `<icon>arrow_right_alt</icon>`, tooltip: `Jump To` }),
-						branch: new ve.Button(() => { //[WIP] - This needs to be reworked to branch at this node specifically by setting DALS.Timeline.current_index before branching
+						branch: new ve.Button(() => {
 							DALS.Timeline.current_index = current_index + timeline_groups[i].length;
 							let new_timeline = timeline_obj.branch();
 								DALS.Timeline.current_timeline = new_timeline.id;
