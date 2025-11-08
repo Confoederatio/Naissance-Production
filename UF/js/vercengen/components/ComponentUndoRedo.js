@@ -79,7 +79,9 @@ ve.UndoRedo = class extends ve.Component {
 				};
 			}
 			
-			this.html_select = new ve.Select(select_obj);
+			this.html_select = new ve.Select(select_obj, {
+				onchange: (v, e) => console.log(v, e) //This should switch the present timeline
+			});
 				this.html_list_el.appendChild(this.html_select.element);
 			
 			//Iterate over timeline_obj.value and populate timeline_groups
