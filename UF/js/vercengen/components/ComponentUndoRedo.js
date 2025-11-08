@@ -29,8 +29,10 @@ ve.UndoRedo = class extends ve.Component {
 				name: "Current Timeline",
 				components_obj: {
 					actions_bar: new ve.RawInterface({
-						undo_button: new ve.Button(() => DALS.Timeline.undo(), { name: "<icon>undo</icon>" }),
-						redo_button: new ve.Button(() => DALS.Timeline.redo(), { name: "<icon>redo</icon>" })
+						undo_button: new ve.Button(() => DALS.Timeline.undo(), { 
+							name: "<icon>undo</icon>" }),
+						redo_button: new ve.Button(() => DALS.Timeline.redo(), { 
+							name: "<icon>redo</icon>" })
 					}, { name: " " }),
 					html: new ve.HTML(this.html_list_el)
 				}

@@ -283,8 +283,10 @@
         font-family: var(--body-font-family);
         font-size: var(--body-font-size);
         font-weight: var(--body-font-weight);
+        height: 100%;
         padding: var(--padding);
         padding-top: calc(var(--padding)*0.5);
+        width: 100%;
 
         overflow-x: auto;
         scrollbar-color: white transparent;

@@ -66,6 +66,10 @@
 /* -- ve.Button -- */
 [component="ve-button"] {
     display: inline;
+    
+    button:has(icon) {
+        padding: var(--cell-padding);
+    }
 }
 
 /* -- ve.Checkbox -- */
@@ -134,9 +138,6 @@
         vertical-align: top;
     }
 }
-/*[component="ve-interface"]:not(:has(details)) {
-    [component] { padding: 0; }
-}*/
 td:has([component="ve-interface"]) {
     padding-inline-start: 0.5rem;
 }
@@ -196,6 +197,13 @@ td:has([component="ve-interface"]) {
     }
 }
 
+/* -- ve.RawInterface -- */
+[component="ve-raw-interface"] {
+    > [component="ve-button"] {
+      padding: 0;
+    }
+}
+
 /* -- ve.Text -- */
 [component="ve-text"] input {
     min-width: calc(var(--default-width)/2);
@@ -224,6 +232,15 @@ td:has([component="ve-interface"]) {
     }
     .toggle-icon.on {
         color: rgb(0, 204, 106);
+    }
+}
+
+/* -- ve.UndoRedo -- */
+[component="ve-undo-redo"] {
+    [component="ve-html"]:has(#canvas-container) {
+        max-height: 40rem;
+        min-height: 40rem;
+        overflow: clip;
     }
 }
 
