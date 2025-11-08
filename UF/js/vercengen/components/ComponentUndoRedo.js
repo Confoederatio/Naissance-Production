@@ -73,7 +73,7 @@ ve.UndoRedo = class extends ve.Component {
 		setTimeout(() => {
 			this.draw();
 			this.handleEvents();
-		})
+		});
 		this.v = DALS.Timeline.current_timeline;
 	}
 	
