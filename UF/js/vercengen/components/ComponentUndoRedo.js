@@ -65,6 +65,22 @@ ve.UndoRedo = class extends ve.Component {
 		//Render HTML list
 		{
 			this.html_list_el.innerHTML = "";
+			let select_obj = {};
+			
+			//Iterate over all DALS.Timeline.instances and list them in order of length
+			DALS.Timeline.instances.sort((a, b) => b.value.length - a.value.length);
+			
+			for (let i = 0; i < DALS.Timeline.instances.length; i++) {
+				let local_timeline = DALS.Timeline.instances[i];
+				
+				select_obj[local_timeline.id] = {
+					name: (local_timeline.name) ? local_timeline.name : local_timeline.id,
+					selected: (local_timeline.id === DALS.Timeline.current_timeline)
+				};
+			}
+			
+			this.html_select = new ve.Select(select_obj);
+				this.html_list_el.appendChild(this.html_select.element);
 			
 			//Iterate over timeline_obj.value and populate timeline_groups
 			let current_group = [];
