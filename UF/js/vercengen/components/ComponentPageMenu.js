@@ -112,6 +112,11 @@ ve.PageMenu = class extends ve.Component { //[WIP] - This should be updated late
 		
 		//2. Body handling; display starting interface
 		{
+			let initialise_underline_loop = setInterval(() => {
+				if (!document.contains(this.element)) return;
+				this.updateUnderline();
+				clearInterval(initialise_underline_loop);
+			});
 			this.v = options.starting_page;
 			if (options.name) this.name = options.name;
 		}
