@@ -249,7 +249,7 @@ DALS.Timeline = class {
 		/**
 		 * Object list of UI elements.
 		 * - `.connections`: ({@link Array}<{@link Array}<x:{@link number}, y:{@link number}>>
-		 * @type {{x: number, y: number, name: string, connections: [[number, number]]}}
+		 * @type {{x: number, y: number, name: string, connections: number[][]}}
 		 */
 		let current_y_offset = Math.returnSafeNumber(options.y_offset);
 		let timeline_graph = {};
@@ -324,7 +324,7 @@ DALS.Timeline = class {
 	 * Groups together actions with the same `.key` field to avoid their duplication and returns the grouped `.value` of the present timeline acoordingly.
 	 * - Method of: {@link DALS.Timeline}
 	 * 
-	 * @returns {[DALS.Action[]]}
+	 * @returns {DALS.Action[][]}
 	 */
 	getGroups () {
 		//Declare local instance variables

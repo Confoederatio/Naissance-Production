@@ -1,4 +1,3 @@
-//Work on ve.ComponentUndoRedo as DALS Timelines become available via Naissance
 /**
  * Refer to <span color = "yellow">{@link ve.Component}</span> for methods or fields inherited from this Component's parent such as `.options.attributes` or `.element`.
  * 
