@@ -121,6 +121,10 @@ DALS.Timeline = class {
 		return new_action;
 	}
 	
+	/**
+	 * Assigns the `.child_timelines` field for the present timeline by looking for any attached {@link DALS.Timeline} instances.
+	 * - Method of: {@link DALS.Timeline}
+	 */
 	assignChildTimelines () {
 		//Declare local instance variables
 		let timeline_obj = true;
@@ -203,6 +207,12 @@ DALS.Timeline = class {
 		}
 	}
 	
+	/**
+	 * Flips a generated graph from generateGraph() by switching the `.x`/`.y` coordinates of each node.
+	 * - Method of: {@link DALS.Timeline}
+	 * 
+	 * @returns {Object}
+	 */
 	generateFlippedGraph () {
 		//Declare local instance variables
 		let timeline_graph = this.generateGraph();
@@ -223,7 +233,15 @@ DALS.Timeline = class {
 		return timeline_graph;
 	}
 	
-	generateGraph (arg0_options) { //[WIP] - This needs to group together actions with the same key in Stage 3
+	/**
+	 * Generates a timeline graph starting from the current {@link DALS.Timeline} instance with plotted `.x`/`.y` fields for node positions. Used in {@link ve.Component.UndoRedo} for rendering canvas displays.
+	 * - Method of: {@link DALS.Timeline}
+	 * 
+	 * @param {Object} arg0_options
+	 * 
+	 * @returns {Object}
+	 */
+	generateGraph (arg0_options) {
 		//Convert from parameters
 		let options = (arg0_options) ? arg0_options : {};
 		
@@ -302,6 +320,12 @@ DALS.Timeline = class {
 		return timeline_graph;
 	}
 	
+	/**
+	 * Groups together actions with the same `.key` field to avoid their duplication and returns the grouped `.value` of the present timeline acoordingly.
+	 * - Method of: {@link DALS.Timeline}
+	 * 
+	 * @returns {[DALS.Action[]]}
+	 */
 	getGroups () {
 		//Declare local instance variables
 		let current_group = [];
@@ -335,6 +359,12 @@ DALS.Timeline = class {
 		return timeline_groups;
 	}
 	
+	/**
+	 * Returns the width of the present timeline, accounting for any `.child_timelines` that may exist.
+	 * - Method of: {@link DALS.Timeline}
+	 * 
+	 * @returns {number}
+	 */
 	getTimelineWidth () {
 		//Declare local instance variables
 		let timeline_width = 0;
@@ -447,6 +477,12 @@ DALS.Timeline = class {
 				this.value.splice(i, 1);
 	}
 	
+	/**
+	 * Generates a global timeline graph from the root {@link DALS.Timeline.initial_timeline}.
+	 * - Static method of: {@link DALS.Timeline}
+	 * 
+	 * @returns {Object}
+	 */
 	static generateGraph () {
 		//Return statement
 		for (let i = 0; i < DALS.Timeline.instances.length; i++)
@@ -454,6 +490,14 @@ DALS.Timeline = class {
 				return DALS.Timeline.instances[i].generateGraph();
 	}
 	
+	/**
+	 * Returns the max `.x` value from a given graph from <span color=00ffff>{@link DALS.Timeline.generateGraph}</span>() to assess its dimensions.
+	 * - Static method of: {@link DALS.Timeline}
+	 *
+	 * @param {Object} arg0_graph
+	 *
+	 * @returns {number}
+	 */
 	static getGraphMaxX (arg0_graph) {
 		//Convert from parameters
 		let timeline_graph = arg0_graph;
@@ -471,6 +515,14 @@ DALS.Timeline = class {
 		return max_x;
 	}
 	
+	/**
+	 * Returns the max `.y` value from a given graph from <span color=00ffff>{@link DALS.Timeline.generateGraph}</span>() to assess its dimensions.
+	 * - Static method of: {@link DALS.Timeline}
+	 * 
+	 * @param {Object} arg0_graph
+	 * 
+	 * @returns {number}
+	 */
 	static getGraphMaxY (arg0_graph) {
 		//Convert from parameters
 		let timeline_graph = arg0_graph;
