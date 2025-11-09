@@ -432,10 +432,6 @@ ve.UndoRedo = class extends ve.Component {
 			}
 		}
 		
-		//2. [WIP] - Render HTML post-processing by highlighting whether the timeline/action is current
-		{
-		}
-		
 		this.current_index = JSON.parse(JSON.stringify(DALS.Timeline.current_index));
 		this.current_timeline = JSON.parse(JSON.stringify(DALS.Timeline.current_timeline));
 	}
