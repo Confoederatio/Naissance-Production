@@ -276,7 +276,7 @@ DALS.Timeline = class {
 					for (let x = 0; x < timeline_groups.length; x++) try {
 						let local_domain = timeline_groups[x][0].options.domain;
 						
-						if (target_index >= local_domain[0] && target_index <= local_domain[1]) {
+						if (target_index >= local_domain[0] && target_index < local_domain[1]) {
 							branch_group = x;
 							break;
 						}

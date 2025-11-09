@@ -283,15 +283,13 @@ ve.UndoRedo = class extends ve.Component {
 			//6. Add click event listener to detect node clicks
 			this.canvas_el.onclick = (e) => {
 				let canvas_el_rect = this.canvas_el.getBoundingClientRect();
-				let scale = HTML.getCanvasScale(this.canvas_el);
+				let click_x = (e.clientX - canvas_el_rect.left)/this.scale;
+				let click_y = (e.clientY - canvas_el_rect.top)/this.scale;
 				
-				let click_x = (e.clientX - canvas_el_rect.left)/scale;
-				let click_y = (e.clientY - canvas_el_rect.top)/scale;
-				
-				//Iterate over all node_positions - [WIP] - Finish implementing .jumpToAction()
+				//Iterate over all node_positions
 				Object.iterate(node_positions, (local_key, local_value) => {
 					if (
-						click_x >= local_value.x - local_value.width/2 && click_x <= local_value.x + local_value.width && click_y >= local_value.y - local_value.height/2 && click_y <= local_value.y + local_value.height/2
+						click_x >= local_value.x - local_value.width/2 && click_x <= local_value.x + local_value.width/2 && click_y >= local_value.y - local_value.height/2 && click_y <= local_value.y + local_value.height/2
 					) {
 						let local_timeline = DALS.Timeline.getTimeline(local_value.timeline_id);
 						console.log(`Calling local_timeline.jumpToAction(${Math.returnSafeNumber(local_value.value.options.domain[1]) + 1})!`);
