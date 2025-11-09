@@ -298,7 +298,7 @@ DALS.Timeline = class {
 				});
 			}
 		
-		//3. Parse connections - [WIP] - This needs to group together actions with the same .key value. It currently does not
+		//3. Parse connections
 		let last_id = "";
 		
 		for (let i = 0; i < timeline_groups.length; i++) {

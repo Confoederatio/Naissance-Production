@@ -128,6 +128,15 @@ ve.UndoRedo = class extends ve.Component {
 		//Convert from parameters
 		let force_update = arg0_force_update;
 		
+		//Force update if DALS.Timeline.current_timeline has changed
+		if (
+			DALS.Timeline.current_timeline !== this.current_timeline ||
+			DALS.Timeline.current_index !== this.current_index
+		) {
+			force_update = true;
+			this.value = DALS.Timeline.current_timeline;
+		}
+		
 		//Render canvas
 		{
 			//Declare local instance variables
@@ -307,7 +316,7 @@ ve.UndoRedo = class extends ve.Component {
 			};
 		}
 		
-		//Render HTML
+		//1. Render HTML
 		{
 			//Declare local instance variables
 			let skip_html_redraw = false;
@@ -348,28 +357,51 @@ ve.UndoRedo = class extends ve.Component {
 						this.fireToBinding();
 					}
 				});
+				this.html_information = new ve.HTML(() => `Current Timeline: ${DALS.Timeline.current_timeline} | Current Index: #${DALS.Timeline.current_index}`);
 				this.html_list_el.appendChild(this.html_select.element);
+				this.html_list_el.appendChild(this.html_information.element);
 				
 				//Iterate over timeline_groups, and add list items depending on the length
 				let current_index = 1;
 				let timeline_groups = timeline_obj.getGroups();
 				let ul_el = document.createElement("ul");
+					ul_el.classList.add("no-markers");
 				
 				for (let i = 0; i < timeline_groups.length; i++) { //[WIP] - Worth checking if we need a +/-1 offset later
 					//Create header_el with Jump To/Branch buttons
 					let group_el = document.createElement("li");
+					let local_domain =  timeline_groups[i][0].options.domain;
+						local_domain = [Math.returnSafeNumber(local_domain[0]), Math.returnSafeNumber(local_domain[1])];
 					let local_index = JSON.parse(JSON.stringify(current_index));
 					let local_name = `New Action`;
 					if (timeline_groups[i] && timeline_groups[i][0] && timeline_groups[i][0].name)
 						local_name = timeline_groups[i][0].name;
+					
+					let is_selected = (DALS.Timeline.current_timeline === timeline_obj.id && DALS.Timeline.current_index >= local_domain[0] && DALS.Timeline.current_index <= local_domain[1]);
+					
 					let header_el = new ve.RawInterface({
-						action_name: new ve.HTML(`${local_name} (${String.formatNumber(timeline_groups[i].length)})`),
+						action_name: new ve.HTML(`${local_name} (${String.formatNumber(timeline_groups[i].length)})&nbsp;&nbsp;<br>#${local_domain[0]} - ${local_domain[1]}`, {
+							attributes: {
+								"data-is-selected": is_selected
+							},
+							style: {
+								display: "inline-block"
+							}
+						}),
 							
 						jump_to_button: new ve.Button(() => {
 							console.log(`timeline_obj.jumpToAction(${local_index} + ${timeline_groups[i].length});`, local_index + timeline_groups[i].length);
-							timeline_obj.jumpToAction(local_index + timeline_groups[i].length);
+							timeline_obj.jumpToAction(local_index + timeline_groups[i].length - 1);
 							this.fireToBinding();
-						}, { name: `<icon>arrow_right_alt</icon>`, tooltip: `Jump To` }),
+						}, { 
+							name: `<icon>arrow_right_alt</icon>`, tooltip: `Jump To`,
+							style: { 
+								"button": {
+									marginLeft: "var(--padding)"
+								},
+								marginLeft: "auto", order: 99 
+							}
+						}),
 						branch: new ve.Button(() => {
 							DALS.Timeline.current_index = current_index + timeline_groups[i].length;
 							let new_timeline = timeline_obj.branch();
@@ -377,7 +409,15 @@ ve.UndoRedo = class extends ve.Component {
 								DALS.Timeline.current_index = 0;
 								new_timeline.jumpToStart();
 							this.fireToBinding();
-						}, { name: `<icon>alt_route</icon>`, tooltip: `Branch Timeline` })
+						}, { 
+							name: `<icon>alt_route</icon>`, tooltip: `Branch At Node`,
+							style: { order: 100 }
+						})
+					}, {
+						style: {
+							alignItems: "center",
+							display: "flex"
+						}
 					});
 					
 					//Append main header in div; don't split it up to prevent DOM lag
@@ -391,6 +431,13 @@ ve.UndoRedo = class extends ve.Component {
 				this.html_list_el.appendChild(ul_el);
 			}
 		}
+		
+		//2. [WIP] - Render HTML post-processing by highlighting whether the timeline/action is current
+		{
+		}
+		
+		this.current_index = JSON.parse(JSON.stringify(DALS.Timeline.current_index));
+		this.current_timeline = JSON.parse(JSON.stringify(DALS.Timeline.current_timeline));
 	}
 	
 	/**
