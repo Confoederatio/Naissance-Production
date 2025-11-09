@@ -115,7 +115,7 @@ DALS.Timeline = class {
 				if (json_obj.options.timeline === undefined) json_obj.options.timeline = this.id;
 		let new_action = new DALS.Action(json_obj);
 			if (options.do_not_parse_action !== false)
-				DALS.Timeline.parseAction(json_obj);
+				DALS.Timeline.parseAction(json_obj, true);
 			
 		//Return statement
 		return new_action;
@@ -161,6 +161,7 @@ DALS.Timeline = class {
 		let options = (arg0_options) ? arg0_options : {};
 		
 		//Declare local instance variables
+		console.trace(`Branch called!`);
 		let new_timeline = new DALS.Timeline(options);
 			if (DALS.Timeline.current_timeline === this.id) {
 				new_timeline.parent_timeline = [this.id, DALS.Timeline.current_index];
@@ -236,9 +237,9 @@ DALS.Timeline = class {
 	/**
 	 * Generates a timeline graph starting from the current {@link DALS.Timeline} instance with plotted `.x`/`.y` fields for node positions. Used in {@link ve.Component.UndoRedo} for rendering canvas displays.
 	 * - Method of: {@link DALS.Timeline}
-	 * 
+	 *
 	 * @param {Object} arg0_options
-	 * 
+	 *
 	 * @returns {Object}
 	 */
 	generateGraph (arg0_options) {
@@ -261,16 +262,20 @@ DALS.Timeline = class {
 		if (this.initial_timeline)
 			this.assignChildTimelines();
 		
+		//Get groups early for use in both Stage 2 and Stage 3
+		let timeline_groups = this.getGroups.call(timeline_obj);
+		
 		//2. Produce graph at this layer only for the current timeline and all .child_timelines connected to it, then call recursively
 		if (timeline_obj.child_timelines)
 			for (let i = 0; i < timeline_obj.child_timelines.length; i++) {
 				let local_child_timeline = DALS.Timeline.getTimeline(this.child_timelines[i]);
-				let local_x_offset = Math.returnSafeNumber(local_child_timeline.parent_timeline[1]);
+				let local_x_offset = x_offset + timeline_groups.length + i;
+				let child_y_offset = y_offset + i;
 				
 				//Iterate recursively
 				let new_timeline_graph = local_child_timeline.generateGraph({
 					x_offset: local_x_offset,
-					y_offset: i,
+					y_offset: child_y_offset,
 					
 					x_original: x_offset,
 					y_original: y_offset
@@ -279,16 +284,15 @@ DALS.Timeline = class {
 					timeline_graph[local_key] = new_timeline_graph[local_key];
 				});
 			}
-			
+		
 		//3. Parse connections - [WIP] - This needs to group together actions with the same .key value. It currently does not
 		let last_id = "";
-		let timeline_groups = this.getGroups.call(timeline_obj);
 		
 		for (let i = 0; i < timeline_groups.length; i++) {
 			let group = timeline_groups[i];
 			let local_id = Object.generateRandomID(timeline_graph);
-				timeline_graph[local_id] = {};
-				
+			timeline_graph[local_id] = {};
+			
 			let first_action = group[0];
 			
 			//Connect to previous group
@@ -298,18 +302,18 @@ DALS.Timeline = class {
 			timeline_graph[local_id].timeline_index = first_action.options.timeline_index;
 			timeline_graph[local_id].timeline_group_index = i;
 			timeline_graph[local_id].value = group;
-				timeline_graph[local_id].value.options = first_action.value.options;
-					timeline_graph[local_id].value.options.domain = [
-						first_action.options.timeline_index,
-						group[group.length - 1].options.timeline_index
-					];
-					timeline_graph[local_id].value.options.length = group.length;
+			timeline_graph[local_id].value.options = first_action.value.options;
+			timeline_graph[local_id].value.options.domain = [
+				first_action.options.timeline_index,
+				group[group.length - 1].options.timeline_index
+			];
+			timeline_graph[local_id].value.options.length = group.length;
 			timeline_graph[local_id].x = i;
 			timeline_graph[local_id].y = current_y_offset;
 			
 			last_id = local_id;
 		}
-			
+		
 		//4. Add x_offset; y_offset to timeline graph and to connections
 		Object.iterate(timeline_graph, (local_key, local_value) => {
 			local_value.x += x_offset;
@@ -407,7 +411,7 @@ DALS.Timeline = class {
 		
 		//3. Redo actions starting from the state head using DALS.Timeline.parseAction() until we hit the target action ID
 		for (let i = 1; i < this.value.length; i++) {
-			DALS.Timeline.parseAction(this.value[i].value);
+			DALS.Timeline.parseAction(this.value[i].value, true);
 			DALS.Timeline.current_index = i;
 			if (this.value[i].id === action_id) break;
 		}

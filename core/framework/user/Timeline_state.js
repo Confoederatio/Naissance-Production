@@ -1,15 +1,16 @@
 //State mutation functions
 {
-	DALS.Timeline.parseAction = function (arg0_json) {
+	DALS.Timeline.parseAction = function (arg0_json, arg1_do_not_push_action) {
 		//Convert from parameters
-		let json = (typeof arg0_json === "string") ? JSON.parse(arg0_json) : arg0_json
+		let json = (typeof arg0_json === "string") ? JSON.parse(arg0_json) : arg0_json;
+		let do_not_push_action = arg1_do_not_push_action;
 		
 		//Initialise JSON
 		if (json.options === undefined) json.options = {};
 		if (json.value === undefined) json.value = [];
 		
 		//Iterate over multi-value packet (MVP) and filter it down to superclass single-value packets (SVPs)
-		console.log(json.value);
+		//console.log(json.value);
 		for (let i = 0; i < json.value.length; i++) {
 			if (json.value[i].type === "global") {
 				if (json.value[i].set_date) {
@@ -23,8 +24,9 @@
 				naissance[json.value[i].type].parseAction(json.value[i]);
 		}
 		
-		//Save action to current timeline
-		new DALS.Action(json);
+		//Save action to current timeline if needed
+		if (!do_not_push_action)
+			new DALS.Action(json);
 	};
 }
 
@@ -35,8 +37,12 @@
 		let json = (arg0_json) ? arg0_json : {};
 		if (typeof json === "string") json = JSON.parse(json);
 		
-		//Clear map first
+		//Clear map first, then naissance.Geometry.instances
+		for (let i = 0; i < naissance.Geometry.instances.length; i++)
+			naissance.Geometry.instances[i].remove();
+			
 		scene.map_component.clear();
+		naissance.Geometry.instances = [];
 		
 		//1. Handle naissance.Geometry classes
 		//Iterate over json to load in each class

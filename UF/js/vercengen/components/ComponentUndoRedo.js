@@ -106,7 +106,7 @@ ve.UndoRedo = class extends ve.Component {
 		
 		//Render Canvas list; scavenge code from old Naissance
 		{
-			this.draw();
+			this.draw(true);
 			this.fireFromBinding();
 		}
 	}
@@ -115,7 +115,10 @@ ve.UndoRedo = class extends ve.Component {
 	 * Redraws the current interface.
 	 * - Method of: {@link ve.Interface}
 	 */
-	draw () {
+	draw (arg0_force_update) {
+		//Convert from parameters
+		let force_update = arg0_force_update;
+		
 		//Render canvas
 		{
 			//Declare local instance variables
@@ -145,6 +148,8 @@ ve.UndoRedo = class extends ve.Component {
 			ctx.clearRect(0, 0, this.canvas_el.width, this.canvas_el.height);
 			
 			//1. Iterate over timeline_graph keys and render nodes
+			this.unique_timeline_ids = (this.unique_timeline_ids) ? this.unique_timeline_ids : [];
+			
 			Object.iterate(timeline_graph, (local_key, local_value) => {
 				let local_x = local_value.x*spacing_x - 50;
 				let local_y = local_value.y*spacing_y + 10;
@@ -157,8 +162,8 @@ ve.UndoRedo = class extends ve.Component {
 				let is_selected = false;
 				if (
 					local_value.timeline_id === DALS.Timeline.current_timeline && 
-					DALS.Timeline.current_index > local_value.value.options.domain[0] &&
-					DALS.Timeline.current_index <= local_value.value.options.domain[1]
+					DALS.Timeline.current_index >= local_value.value.options.domain[0] + 1 &&
+					DALS.Timeline.current_index <= local_value.value.options.domain[1] + 1
 				)
 					is_selected = true;
 				
@@ -278,12 +283,11 @@ ve.UndoRedo = class extends ve.Component {
 				//Iterate over all node_positions - [WIP] - Finish implementing .jumpToAction()
 				Object.iterate(node_positions, (local_key, local_value) => {
 					if (
-						click_x >= local_value.x - local_value.width/2 && click_x <= local_value.x + local_value.width && 
-						click_y >= local_value.y - local_value.height && click_y <= local_value.y + local_value.height
+						click_x >= local_value.x - local_value.width/2 && click_x <= local_value.x + local_value.width && click_y >= local_value.y - local_value.height/2 && click_y <= local_value.y + local_value.height/2
 					) {
 						let local_timeline = DALS.Timeline.getTimeline(local_value.timeline_id);
-						//console.log(`[WIP] - Would call local_timeline.jumpToAction(${Math.returnSafeNumber(local_value.value.options.domain[1]) + 1})`);
-						local_timeline.jumpToAction(local_value.value.options.domain[1] + 1);
+						console.log(`Calling local_timeline.jumpToAction(${Math.returnSafeNumber(local_value.value.options.domain[1]) + 1})!`);
+						local_timeline.jumpToAction(Math.returnSafeNumber(local_value.value.options.domain[1]) + 1);
 						
 						if (local_timeline.id !== DALS.Timeline.current_timeline) {
 							this.from_binding_fire_silently = true;
@@ -301,10 +305,14 @@ ve.UndoRedo = class extends ve.Component {
 		{
 			//Declare local instance variables
 			let skip_html_redraw = false;
+			let skip_timeline_redraw = false;
 			let timeline_obj = DALS.Timeline.getTimeline(this.value);
-				if (this.html_timeline_length === timeline_obj.value.length) skip_html_redraw = true;
+			
+			if (this.html_timeline_length === timeline_obj.value.length) skip_html_redraw = true;
+			if (this.timeline_select_obj)
+				if (DALS.Timeline.instances.length === Object.keys(this.timeline_select_obj).length) skip_timeline_redraw = true;
 				
-			if (!skip_html_redraw) {
+			if (!(skip_html_redraw && skip_timeline_redraw) || force_update) {
 				this.html_timeline_length = timeline_obj.value.length;
 				
 				if (!timeline_obj) {
@@ -313,7 +321,7 @@ ve.UndoRedo = class extends ve.Component {
 				}
 				
 				this.html_list_el.innerHTML = "";
-				let select_obj = {};
+				this.timeline_select_obj = {};
 				
 				//Iterate over all DALS.Timeline.instances and list them in order of length
 				DALS.Timeline.instances.sort((a, b) => b.value.length - a.value.length);
@@ -321,14 +329,18 @@ ve.UndoRedo = class extends ve.Component {
 				for (let i = 0; i < DALS.Timeline.instances.length; i++) {
 					let local_timeline = DALS.Timeline.instances[i];
 					
-					select_obj[local_timeline.id] = {
+					this.timeline_select_obj[local_timeline.id] = {
 						name: `${(local_timeline.name) ? local_timeline.name : local_timeline.id} (${String.formatNumber(local_timeline.value.length)})`,
-						selected: (local_timeline.id === DALS.Timeline.current_timeline)
+						selected: (local_timeline.id === this.value)
 					};
 				}
 				
-				this.html_select = new ve.Select(select_obj, {
-					onchange: (v, e) => console.log(v, e) //This should switch the present timeline
+				this.html_select = new ve.Select(this.timeline_select_obj, {
+					onchange: (v, e) => {
+						this.value = v;
+						this.draw(true);
+						this.fireToBinding();
+					}
 				});
 				this.html_list_el.appendChild(this.html_select.element);
 				
@@ -340,6 +352,7 @@ ve.UndoRedo = class extends ve.Component {
 				for (let i = 0; i < timeline_groups.length; i++) { //[WIP] - Worth checking if we need a +/-1 offset later
 					//Create header_el with Jump To/Branch buttons
 					let group_el = document.createElement("li");
+					let local_index = JSON.parse(JSON.stringify(current_index));
 					let local_name = `New Action`;
 					if (timeline_groups[i] && timeline_groups[i][0] && timeline_groups[i][0].name)
 						local_name = timeline_groups[i][0].name;
@@ -347,7 +360,8 @@ ve.UndoRedo = class extends ve.Component {
 						action_name: new ve.HTML(`${local_name} (${String.formatNumber(timeline_groups[i].length)})`),
 							
 						jump_to_button: new ve.Button(() => {
-							timeline_obj.jumpToAction(current_index + timeline_groups[i].length);
+							console.log(`timeline_obj.jumpToAction(${local_index} + ${timeline_groups[i].length});`, local_index + timeline_groups[i].length);
+							timeline_obj.jumpToAction(local_index + timeline_groups[i].length);
 							this.fireToBinding();
 						}, { name: `<icon>arrow_right_alt</icon>`, tooltip: `Jump To` }),
 						branch: new ve.Button(() => {

@@ -39,6 +39,11 @@ naissance.Geometry = class extends ve.Class {
 		naissance.Geometry.instances.push(this);
 	}
 	
+	remove () {
+		this.history = new naissance.History();
+		this.draw();
+	}
+	
 	static linter () {
 		
 	}
