@@ -5,6 +5,12 @@ global.UI_Leftbar = class extends ve.Class {
 		//Declare local instance variables
 		let navbar_el = document.querySelector(".ve.navbar");
 		this.page_menu = new ve.PageMenu({
+			file_explorer: {
+				name: "File",
+				components_obj: {
+					file_explorer: veFileExplorer(__dirname, { name: " " })
+				}
+			},
 			hierarchy: {
 				name: "Hierarchy",
 				components_obj: {
@@ -21,7 +27,7 @@ global.UI_Leftbar = class extends ve.Class {
 					undo_redo: new ve.UndoRedo()
 				}
 			}
-		});
+		}, { starting_page: "hierarchy" });
 		
 		//Open UI
 		super.open("instance", {

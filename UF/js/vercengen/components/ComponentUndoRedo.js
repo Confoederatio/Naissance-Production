@@ -475,7 +475,7 @@ ve.UndoRedo = class extends ve.Component {
 			
 			//Limit new_scale to a reasonable range
 			let new_scale = (e.deltaY < 0) ? this.scale*zoom_factor : this.scale/zoom_factor;
-				new_scale = Math.max(0.5, Math.min(new_scale, 5));
+				new_scale = Math.max(0.1, Math.min(new_scale, 5));
 			let current_rect = this.canvas_container_el.getBoundingClientRect();
 			let offset_x = (e.clientX - current_rect.left)/current_rect.width;
 			let offset_y = (e.clientY - current_rect.top)/current_rect.height;
