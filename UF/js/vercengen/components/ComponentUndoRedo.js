@@ -66,7 +66,16 @@ ve.UndoRedo = class extends ve.Component {
 					coords_display: new ve.HTML(() => `X: ${String.formatNumber(this.translate_x, 2)}, Y: ${String.formatNumber(this.translate_y, 2)} | Scale: ${String.formatNumber(this.scale, 2)}`)
 				}
 			}
-		}, { name: this.options.name });
+		}, { 
+			name: this.options.name,
+			onchange: (v, e) => {
+				if (v === "current_timeline") {
+					this.from_binding_fire_silently = true;
+					this.v = DALS.Timeline.current_timeline;
+					delete this.from_binding_fire_silently;
+				}
+			}
+		});
 		this.element.appendChild(this.page_menu.element);
 		
 		//KEEP AT BOTTOM!
@@ -137,7 +146,7 @@ ve.UndoRedo = class extends ve.Component {
 			let canvas_height = 0;
 			let canvas_width = 0;
 			let node_height = 14;
-			let spacing_x = 140;
+			let spacing_x = 240;
 			let spacing_y = 60;
 			
 			//Store node positions for event handling
@@ -179,6 +188,7 @@ ve.UndoRedo = class extends ve.Component {
 				let text_width = ctx.measureText(node_text).width;
 				
 				//Store position for click detection
+				//console.log(local_value, local_value.timeline_index);
 				node_positions[local_key] = {
 					id: `${local_value.x}-${local_value.y}`,
 					name: node_text,
@@ -187,6 +197,7 @@ ve.UndoRedo = class extends ve.Component {
 					timeline_id: local_value.timeline_id,
 					timeline_index: local_value.timeline_index,
 					value: local_value.value,
+					is_branch_point: (local_value.timeline_group_index === 0),
 					
 					height: text_height,
 					width: text_width,
@@ -218,25 +229,22 @@ ve.UndoRedo = class extends ve.Component {
 			
 			//4. Draw horizontal lines
 			Object.iterate(row_tracker, (local_key, local_value) => {
-				local_value = local_value.sort((a, b) => node_positions[a].x - node_positions[b].x); //Sort nodes by X position
+				local_value = local_value.sort((a, b) => node_positions[a].x - node_positions[b].x);
 				
 				for (let i = 0; i < local_value.length - 1; i++) {
-					let local_end_key = local_value[i + 1];
 					let local_start_key = local_value[i];
+					let local_end_key = local_value[i + 1];
 					
-					let local_end_node = node_positions[local_end_key];
-					let local_end_x = local_end_node.x - local_end_node.width - local_end_node.height;
-					let local_end_y = local_end_node.y;
 					let local_start_node = node_positions[local_start_key];
-					let local_start_x = local_start_node.x + local_start_node.width/2 + local_start_node.height/2;
-					if (i >= 1) local_start_x += local_start_node.height*2 + 4;
-					let local_start_y = local_start_node.y;
+					let local_end_node = node_positions[local_end_key];
 					
-					//Check if line should be drawn
-					let local_node_timeline = DALS.Timeline.getTimeline(local_end_node.timeline_id);
-					
-					if (local_node_timeline.parent_timeline) {
-						//Draw line between nodes
+					//Only draw if end node is a branch point
+					if (local_end_node.is_branch_point) {
+						let local_start_x = local_start_node.x + local_start_node.width/2 + local_start_node.height/2;
+						let local_start_y = local_start_node.y;
+						let local_end_x = local_end_node.x - local_end_node.width/2 - local_end_node.height/2;
+						let local_end_y = local_end_node.y;
+						
 						ctx.beginPath();
 						ctx.moveTo(local_start_x, local_start_y);
 						ctx.lineTo(local_end_x, local_end_y);

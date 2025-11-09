@@ -161,7 +161,7 @@ DALS.Timeline = class {
 		let options = (arg0_options) ? arg0_options : {};
 		
 		//Declare local instance variables
-		console.trace(`Branch called!`);
+		options.current_timeline = false;
 		let new_timeline = new DALS.Timeline(options);
 			if (DALS.Timeline.current_timeline === this.id) {
 				new_timeline.parent_timeline = [this.id, DALS.Timeline.current_index];
@@ -267,9 +267,22 @@ DALS.Timeline = class {
 		
 		//2. Produce graph at this layer only for the current timeline and all .child_timelines connected to it, then call recursively
 		if (timeline_obj.child_timelines)
-			for (let i = 0; i < timeline_obj.child_timelines.length; i++) {
+			for (let i = 0; i < timeline_obj.child_timelines.length; i++) { //[WIP] - local_x_offset is not reflective of the actual branch domain
+				let branch_group = 0;
 				let local_child_timeline = DALS.Timeline.getTimeline(this.child_timelines[i]);
-				let local_x_offset = x_offset + timeline_groups.length + i;
+					//Iterate over all timeline_groups; determine branch_group
+					let target_index = local_child_timeline.parent_timeline[1];
+				
+					for (let x = 0; x < timeline_groups.length; x++) try {
+						let local_domain = timeline_groups[x][0].options.domain;
+						
+						if (target_index >= local_domain[0] && target_index <= local_domain[1]) {
+							branch_group = x;
+							break;
+						}
+					} catch (e) {}
+				
+				let local_x_offset = x_offset + branch_group; //In vertical ve.UndoRedo components, this determines the Y offset the new child timeline has
 				let child_y_offset = y_offset + i;
 				
 				//Iterate recursively
