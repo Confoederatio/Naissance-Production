@@ -38,7 +38,7 @@ ve.HTML = class extends ve.Component {
 				this.element.setAttribute(local_key, local_value.toString());
 			});
 			this.element.instance = this;
-		HTML.applyTelestyle(this.element, options.style);
+		
 		this.options = options;
 		this.value = value;
 		

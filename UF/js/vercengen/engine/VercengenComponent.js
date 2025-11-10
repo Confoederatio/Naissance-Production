@@ -111,6 +111,7 @@ ve.Component = class {
 		setTimeout(() => {
 			if (this.options === undefined)
 				this.options = options; //Preferably overridden by lower components
+			HTML.applyTelestyle(this.element, this.options.style);
 			
 			//Flow control handlers
 			//.binding handler (bidirectional)

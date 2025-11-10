@@ -50,7 +50,7 @@ ve.Radio = class extends ve.Component {
 		this.element = document.createElement("div");
 			this.element.setAttribute("component", "ve-radio");
 			this.element.instance = this;
-		HTML.applyTelestyle(this.element, options.style);
+		
 		this.id = Class.generateRandomID(ve.Radio);
 		this.options = options;
 		this.value = value;

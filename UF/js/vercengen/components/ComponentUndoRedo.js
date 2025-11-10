@@ -37,7 +37,7 @@ ve.UndoRedo = class extends ve.Component {
 			this.element.instance = this;
 			if (options.attributes)
 				Object.iterate(options.attributes, (local_key, local_value) => this.element.setAttribute(local_key, local_value.toString()));
-			HTML.applyTelestyle(this.element, options.style);
+			
 		this.options = options;
 		this.value = value; //Stores timeline_id
 		

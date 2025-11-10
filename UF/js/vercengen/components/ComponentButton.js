@@ -52,7 +52,7 @@ ve.Button = class extends ve.Component {
 		});
 		this.name = options.name;
 		this.v = this.value;
-		HTML.applyTelestyle(this.element, options.style);
+		
 	}
 	
 	/**
