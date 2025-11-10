@@ -63,7 +63,7 @@
 			if (local_value.class_name && local_value.type === "feature") {
 				let feature_obj = new naissance[local_value.class_name]();
 				if (local_value.id) feature_obj.id = local_value.id;
-				feature_obj.fromJSON(local_value);
+				feature_obj.fromJSON(local_value.value);
 				try {
 					if (feature_obj.draw) feature_obj.draw();
 				} catch (e) { console.warn(e); }
@@ -88,6 +88,17 @@
 				class_name: local_geometry.class_name,
 				history: local_geometry.history.toJSON(),
 				type: "geometry"
+			};
+		}
+		
+		//Iterate over all naissance.Feature.instances and serialise them
+		for (let i = 0; i < naissance.Feature.instances.length; i++) {
+			let local_feature = naissance.Feature.instances[i];
+			json_obj[local_feature.id] = {
+				id: local_feature.id,
+				class_name: local_feature.class_name,
+				type: "feature",
+				value: local_feature.toJSON()
 			};
 		}
 		
