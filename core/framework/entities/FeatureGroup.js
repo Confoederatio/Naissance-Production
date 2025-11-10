@@ -18,16 +18,17 @@ naissance.FeatureGroup = class extends naissance.Feature {
 		this.drawHierarchyDatatype(); //Declares this.interface
 	}
 	
-	addEntity (arg0_naissance_obj) {
+	addEntity (arg0_naissance_obj, arg1_do_not_refresh) {
 		//Convert from parameters
 		let naissance_obj = arg0_naissance_obj;
+		let do_not_refresh = arg1_do_not_refresh;
 		
 		//Declare local instance variables
 		let has_entity = this.hasEntity(naissance_obj);
 		
 		if (!has_entity) {
 			this.entities.push(naissance_obj);
-			this.drawHierarchyDatatype();
+			if (!do_not_refresh) this.drawHierarchyDatatype();
 		}
 	}
 	
@@ -105,7 +106,37 @@ naissance.FeatureGroup = class extends naissance.Feature {
 	}
 	
 	fromJSON (arg0_json) {
+		//Convert from parameters
+		let json = (typeof arg0_json !== "object") ? JSON.parse(arg0_json) : arg0_json;
 		
+		//Declare local instance variables
+		this.id = json.id;
+		this.options = json.options;
+		
+		//Iterate over json.entities and restore them
+		for (let i = 0; i < naissance.Feature.instances.length; i++) {
+			let local_feature = naissance.Feature.instances[i];
+			
+			for (let x = 0; x < json.entities.length; x++)
+				if (
+					json.entities[x].class_name === local_feature.class_name &&
+					json.entities[x].id === local_feature.id
+				)
+					this.addEntity(local_feature, true);
+		}
+		for (let i = 0; i < naissance.Geometry.instances.length; i++) {
+			let local_geometry = naissance.Geometry.instances[i];
+			
+			for (let x = 0; x < json.entities.length; x++)
+				if (
+					json.entities[x].class_name === local_geometry.class_name &&
+					json.entities[x].id === local_geometry.id
+				)
+					this.addEntity(local_geometry, true);
+		}
+		
+		//Draw HierarchyDatatype if possible
+		this.drawHierarchyDatatype();
 	}
 	
 	hasEntity (arg0_naissance_obj) {
@@ -132,6 +163,7 @@ naissance.FeatureGroup = class extends naissance.Feature {
 				this.entities[i].class_name === naissance_obj.class_name &&
 				this.entities[i].id === naissance_obj.id
 			) {
+				this.drawHierarchyDatatype();
 				this.entities.splice(i, 1);
 				break;
 			}
@@ -150,6 +182,8 @@ naissance.FeatureGroup = class extends naissance.Feature {
 		
 		//Return statement
 		return JSON.stringify({
+			id: this.id,
+			entities: entity_ids,
 			options: this.options
 		});
 	}
