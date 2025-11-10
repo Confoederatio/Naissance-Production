@@ -82,7 +82,9 @@ DALS.Timeline = class {
 		if (DALS.Timeline.instances.length === 0)
 			this.initial_timeline = true;
 		this.child_timelines = []; //Cache: tracker variable
+		this.date_created = new Date();
 		this.id = Class.generateRandomID(DALS.Timeline);
+		this.last_modified = new Date();
 		this.name = (options.name) ? options.name : `Timeline ${this.id}`;
 		this.options = options;
 		this.parent_timeline = options.parent_timeline;

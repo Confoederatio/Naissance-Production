@@ -60,16 +60,20 @@ DALS.Action = class {
 					DALS.Timeline.current_index = 0;
 				
 				//Assign to new_timeline if state is behind current
+				new_timeline.last_modified = new Date();
 				new_timeline.value.push(this);
 			} else {
 				//Assign to old_timeline if state is at current
+				old_timeline.last_modified = new Date();
 				old_timeline.value.push(this);
 			}
 			
 			DALS.Timeline.current_index++;
 		} else {
 			//Assign to specified timeline
-			DALS.Timeline.getTimeline(this.options.timeline).value.push(this);
+			let local_timeline = DALS.Timeline.getTimeline(this.options.timeline);
+			local_timeline.last_modified = new Date();
+			local_timeline.value.push(this);
 		}
 		DALS.Action.instances.push(this);
 	}

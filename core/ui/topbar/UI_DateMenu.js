@@ -14,7 +14,7 @@ global.UI_DateMenu = class extends ve.Class {
 					value: [{ type: "global", refresh_date: true }]
 				})
 			},
-			onuserchange: (v) => {
+			onuserchange: (v) => { //[WIP] - Check that proxy is reset
 				DALS.Timeline.parseAction({
 					options: { name: "Set Date", key: "load_date" },
 					value: [

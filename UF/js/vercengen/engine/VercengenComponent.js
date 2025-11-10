@@ -136,6 +136,8 @@ ve.Component = class {
 			//.limit handler
 			if (this.options.limit) 
 				this.limit = this.options.limit;
+			if (this.options.name && this.name === "")
+				this.name = this.options.name;
 			
 			//.tooltip handler
 			if (this.options.tooltip)

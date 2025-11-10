@@ -88,7 +88,7 @@ ve.Radio = class extends ve.Component {
 	 */
 	get v () {
 		//Declare local instance variables
-		return this.element.querySelector(`input[type="radio"]:checked`).value;
+		return this.element.querySelector(`input[type="radio"]:checked`).id;
 	}
 	
 	/**

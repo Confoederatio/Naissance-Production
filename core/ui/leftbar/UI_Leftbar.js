@@ -32,8 +32,7 @@ global.UI_Leftbar = class extends ve.Class {
 		//Open UI
 		super.open("instance", {
 			anchor: "top_left",
-			mode: "static_window",
-			name: "Project",
+			mode: "static_ui",
 			height: `calc(100dvh${(navbar_el) ? " - " + navbar_el.offsetHeight + "px" : ""} - 16px)`,
 			width: "24rem",
 			x: 8,

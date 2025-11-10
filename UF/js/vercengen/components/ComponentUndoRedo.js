@@ -22,7 +22,10 @@
 ve.UndoRedo = class extends ve.Component {
 	constructor (arg0_value, arg1_options) {
 		let value = arg0_value;
-		let options = (arg1_options) ? arg1_options : {};
+		let options = {
+			sort_mode: "last_modified",
+			...arg1_options
+		};
 			super(options);
 			
 		//Initialise options
@@ -48,7 +51,7 @@ ve.UndoRedo = class extends ve.Component {
 		//Create a ve.PageMenu with this.html_list_el, this.canvas_container_el, and mount it to this.element
 		this.page_menu = new ve.PageMenu({
 			current_timeline: {
-				name: "Current Timeline",
+				name: "Timeline View",
 				components_obj: {
 					actions_bar: new ve.RawInterface({
 						undo_button: new ve.Button(() => DALS.Timeline.undo(), { 
@@ -339,7 +342,17 @@ ve.UndoRedo = class extends ve.Component {
 				this.timeline_select_obj = {};
 				
 				//Iterate over all DALS.Timeline.instances and list them in order of length
-				DALS.Timeline.instances.sort((a, b) => b.value.length - a.value.length);
+				if (this.options.sort_mode === "chronological_ascending") {
+					DALS.Timeline.instances.sort((a, b) => a.date_created.getTime() - b.date_created.getTime());
+				} else if (this.options.sort_mode === "chronological_descending") {
+					DALS.Timeline.instances.sort((a, b) => b.date_created.getTime() - a.date_created.getTime());
+				} else if (this.options.sort_mode === "last_modified") {
+					DALS.Timeline.instances.sort((a, b) => b.last_modified.getTime() - a.last_modified.getTime());
+				} else if (this.options.sort_mode === "least_actions") {
+					DALS.Timeline.instances.sort((a, b) => a.value.length - b.value.length);
+				} else if (this.options.sort_mode === "most_actions") {
+					DALS.Timeline.instances.sort((a, b) => b.value.length - a.value.length);
+				}
 				
 				for (let i = 0; i < DALS.Timeline.instances.length; i++) {
 					let local_timeline = DALS.Timeline.instances[i];
@@ -350,14 +363,52 @@ ve.UndoRedo = class extends ve.Component {
 					};
 				}
 				
-				this.html_select = new ve.Select(this.timeline_select_obj, {
-					onchange: (v, e) => {
-						this.value = v;
-						this.draw(true);
-						this.fireToBinding();
-					}
-				});
-				this.html_information = new ve.HTML(() => `Current Timeline: ${DALS.Timeline.current_timeline} | Current Index: #${DALS.Timeline.current_index}`);
+				this.html_select = new ve.Interface({
+					select_field: new ve.Select(this.timeline_select_obj, {
+						name: "Viewing: ",
+						onchange: (v, e) => {
+							this.value = v;
+							this.draw(true);
+							this.fireToBinding();
+						},
+						x: 0, y: 0
+					}),
+					filter_button: new ve.Button(() => {
+						let local_context_menu = new ve.ContextMenu({
+							radio_select: new ve.Radio({
+								"Chronological (Ascending)": (this.options.sort_mode === "chronological_ascending"),
+								"Chronological (Descending)": (this.options.sort_mode === "chronological_descending"),
+								"Last Modified": (this.options.sort_mode === "last_modified"),
+								"Least Actions": (this.options.sort_mode === "least_actions"),
+								"Most Actions": (this.options.sort_mode === "most_actions")
+							}, {
+								name: "<b>Sort Timelines:</b><br><br>",
+								onchange: (v, e) => {
+									let local_dictionary = {
+										"Chronological (Ascending)": "chronological_ascending",
+										"Chronological (Descending)": "chronological_descending",
+										"Last Modified": "last_modified",
+										"Least Actions": "least_actions",
+										"Most Actions": "most_actions"
+									};
+									
+									this.options.sort_mode = local_dictionary[v];
+									this.draw(true);
+								}
+							})
+						}, { id: "ve_undo_redo_html_select_filter" });
+					}, { name: "<icon>filter_alt</icon>", tooltip: "Sorting Filter", x: 1, y: 0 }),
+					timeline_name: new ve.Text(timeline_obj.name, { 
+						name: "Name: ",
+						onchange: (v, e) => {
+							timeline_obj.name = v;
+							this.draw(true);
+						},
+						x: 0, y: 1, width: 99 
+					})
+				}, { is_folder: false }); 
+				
+				this.html_information = new ve.HTML(() => `Timeline ID: ${DALS.Timeline.current_timeline} | Index: #${DALS.Timeline.current_index}<br><li style = "margin-left: calc(var(--padding)*2);"><b>Active Branch</b>: ${DALS.Timeline.getTimeline(DALS.Timeline.current_timeline).name}</li>`);
 				this.html_list_el.appendChild(this.html_select.element);
 				this.html_list_el.appendChild(this.html_information.element);
 				

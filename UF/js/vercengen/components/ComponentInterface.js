@@ -110,7 +110,10 @@ ve.Interface = class extends ve.Component {
 		//2. Set new destructured bindings for components_obj by deleting their addresses
 		Object.iterate(components_obj, (local_key, local_value) => {
 			if (!this.reserved_keys.includes(local_key)) {
-				if (local_value.name === undefined || local_value.name === "") 
+				if (
+					(local_value.name === undefined || local_value.name.length === 0) &&
+					(local_value.options.name === undefined || local_value.options.name.length === 0)
+				)
 					local_value.name = local_key;
 				this[local_key] = local_value;
 			} else {
