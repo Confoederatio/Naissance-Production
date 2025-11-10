@@ -9,6 +9,7 @@
  * - `arg1_options`: {@link Object}
  *   - `.disabled=false`: {@link boolean} - Whether the item is draggable within the hierarchy.
  *   - `.id`: {@link string}
+ *   - `.name_options`: {@link Object} - Any options that should be carried over to `.components_obj.name`. Same options as {@link ve.Text}.
  *   - `.type="item"`: {@link string} - Either 'group'/'item'.
  * 
  * ##### Instance:
@@ -104,7 +105,10 @@ ve.HierarchyDatatype = class extends ve.Component {
 		if (this.components_obj.name) {
 			this.components_obj.name.v = value;
 		} else {
-			this.components_obj.name = new ve.Text(value, { disabled: this.options.disabled });
+			this.components_obj.name = new ve.Text(value, { 
+				disabled: this.options.disabled,
+				...this.options.name_options
+			});
 			this.v = this.components_obj;
 		}
 	}

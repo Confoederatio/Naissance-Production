@@ -9,6 +9,9 @@ naissance.Geometry = class extends ve.Class {
 		this.id = Class.generateRandomID(naissance.Geometry);
 		this.is_naissance_geometry = true; //Identifier flag for Naissance-bound reflection engine
 		
+		//Declare local instance variables
+		this.name = undefined;
+		
 		//Define naissance.Geometry contract
 		
 		/** 
@@ -39,12 +42,57 @@ naissance.Geometry = class extends ve.Class {
 		naissance.Geometry.instances.push(this);
 	}
 	
+	get name () {
+		//Declare local instance variables
+		let current_keyframe = this.history.getKeyframe();
+		
+		//Return statement
+		return (current_keyframe[2] && current_keyframe[2].name) ? current_keyframe[2].name : `New ${(this.class_name) ? this.class_name : "Geometry"}`;
+	}
+	
+	set name (arg0_value) {
+		//Convert from parameters
+		let value = (arg0_value) ? arg0_value : `New ${(this.class_name) ? this.class_name : "Geometry"}`;
+		
+		//Send DALS.Timeline.parseAction() command
+		DALS.Timeline.parseAction({
+			options: { name: "Rename Geometry", key: "rename_Geometry" },
+			value: [{ type: "Geometry", geometry_id: this.id, set_name: value }]
+		});
+	}
+	
+	fromJSON () {
+		console.warn(`naissance.Geometry.fromJSON() was called for: ${this.class_name}, but was not defined.`);
+	}
+	
+	toJSON () {
+		console.warn(`naissance.Geometry.toJSON() was called for: ${this.class_name}, but was not defined.`);
+	}
+	
 	remove () {
 		this.history = new naissance.History();
 		this.draw();
 	}
 	
-	static linter () {
+	static parseAction (arg0_json) {
+		//Convert from parameters
+		let json = (typeof arg0_json === "string") ? JSON.parse(arg0_json) : arg0_json;
 		
+		//Declare local instance variables
+		let geometry_obj = naissance.Geometry.instances.filter((v) => v.id === json.geometry_id)[0];
+		
+		//Parse commands for geometry_obj
+		if (geometry_obj) {
+			//set_name
+			if (typeof json.set_name === "object") {
+				let date = (json.set_name.date) ? json.set_name.date : main.date;
+				let new_name = json.set_name.name;
+				geometry_obj.history.addKeyframe(date, undefined, undefined, { name: new_name });
+				geometry_obj.draw();
+			} else if (typeof json.set_name === "string") {
+				geometry_obj.history.addKeyframe(date, undefined, undefined, { name: json.set_name });
+				geometry_obj.draw();
+			}
+		}
 	}
 };

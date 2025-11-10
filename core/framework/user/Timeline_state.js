@@ -32,7 +32,7 @@
 
 //State save/load functions
 {
-	DALS.Timeline.loadState = function (arg0_json) {
+	DALS.Timeline.loadState = function (arg0_json) { //[WIP] - Finish function body
 		//Convert from parameters
 		let json = (arg0_json) ? arg0_json : {};
 		if (typeof json === "string") json = JSON.parse(json);
@@ -42,26 +42,41 @@
 			naissance.Geometry.instances[i].remove();
 			
 		scene.map_component.clear();
+		naissance.Feature.instances = [];
 		naissance.Geometry.instances = [];
 		
 		//1. Handle naissance.Geometry classes
 		//Iterate over json to load in each class
 		Object.iterate(json, (local_key, local_value) => {
 			if (local_value.class_name && local_value.type === "geometry") {
-				let polygon_obj = new naissance[local_value.class_name]();
-				if (local_value.id) polygon_obj.id = local_value.id;
-				polygon_obj.history.fromJSON(local_value.history);
+				let geometry_obj = new naissance[local_value.class_name]();
+				if (local_value.id) geometry_obj.id = local_value.id;
+				geometry_obj.history.fromJSON(local_value.history);
 				try {
-					polygon_obj.draw();
+					if (geometry_obj.draw) geometry_obj.draw();
 				} catch (e) { console.warn(e); }
 			}
 		});
+		
+		//2. Handle naissance.Feature classes
+		Object.iterate(json, (local_key, local_value) => {
+			if (local_value.class_name && local_value.type === "feature") {
+				let feature_obj = new naissance[local_value.class_name]();
+				if (local_value.id) feature_obj.id = local_value.id;
+				feature_obj.fromJSON(local_value);
+				try {
+					if (feature_obj.draw) feature_obj.draw();
+				} catch (e) { console.warn(e); }
+			}
+		});
+		
+		//3. Force all UI_LeftbarHierarchy instances to redraw
 		
 		//Reload cursor
 		main.layers.cursor_layer.addGeometry(main.brush.cursor)
 	};
 	
-	DALS.Timeline.saveState = function () {
+	DALS.Timeline.saveState = function () { //[WIP] - Finish function body for naissance.Feature
 		//Declare local instance variables
 		let json_obj = {};
 		

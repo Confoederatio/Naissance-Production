@@ -10,9 +10,12 @@ naissance.FeatureGroup = class extends naissance.Feature {
 		this.entities = (arg0_entities) ? arg0_entities : [];
 		this.options = (arg1_options) ? arg1_options : {};
 		
+		//Initialise this.options
+		if (this.options.name === undefined) this.options.name = "New Group";
+		
 		//Declare UI; attached to UI_LeftbarHierarchy
 		this.interface = undefined;
-		this.draw(); //Declares this.interface
+		this.drawHierarchyDatatype(); //Declares this.interface
 	}
 	
 	addEntity (arg0_naissance_obj) {
@@ -24,11 +27,11 @@ naissance.FeatureGroup = class extends naissance.Feature {
 		
 		if (!has_entity) {
 			this.entities.push(naissance_obj);
-			this.draw();
+			this.drawHierarchyDatatype();
 		}
 	}
 	
-	draw () { //[WIP] - Finish function body
+	drawHierarchyDatatype () { //[WIP] - Finish function body
 		//Declare local instance variables
 		let hierarchy_obj = {};
 		
@@ -39,31 +42,61 @@ naissance.FeatureGroup = class extends naissance.Feature {
 			
 			//naissance.FeatureGroup, naissance.FeatureLayer handling
 			if (local_entity instanceof naissance.FeatureGroup || local_entity instanceof naissance.FeatureLayer) {
-				hierarchy_obj[local_key] = local_entity.draw();
+				hierarchy_obj[local_key] = local_entity.drawHierarchyDatatype();
 			} else {
 				//naissance.Feature generic handling
 				if (local_entity instanceof naissance.Feature) {
-					
+					hierarchy_obj[local_key] = new ve.HierarchyDatatype({
+						icon: new ve.HTML(`<icon>inventory_2</icon>`, {
+							style: { padding: 0 }, tooltip: local_entity.class_name } )
+					});
 				}
 				//naissance.Geometry generic handling
-				if (local_entity instanceof naissance.Geometry)
-					/*if (local_entity instanceof naissance.GeometryPolygon) {
-						
-					} else*/ { //[WIP] - Implement naissance.Geometry.name accessor
+				if (local_entity instanceof naissance.Geometry) {
+					let geometry_name_options = () => {
+						return {
+							onprogramchange: () => {
+								this.drawHierarchyDatatype();
+							},
+							onuserchange: (v) => {
+								local_entity.name = v;
+							}
+						};
+					};
+					
+					if (local_entity instanceof naissance.GeometryPolygon) {
 						hierarchy_obj[local_key] = new ve.HierarchyDatatype({
-							icon: new ve.HTML(`<icon>shapes</icon>`, { 
+							icon: new ve.HTML(`<icon>pentagon</icon>`, {
 								style: { padding: 0 }, tooltip: local_entity.class_name } )
-						}, { name: local_entity.name });
+						}, {
+							name: local_entity.name,
+							name_options: geometry_name_options()
+						});
+					} else { //[WIP] - Implement naissance.Geometry.name accessor
+						hierarchy_obj[local_key] = new ve.HierarchyDatatype({
+							icon: new ve.HTML(`<icon>shapes</icon>`, {
+								style: { padding: 0 }, tooltip: local_entity.class_name } )
+						}, {
+							name: local_entity.name,
+							name_options: geometry_name_options()
+						});
 					}
+				}
 			}
 		}
 		
 		//Set this.interface
 		this.interface = new ve.HierarchyDatatype({
-			icon: new ve.HTML(`<icon>folder</icon>`, { style: { padding: 0 } } ),
+			icon: new ve.HTML(`<icon>folder</icon>`, { style: { padding: 0 } }),
 			...hierarchy_obj
 		}, {
-			name: (this.options.name) ? this.options.name : "New Group",
+			name: this.options.name,
+			name_options: {
+				onchange: (v) => {
+					this.options.name = v;
+					this.drawHierarchyDatatype();
+				}
+			},
 			type: "group"
 		});
 		
@@ -71,11 +104,15 @@ naissance.FeatureGroup = class extends naissance.Feature {
 		return this.interface;
 	}
 	
+	fromJSON (arg0_json) {
+		
+	}
+	
 	hasEntity (arg0_naissance_obj) {
 		//Convert from parameters
 		let naissance_obj = arg0_naissance_obj;
 		
-		//Iterate over this.entities and flag anything with the same .id
+		//Iteiiiiiirate over this.entities and flag anything with the same .id
 		for (let i = 0; i < this.entities.length; i++)
 			if (
 				this.entities[i].class_name === naissance_obj.class_name &&
@@ -98,6 +135,23 @@ naissance.FeatureGroup = class extends naissance.Feature {
 				this.entities.splice(i, 1);
 				break;
 			}
+	}
+	
+	toJSON () {
+		//Declare local instance variables
+		let entity_ids = [];
+		
+		//Iterate over all this.entities
+		for (let i = 0; i < this.entities.length; i++)
+			entity_ids.push({
+				class_name: this.entities[i].class_name,
+				id: this.entities[i].id
+			});
+		
+		//Return statement
+		return JSON.stringify({
+			options: this.options
+		});
 	}
 	
 	static parseAction (arg0_json) {
