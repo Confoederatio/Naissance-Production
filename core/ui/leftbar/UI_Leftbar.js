@@ -14,11 +14,7 @@ global.UI_Leftbar = class extends ve.Class {
 			hierarchy: {
 				name: "Hierarchy",
 				components_obj: {
-					hierarchy: veHierarchy({
-						layer: new ve.HierarchyDatatype({
-							sample_button: veButton(() => { console.trace("Clicked!"); }, { name: `<icon>close</icon>` })
-						}, { name: "Test" })
-					})
+					hierarchy: new UI_LeftbarHierarchy().value
 				}
 			},
 			undo_redo: {
