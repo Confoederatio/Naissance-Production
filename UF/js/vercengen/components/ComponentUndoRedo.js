@@ -342,7 +342,12 @@ ve.UndoRedo = class extends ve.Component {
 				this.timeline_select_obj = {};
 				
 				//Iterate over all DALS.Timeline.instances and list them in order of length
-				if (this.options.sort_mode === "chronological_ascending") {
+				if (this.options.sort_mode === "alphabetical_ascending") {
+					DALS.Timeline.instances.sort((a, b) => a.name.localeCompare(b.name));
+				} else if (this.options.sort_mode === "alphabetical_descending") {
+					DALS.Timeline.instances.sort((a, b) => a.name.localeCompare(b.name));
+					DALS.Timeline.instances.reverse();
+				} else if (this.options.sort_mode === "chronological_ascending") {
 					DALS.Timeline.instances.sort((a, b) => a.date_created.getTime() - b.date_created.getTime());
 				} else if (this.options.sort_mode === "chronological_descending") {
 					DALS.Timeline.instances.sort((a, b) => b.date_created.getTime() - a.date_created.getTime());
@@ -376,6 +381,8 @@ ve.UndoRedo = class extends ve.Component {
 					filter_button: new ve.Button(() => {
 						let local_context_menu = new ve.ContextMenu({
 							radio_select: new ve.Radio({
+								"Alphabetical (A-Z)": (this.options.sort_mode === "alphabetical_ascending"),
+								"Alphabetical (Z-A)": (this.options.sort_mode === "alphabetical_descending"),
 								"Chronological (Ascending)": (this.options.sort_mode === "chronological_ascending"),
 								"Chronological (Descending)": (this.options.sort_mode === "chronological_descending"),
 								"Last Modified": (this.options.sort_mode === "last_modified"),
@@ -385,6 +392,8 @@ ve.UndoRedo = class extends ve.Component {
 								name: "<b>Sort Timelines:</b><br><br>",
 								onchange: (v, e) => {
 									let local_dictionary = {
+										"Alphabetical (A-Z)": "alphabetical_ascending",
+										"Alphabetical (Z-A)": "alphabetical_descending",
 										"Chronological (Ascending)": "chronological_ascending",
 										"Chronological (Descending)": "chronological_descending",
 										"Last Modified": "last_modified",
