@@ -317,11 +317,11 @@ DALS.Timeline = class {
 			timeline_graph[local_id].timeline_index = first_action.options.timeline_index;
 			timeline_graph[local_id].timeline_group_index = i;
 			timeline_graph[local_id].value = group;
-			timeline_graph[local_id].value.options = first_action.value.options;
-			timeline_graph[local_id].value.options.domain = [
-				first_action.options.timeline_index,
-				group[group.length - 1].options.timeline_index
-			];
+				timeline_graph[local_id].value.options = first_action.value.options;
+					timeline_graph[local_id].value.options.domain = [
+						first_action.options.timeline_index,
+						group[group.length - 1].options.timeline_index
+					];
 			timeline_graph[local_id].value.options.length = group.length;
 			timeline_graph[local_id].x = i;
 			timeline_graph[local_id].y = current_y_offset;
@@ -331,7 +331,8 @@ DALS.Timeline = class {
 		
 		//4. Add x_offset; y_offset to timeline graph and to connections
 		Object.iterate(timeline_graph, (local_key, local_value) => {
-			local_value.x += x_offset;
+			if (local_value.timeline_id === timeline_obj.id)
+				local_value.x += x_offset;
 			local_value.y++;
 		});
 		

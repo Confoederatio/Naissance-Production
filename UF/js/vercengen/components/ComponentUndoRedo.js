@@ -49,25 +49,25 @@ ve.UndoRedo = class extends ve.Component {
 		this.html_list_el = document.createElement("div");
 		
 		//Create a ve.PageMenu with this.html_list_el, this.canvas_container_el, and mount it to this.element
-		let localActionsBar = () => new ve.RawInterface({
+		let actions_bar = () => new ve.RawInterface({
 			undo_button: new ve.Button(() => DALS.Timeline.undo(), {
-				name: "<icon>undo</icon>" }),
+				name: "<icon>undo</icon>", tooltip: "Undo" }),
 			redo_button: new ve.Button(() => DALS.Timeline.redo(), {
-				name: "<icon>redo</icon>" })
+				name: "<icon>redo</icon>", tooltip: "Redo" })
 		}, { name: " " });
 		
 		this.page_menu = new ve.PageMenu({
 			current_timeline: {
 				name: "Timeline View",
 				components_obj: {
-					actions_bar: localActionsBar(),
+					actions_bar: actions_bar(),
 					html: new ve.HTML(this.html_list_el)
 				}
 			},
 			timeline_map: {
 				name: "Actions Map",
 				components_obj: {
-					actions_bar: localActionsBar(),
+					actions_bar: actions_bar(),
 					html: new ve.HTML(this.canvas_container_el),
 					coords_display: new ve.HTML(() => `X: ${String.formatNumber(this.translate_x, 2)}, Y: ${String.formatNumber(this.translate_y, 2)} | Scale: ${String.formatNumber(this.scale, 2)}`)
 				}

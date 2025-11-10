@@ -101,6 +101,8 @@ ve.Component = class {
 		this.child_class = this.constructor;
 		this.do_not_fire_to_binding = false;
 		this.is_vercengen_component = true;
+		if (this.options === undefined)
+			this.options = options; //Preferably overridden by lower components
 		
 		this.height = options.height;
 		this.width = options.width;
@@ -109,8 +111,6 @@ ve.Component = class {
 		
 		//Binding handlers; setTimeout() is necessary to tick a frame until ve.Component child class's constructor populates
 		setTimeout(() => {
-			if (this.options === undefined)
-				this.options = options; //Preferably overridden by lower components
 			HTML.applyTelestyle(this.element, this.options.style);
 			
 			//Flow control handlers
