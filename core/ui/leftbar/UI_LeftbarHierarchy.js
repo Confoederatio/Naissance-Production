@@ -35,6 +35,12 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 		//2. Iterate over all naissance.FeatureLayers and render them recursively
 		
 		//3. Iterate over all naissance.Geometries and render them at base
+		for (let i = 0; i < naissance.Geometry.instances.length; i++) {
+			let local_geometry = naissance.Geometry.instances[i];
+			
+			if (local_geometry.drawHierarchyDatatype)
+				hierarchy_obj[`${local_geometry.class_name}-${local_geometry.id}`] = local_geometry.drawHierarchyDatatype();
+		}
 		
 		console.log(hierarchy_obj);
 		let current_hierarchy = new ve.Hierarchy({

@@ -128,6 +128,25 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		}
 	}
 	
+	drawHierarchyDatatype () {
+		//Return statement
+		return new ve.HierarchyDatatype({
+			icon: new veHTML(`<icon>pentagon</icon>`, {
+				style: { padding: 0 }, tooltip: "GeometryPolygon"
+			})
+		},  {
+			name: this.name,
+			name_options: {
+				onprogramchange: () => {
+					this.drawHierarchyDatatype();
+				},
+				onuserchange: (v) => {
+					this.name = v;
+				}
+			}
+		});
+	}
+	
 	removeKeyframe (arg0_date) {
 		//Convert from parameters
 		let date = (arg0_date) ? arg0_date : main.date;

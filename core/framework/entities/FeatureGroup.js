@@ -54,32 +54,22 @@ naissance.FeatureGroup = class extends naissance.Feature {
 				}
 				//naissance.Geometry generic handling
 				if (local_entity instanceof naissance.Geometry) {
-					let geometry_name_options = () => {
-						return {
-							onprogramchange: () => {
-								this.drawHierarchyDatatype();
-							},
-							onuserchange: (v) => {
-								local_entity.name = v;
-							}
-						};
-					};
-					
-					if (local_entity instanceof naissance.GeometryPolygon) {
-						hierarchy_obj[local_key] = new ve.HierarchyDatatype({
-							icon: new ve.HTML(`<icon>pentagon</icon>`, {
-								style: { padding: 0 }, tooltip: local_entity.class_name } )
-						}, {
-							name: local_entity.name,
-							name_options: geometry_name_options()
-						});
+					if (local_entity.drawHierarchyDatatype) {
+						hierarchy_obj[local_key] = local_entity.drawHierarchyDatatype();
 					} else { //[WIP] - Implement naissance.Geometry.name accessor
 						hierarchy_obj[local_key] = new ve.HierarchyDatatype({
 							icon: new ve.HTML(`<icon>shapes</icon>`, {
 								style: { padding: 0 }, tooltip: local_entity.class_name } )
 						}, {
 							name: local_entity.name,
-							name_options: geometry_name_options()
+							name_options: {
+								onprogramchange: () => {
+									this.drawHierarchyDatatype();
+								},
+								onuserchange: (v) => {
+									local_entity.name = v;
+								}
+							}
 						});
 					}
 				}
