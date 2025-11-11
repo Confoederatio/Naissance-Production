@@ -7,5 +7,8 @@ naissance.Feature = class extends ve.Class {
 		super();
 		this.id = Class.generateRandomID(naissance.Feature);
 		this.is_naissance_feature = true;
+		
+		//Push to naissance.Feature.instances
+		naissance.Feature.instances.push(this);
 	}
 };

@@ -27,6 +27,9 @@
 		//Save action to current timeline if needed
 		if (!do_not_push_action)
 			new DALS.Action(json);
+		
+		//Force all UI_LeftbarHierarchy instances to .refresh()
+		UI_LeftbarHierarchy.refresh();
 	};
 }
 
@@ -70,7 +73,8 @@
 			}
 		});
 		
-		//3. Force all UI_LeftbarHierarchy instances to redraw
+		//3. Force all UI_LeftbarHierarchy instances to .refresh()
+		UI_LeftbarHierarchy.refresh();
 		
 		//Reload cursor
 		main.layers.cursor_layer.addGeometry(main.brush.cursor)
