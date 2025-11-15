@@ -13,6 +13,9 @@ naissance.FeatureGroup = class extends naissance.Feature {
 		//Initialise this.options
 		if (this.options.name === undefined) this.options.name = "New Group";
 		
+		//Declare local instance variables
+		this.parent = undefined;
+		
 		//Declare UI; attached to UI_LeftbarHierarchy
 		this.interface = undefined;
 		this.drawHierarchyDatatype(); //Declares this.interface
@@ -27,14 +30,22 @@ naissance.FeatureGroup = class extends naissance.Feature {
 		let has_entity = this.hasEntity(naissance_obj);
 		
 		if (!has_entity) {
+			naissance_obj.parent = this;
 			this.entities.push(naissance_obj);
 			if (!do_not_refresh) this.drawHierarchyDatatype();
 		}
 	}
 	
-	drawHierarchyDatatype () { //[WIP] - Finish function body
+	drawHierarchyDatatype () {
 		//Declare local instance variables
 		let hierarchy_obj = {};
+		
+		//Delete any self-references
+		for (let i = this.entities.length - 1; i >= 0; i--)
+			if (this.entities[i].class_name === "FeatureGroup" && this.entities[i].id === this.id) {
+				console.warn(`Deleting self-reference`, this.entities[i], `from`, this);
+				this.entities.splice(i, 1);
+			}
 		
 		//Iterate over this.entities, if naissance.FeatureGroup/naissance.FeatureLayer, call .draw() recursively
 		for (let i = 0; i < this.entities.length; i++) {
@@ -50,7 +61,7 @@ naissance.FeatureGroup = class extends naissance.Feature {
 					hierarchy_obj[local_key] = new ve.HierarchyDatatype({
 						icon: new ve.HTML(`<icon>inventory_2</icon>`, {
 							style: { padding: 0 }, tooltip: local_entity.class_name } )
-					});
+					}, { instance: local_entity });
 				}
 				//naissance.Geometry generic handling
 				if (local_entity instanceof naissance.Geometry) {
@@ -61,6 +72,7 @@ naissance.FeatureGroup = class extends naissance.Feature {
 							icon: new ve.HTML(`<icon>shapes</icon>`, {
 								style: { padding: 0 }, tooltip: local_entity.class_name } )
 						}, {
+							instance: local_entity,
 							name: local_entity.name,
 							name_options: {
 								onprogramchange: () => {
@@ -81,6 +93,7 @@ naissance.FeatureGroup = class extends naissance.Feature {
 			icon: new ve.HTML(`<icon>folder</icon>`, { style: { padding: 0 } }),
 			...hierarchy_obj
 		}, {
+			instance: this,
 			name: this.options.name,
 			name_options: {
 				onchange: (v) => {

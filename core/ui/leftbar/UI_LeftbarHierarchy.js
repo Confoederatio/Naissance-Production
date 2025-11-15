@@ -3,8 +3,9 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 	
 	constructor () {
 		this.groups = {};
+		this.hierarchy_obj = {};
 		this.items = {};
-		this.value = undefined;
+		this.value = new ve.HTML("Loading ..");
 		this.refresh();
 		
 		UI_LeftbarHierarchy.instances.push(this);
@@ -22,14 +23,14 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 				
 			}, { name: "<icon>layers</icon>", tooltip: "Create New Layer" })
 		}, { disabled: true });
-		let hierarchy_obj = {};
+		this.hierarchy_obj = {};
 		
 		//1. Iterate over all naissance.FeatureGroups and render them recursively
 		for (let i = 0; i < naissance.Feature.instances.length; i++) {
 			let local_feature = naissance.Feature.instances[i];
 			
-			if (local_feature instanceof naissance.FeatureGroup)
-				hierarchy_obj[`${local_feature.class_name}-${local_feature.id}`] = local_feature.drawHierarchyDatatype();
+			if (local_feature instanceof naissance.FeatureGroup && !local_feature.parent)
+				this.hierarchy_obj[`${local_feature.class_name}-${local_feature.id}`] = local_feature.drawHierarchyDatatype();
 		}
 		
 		//2. Iterate over all naissance.FeatureLayers and render them recursively
@@ -39,20 +40,33 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 			let local_geometry = naissance.Geometry.instances[i];
 			
 			if (local_geometry.drawHierarchyDatatype)
-				hierarchy_obj[`${local_geometry.class_name}-${local_geometry.id}`] = local_geometry.drawHierarchyDatatype();
+				this.hierarchy_obj[`${local_geometry.class_name}-${local_geometry.id}`] = local_geometry.drawHierarchyDatatype();
 		}
 		
-		console.log(hierarchy_obj);
 		let current_hierarchy = new ve.Hierarchy({
 			actions_bar: actions_bar,
-			...hierarchy_obj
+			...this.hierarchy_obj
+		}, {
+			onuserchange: (v, e) => {
+				let instance = e.on_stop_data.movedNode?.instance?.options?.instance;
+				let old_parent = e.on_stop_data.originalParentItem?.instance?.options?.instance;
+					if (old_parent && old_parent.entities)
+						for (let i = old_parent.entities.length - 1; i >= 0; i--)
+							if (
+								old_parent.entities[i].class_name === instance.class_name &&
+								old_parent.entities[i].id === instance.id
+							)
+								old_parent.entities.splice(i, 1);
+				let new_parent = e.on_stop_data.newParentItem?.instance?.options?.instance;
+					if (new_parent && new_parent.entities) {
+						instance.parent = new_parent;
+						new_parent.entities.push(instance);
+					}
+			}
 		});
 		
-		if (this.value) {
-			this.value.v = current_hierarchy.components_obj;
-		} else {
-			this.value = current_hierarchy;
-		}
+		this.value.element.innerHTML = "";
+		this.value.element.appendChild(current_hierarchy.element);
 	}
 	
 	static refresh () {

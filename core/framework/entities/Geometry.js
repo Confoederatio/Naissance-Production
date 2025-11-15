@@ -7,6 +7,7 @@ naissance.Geometry = class extends ve.Class {
 		super();
 		this.history = new naissance.History();
 		this.id = Class.generateRandomID(naissance.Geometry);
+		this.instance = this;
 		this.is_naissance_geometry = true; //Identifier flag for Naissance-bound reflection engine
 		
 		//Declare local instance variables

@@ -6,6 +6,7 @@ naissance.Feature = class extends ve.Class {
 		//Convert from parameters
 		super();
 		this.id = Class.generateRandomID(naissance.Feature);
+		this.instance = this;
 		this.is_naissance_feature = true;
 		
 		//Push to naissance.Feature.instances

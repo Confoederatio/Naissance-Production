@@ -66,15 +66,22 @@
 			if (local_value.class_name && local_value.type === "feature") {
 				let feature_obj = new naissance[local_value.class_name]();
 				if (local_value.id) feature_obj.id = local_value.id;
-				feature_obj.fromJSON(local_value.value);
-				try {
-					if (feature_obj.draw) feature_obj.draw();
-				} catch (e) { console.warn(e); }
+				if (local_value.value) feature_obj.json = local_value.value;
 			}
 		});
+		for (let i = 0; i < naissance.Feature.instances.length; i++) {
+			let local_feature = naissance.Feature.instances[i];
+			
+			local_feature.fromJSON(local_feature.json);
+			try {
+				if (local_feature.draw) local_feature.draw();
+			} catch (e) { console.warn(e); }
+		}
 		
 		//3. Force all UI_LeftbarHierarchy instances to .refresh()
-		UI_LeftbarHierarchy.refresh();
+		setTimeout(() => {
+			UI_LeftbarHierarchy.refresh();
+		}, 100);
 		
 		//Reload cursor
 		main.layers.cursor_layer.addGeometry(main.brush.cursor)
