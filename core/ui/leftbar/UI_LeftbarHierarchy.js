@@ -22,26 +22,28 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 				});
 			}, { name: "<icon>create_new_folder</icon>", tooltip: "Create New Group" }),
 			create_new_layer: new ve.Button(() => {
-				
+				let feature_id = Class.generateRandomID(naissance.Feature);
+				DALS.Timeline.parseAction({
+					options: { name: "Create Layer", key: "create_layer" },
+					value: [{ type: "FeatureLayer", create_layer: { id: feature_id } }]
+				});
 			}, { name: "<icon>layers</icon>", tooltip: "Create New Layer" })
 		}, { disabled: true });
 		this.hierarchy_obj = {};
 		
-		//1. Iterate over all naissance.FeatureGroups and render them recursively
+		//1. Iterate over all naissance.FeatureGroups/naissance.FeatureLayers and render them recursively
 		for (let i = 0; i < naissance.Feature.instances.length; i++) {
 			let local_feature = naissance.Feature.instances[i];
 			
-			if (local_feature instanceof naissance.FeatureGroup && !local_feature.parent)
+			if (!local_feature.parent)
 				this.hierarchy_obj[`${local_feature.class_name}-${local_feature.id}`] = local_feature.drawHierarchyDatatype();
 		}
 		
-		//2. Iterate over all naissance.FeatureLayers and render them recursively
-		
-		//3. Iterate over all naissance.Geometries and render them at base
+		//2. Iterate over all naissance.Geometries and render them at base
 		for (let i = 0; i < naissance.Geometry.instances.length; i++) {
 			let local_geometry = naissance.Geometry.instances[i];
 			
-			if (local_geometry.drawHierarchyDatatype)
+			if (!local_geometry.parent && local_geometry.drawHierarchyDatatype)
 				this.hierarchy_obj[`${local_geometry.class_name}-${local_geometry.id}`] = local_geometry.drawHierarchyDatatype();
 		}
 		
@@ -50,13 +52,34 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 			...this.hierarchy_obj
 		}, {
 			onuserchange: (v, e) => {
-				let allow_reassignment = true;
+				let allow_reassignment = [true, undefined];
 				let instance = e.on_stop_data.movedNode?.instance?.options?.instance;
 				let old_parent = e.on_stop_data.originalParentItem?.instance?.options?.instance;
 				let new_parent = e.on_stop_data.newParentItem?.instance?.options?.instance;
 				
-				//Check if reassignment is allowed by the .cannot_nest_self field in instance
-				if (instance.cannot_nest_self) {
+				//1. Check if allow_reassignment[0] is true
+				{
+					//1.1. Fetch all_child_els class names that may forbid nesting
+					let all_child_els = e.on_stop_data.movedNode.querySelectorAll("li[component='ve-hierarchy-datatype']");
+					let cannot_nest_class_names = [];
+					
+					//Make sure that instances cannot be directly nested if disallowed
+					if (!instance)
+						console.warn(`UI_LeftbarHierarchy: .options.instance is not defined. Are you sure that the class name associated with`, e.on_stop_data.movedNode, `has a defined .options.instance in its drawHierarchyDatatype()?`);
+					
+					//Populate cannot_nested_class_names
+					if (instance.cannot_nest_self)
+						if (!cannot_nest_class_names.includes(instance.class_name))
+							cannot_nest_class_names.push(instance.class_name);
+					for (let i = 0; i < all_child_els.length; i++) {
+						let local_instance = all_child_els[i].instance.options.instance;
+						
+						if (local_instance && !cannot_nest_class_names.includes(local_instance.class_name))
+							if (local_instance.cannot_nest_self)
+								cannot_nest_class_names.push(local_instance.class_name);
+					}
+					
+					//1.2. Check if reassignment is allowed, or if it violates self-nesting rules
 					let all_parent_els = HTML.getAllParentElements(e.on_stop_data.movedNode);
 					
 					//Iterate over all_parent_els in reverse to check if the same class_name is up the tree
@@ -64,12 +87,13 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 						if (all_parent_els[i].getAttribute("component") === "ve-hierarchy-datatype") {
 							let local_instance = all_parent_els[i].instance.options.instance;
 							
-							if (local_instance.class_name === instance.class_name)
-								allow_reassignment = false;
+							if (cannot_nest_class_names.includes(local_instance.class_name))
+								allow_reassignment = [false, local_instance.class_name];
 						}
 				}
 				
-				if (allow_reassignment) {
+				//2. If reassignment is allowed, reassign the present entity to its new group
+				if (allow_reassignment[0]) {
 					if (old_parent && old_parent.entities)
 						for (let i = old_parent.entities.length - 1; i >= 0; i--)
 							if (
@@ -82,8 +106,8 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 						new_parent.entities.push(instance);
 					}
 				} else {
-					veToast(`${instance.class_name} cannot nest itself.`);
-					this.refresh();
+					veToast(`${allow_reassignment[1]} cannot nest itself.`);
+					setTimeout(() => this.refresh(), 100);
 				}
 			}
 		});

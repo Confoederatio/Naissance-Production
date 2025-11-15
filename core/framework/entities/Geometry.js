@@ -10,6 +10,10 @@ naissance.Geometry = class extends ve.Class {
 		this.instance = this;
 		this.is_naissance_geometry = true; //Identifier flag for Naissance-bound reflection engine
 		
+		//Initialise this.options
+		if (!this.options) this.options = {};
+			this.options.instance = this;
+		
 		//Declare local instance variables
 		this.name = undefined;
 		

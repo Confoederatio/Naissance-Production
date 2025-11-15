@@ -1,25 +1,23 @@
 if (!global.naissance) global.naissance = {};
 /**
- * @type {naissance.FeatureGroup}
+ * @type {naissance.FeatureLayer}
  */
-naissance.FeatureGroup = class extends naissance.Feature {
+naissance.FeatureLayer = class extends naissance.Feature {
 	constructor (arg0_entities, arg1_options) {
-		//Convert from parameters
 		super();
-		//this.cannot_nest_self = true;
-		this.class_name = "FeatureGroup";
+		this.cannot_nest_self = true;
+		this.class_name = "FeatureLayer";
 		this.entities = (arg0_entities) ? arg0_entities : [];
 		this.options = (arg1_options) ? arg1_options : {};
 		
 		//Initialise this.options
-		if (this.options.name === undefined) this.options.name = "New Group";
+		if (this.options.name === undefined) this.options.name = "New Layer";
 		
 		//Declare local instance variables
 		this.parent = undefined;
 		
-		//Declare UI; attached to UI_LeftbarHierarchy
+		//Declare UI, attached to UI_LeftbarHierarchy
 		this.interface = undefined;
-		this.drawHierarchyDatatype(); //Declares this.interface
 	}
 	
 	addEntity (arg0_naissance_obj, arg1_do_not_refresh) {
@@ -43,7 +41,7 @@ naissance.FeatureGroup = class extends naissance.Feature {
 		
 		//Delete any self-references
 		for (let i = this.entities.length - 1; i >= 0; i--)
-			if (this.entities[i].class_name === "FeatureGroup" && this.entities[i].id === this.id) {
+			if (this.entities[i].class_name === "FeatureLayer" && this.entities[i].id === this.id) {
 				console.warn(`Deleting self-reference`, this.entities[i], `from`, this);
 				this.entities.splice(i, 1);
 			}
@@ -91,7 +89,7 @@ naissance.FeatureGroup = class extends naissance.Feature {
 		
 		//Set this.interface
 		this.interface = new ve.HierarchyDatatype({
-			icon: new ve.HTML(`<icon>folder</icon>`, { style: { padding: 0 } }),
+			icon: new ve.HTML(`<icon>layers</icon>`, { style: { padding: 0 } }),
 			...hierarchy_obj
 		}, {
 			instance: this,
@@ -193,29 +191,28 @@ naissance.FeatureGroup = class extends naissance.Feature {
 	}
 	
 	/**
-	 * Parses a JSON action for a target FeatureGroup.
-	 * - Static method of: {@link naissance.FeatureGroup}
+	 * Parses a JSON action for a target FeatureLayer.
+	 * - Static method of: {@link naissance.FeatureLayer}
 	 * 
 	 * `arg0_json`: {@link Object|string}
 	 * - `.feature_id`: {@link string} - Identifier. The {@link naissance.Feature} ID to target changes for.
 	 * <br>
 	 * - #### Extraneous Commands:
-	 * - `.create_group`: {@link Object}
-	 *   - `.do_not_refresh=false`: {@link boolean}
-	 *   - `.id`: {@link string}
-	 * 
+	 *   - `.create_layer`: {@link Object}
+	 *     - `.do_not_refresh=false`: {@link boolean}
+	 *     - `.id`: {@link string}
 	 */
 	static parseAction (arg0_json) {
 		//Convert from parameters
 		let json = (typeof arg0_json === "string") ? JSON.parse(arg0_json) : arg0_json;
 		
 		//Parse extraneous commands
-		//create_group
-		if (json.create_group)
-			if (json.create_group.id) {
-				let new_group = new naissance.FeatureGroup();
-				new_group.id = json.create_group.id;
-				if (!json.create_group.do_not_refresh)
+		//create_layer
+		if (json.create_layer)
+			if (json.create_layer.id) {
+				let new_layer = new naissance.FeatureLayer();
+				new_layer.id = json.create_layer.id;
+				if (!json.create_layer.do_not_refresh)
 					UI_LeftbarHierarchy.refresh();
 			}
 	}

@@ -9,6 +9,10 @@ naissance.Feature = class extends ve.Class {
 		this.instance = this;
 		this.is_naissance_feature = true;
 		
+		//Initialise this.options
+		if (!this.options) this.options = {};
+			this.options.instance = this;
+		
 		//Push to naissance.Feature.instances
 		naissance.Feature.instances.push(this);
 	}

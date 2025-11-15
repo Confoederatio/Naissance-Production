@@ -135,6 +135,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 				style: { padding: 0 }, tooltip: "GeometryPolygon"
 			})
 		},  {
+			instance: this,
 			name: this.name,
 			name_options: {
 				onprogramchange: () => {
