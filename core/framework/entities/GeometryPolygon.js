@@ -157,24 +157,24 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 	}
 	
 	/**
-	 * Parses a JSON action for a target polygon.
+	 * Parses a JSON action for a target GeometryPolygon.
 	 * - Static method of: {@link naissance.GeometryPolygon}
 	 * 
 	 * `arg0_json`: {@link Object|string}
-	 * - `.geometry_id`: {@link string} - Identifier. The {@link naissance.Geometry ID} to target changes for.
-	 * - 
-	 * - `.add_to_polygon`: {@link Object}
-	 *   - `.geometry`: {@link string}
+	 * - `.geometry_id`: {@link string} - Identifier. The {@link naissance.Geometry} ID to target changes for, if any.
+	 * <br>
+	 * - #### Extraneous Commands:
 	 * - `.create_polygon`: {@link Object}
 	 *   - `.id`: {@link string}
+	 * - #### Internal Commands:
+	 * - `.add_to_polygon`: {@link Object}
+	 *   - `.geometry`: {@link string}
 	 * - `.remove_from_polygon`: {@link Object}
 	 *   - `.geometry`: {@link string}
-	 * - `.set_symbol`: {@link Object}
-	 *   - `<symbol_key>`: {@link any}
-	 * 
-	 * - Associated data:
 	 * - `.set_data`: {@link Object}
 	 *   - `<data_key>`: {@link any}
+	 * - `.set_symbol`: {@link Object}
+	 *   - `<symbol_key>`: {@link any}
 	 */
 	static parseAction (arg0_json) {
 		//Convert from parameters

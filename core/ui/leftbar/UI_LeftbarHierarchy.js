@@ -15,9 +15,11 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 		//Declare local instance variables
 		let actions_bar = new ve.HierarchyDatatype({
 			create_new_group: new ve.Button(() => {
-				let feature_group = new naissance.FeatureGroup();
-				console.log(`Calling redraw!`);
-				this.refresh();
+				let feature_id = Class.generateRandomID(naissance.Feature);
+				DALS.Timeline.parseAction({
+					options: { name: "Create Group", key: "create_group" },
+					value: [{ type: "FeatureGroup", create_group: { id: feature_id } }]
+				});
 			}, { name: "<icon>create_new_folder</icon>", tooltip: "Create New Group" }),
 			create_new_layer: new ve.Button(() => {
 				
