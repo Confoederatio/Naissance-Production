@@ -50,8 +50,26 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 			...this.hierarchy_obj
 		}, {
 			onuserchange: (v, e) => {
+				let allow_reassignment = true;
 				let instance = e.on_stop_data.movedNode?.instance?.options?.instance;
 				let old_parent = e.on_stop_data.originalParentItem?.instance?.options?.instance;
+				let new_parent = e.on_stop_data.newParentItem?.instance?.options?.instance;
+				
+				//Check if reassignment is allowed by the .cannot_nest_self field in instance
+				if (instance.cannot_nest_self) {
+					let all_parent_els = HTML.getAllParentElements(e.on_stop_data.movedNode);
+					
+					//Iterate over all_parent_els in reverse to check if the same class_name is up the tree
+					for (let i = all_parent_els.length - 1; i >= 0; i--)
+						if (all_parent_els[i].getAttribute("component") === "ve-hierarchy-datatype") {
+							let local_instance = all_parent_els[i].instance.options.instance;
+							
+							if (local_instance.class_name === instance.class_name)
+								allow_reassignment = false;
+						}
+				}
+				
+				if (allow_reassignment) {
 					if (old_parent && old_parent.entities)
 						for (let i = old_parent.entities.length - 1; i >= 0; i--)
 							if (
@@ -59,11 +77,14 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 								old_parent.entities[i].id === instance.id
 							)
 								old_parent.entities.splice(i, 1);
-				let new_parent = e.on_stop_data.newParentItem?.instance?.options?.instance;
 					if (new_parent && new_parent.entities) {
 						instance.parent = new_parent;
 						new_parent.entities.push(instance);
 					}
+				} else {
+					veToast(`${instance.class_name} cannot nest itself.`);
+					this.refresh();
+				}
 			}
 		});
 		

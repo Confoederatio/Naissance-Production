@@ -6,6 +6,7 @@ naissance.FeatureGroup = class extends naissance.Feature {
 	constructor (arg0_entities, arg1_options) {
 		//Convert from parameters
 		super();
+		//this.cannot_nest_self = true;
 		this.class_name = "FeatureGroup";
 		this.entities = (arg0_entities) ? arg0_entities : [];
 		this.options = (arg1_options) ? arg1_options : {};
