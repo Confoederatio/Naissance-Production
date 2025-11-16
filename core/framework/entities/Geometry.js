@@ -74,6 +74,22 @@ naissance.Geometry = class extends ve.Class {
 		console.warn(`naissance.Geometry.fromJSON() was called for: ${this.class_name}, but was not defined.`);
 	}
 	
+	getLayer () {
+		//Iterate over naissance.Feature.instances
+		for (let i = 0; i < naissance.Feature.instances.length; i++) {
+			let local_feature = naissance.Feature.instances[i];
+			
+			if (local_feature instanceof naissance.FeatureLayer) {
+				let local_geometries = local_feature.getAllGeometries();
+				
+				for (let x = 0; x < local_geometries.length; x++)
+					if (local_geometries[x].id === this.id)
+						//Return statement
+						return local_feature;
+			}
+		}
+	}
+	
 	toJSON () {
 		console.warn(`naissance.Geometry.toJSON() was called for: ${this.class_name}, but was not defined.`);
 	}

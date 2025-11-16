@@ -127,29 +127,47 @@ naissance.Brush = class extends ve.Class {
 			
 			if (this._selected_geometry instanceof naissance.GeometryPolygon && (HTML.left_click || HTML.right_click)) {
 				let turf_cursor_geometry = Geospatiale.convertMaptalksToTurf(this.cursor);
+				
+				//1. Fetch the current layer of the present geometry
+				let current_layer = this._selected_geometry.getLayer();
+				
+				//2. If defined, difference all geometries in the layer from turf_cursor_geometry
+				if (current_layer) {
+					let all_layer_geometries = current_layer.getAllGeometries();
+					
+					for (let i = 0; i < all_layer_geometries.length; i++)
+						if (all_layer_geometries[i].id !== this._selected_geometry.id && all_layer_geometries[i].geometry) try {
+							turf_cursor_geometry = turf.difference(turf.featureCollection([
+								turf_cursor_geometry,
+								Geospatiale.convertMaptalksToTurf(all_layer_geometries[i].geometry)
+							]));
+						} catch (e) { console.warn(e); }
+				}
+				
 				let processed_geometry = Geospatiale.convertTurfToMaptalks(turf_cursor_geometry);
 				
-				if (HTML.left_click) {
-					DALS.Timeline.parseAction({
-						options: { name: "Add to Polygon", key: "add_to_polygon" },
-						value: [{
-							type: "GeometryPolygon",
-							
-							geometry_id: this._selected_geometry.id,
-							add_to_polygon: { geometry: processed_geometry.toJSON() }
-						}]
-					});
-				} else if (HTML.right_click) {
-					DALS.Timeline.parseAction({
-						options: { name: "Remove from Polygon", key: "remove_from_polygon" },
-						value: [{
-							type: "GeometryPolygon",
-							
-							geometry_id: this._selected_geometry.id,
-							remove_from_polygon: { geometry: processed_geometry.toJSON() }
-						}]
-					});
-				}
+				if (processed_geometry)
+					if (HTML.left_click) {
+						DALS.Timeline.parseAction({
+							options: { name: "Add to Polygon", key: "add_to_polygon" },
+							value: [{
+								type: "GeometryPolygon",
+								
+								geometry_id: this._selected_geometry.id,
+								add_to_polygon: { geometry: processed_geometry.toJSON() }
+							}]
+						});
+					} else if (HTML.right_click) {
+						DALS.Timeline.parseAction({
+							options: { name: "Remove from Polygon", key: "remove_from_polygon" },
+							value: [{
+								type: "GeometryPolygon",
+								
+								geometry_id: this._selected_geometry.id,
+								remove_from_polygon: { geometry: processed_geometry.toJSON() }
+							}]
+						});
+					}
 			}
 		});
 		map.getContainer().addEventListener("wheel", (e) => {

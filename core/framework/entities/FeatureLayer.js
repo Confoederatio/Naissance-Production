@@ -156,6 +156,26 @@ naissance.FeatureLayer = class extends naissance.Feature {
 				return true;
 	}
 	
+	getAllGeometries (arg0_object) {
+		//Convert from parameters
+		let object = (arg0_object) ? arg0_object : this;
+		
+		//Declare local instance variables
+		let all_entities = [];
+		
+		//Iterate over all .entities and check if they have .entities
+		if (object.entities)
+			for (let i = 0; i < object.entities.length; i++)
+				if (object.entities[i] instanceof naissance.Geometry) {
+					all_entities.push(object.entities[i]);
+				} else if (object.entities[i].entities) {
+					all_entities = all_entities.concat(this.getAllGeometries(object.entities[i]));
+				}
+		
+		//Return statement
+		return all_entities;
+	}
+	
 	removeEntity (arg0_naissance_obj) {
 		//Convert from parameters
 		let naissance_obj = arg0_naissance_obj;
