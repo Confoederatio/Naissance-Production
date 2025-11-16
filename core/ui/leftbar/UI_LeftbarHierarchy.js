@@ -29,6 +29,7 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 				});
 			}, { name: "<icon>layers</icon>", tooltip: "Create New Layer" })
 		}, { disabled: true });
+			actions_bar.element.classList.add("actions-bar");
 		this.hierarchy_obj = {};
 		
 		//1. Iterate over all naissance.FeatureGroups/naissance.FeatureLayers and render them recursively
@@ -96,9 +97,9 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 				let all_sibling_li_els = e.on_stop_data.movedNode.parentElement.children;
 				
 				for (let i = 0; i < all_sibling_li_els.length; i++) 
-					if (all_sibling_li_els[i].getAttribute("data-nestable-disabled") === "dragging")
+					if (all_sibling_li_els[i].classList.contains("actions-bar"))
 						if (i > 0) {
-							veToast(`You cannot drag an item before the control block.`);
+							veToast(`You cannot drag an item before the actions bar.`);
 							this.refresh();
 							return;
 						}
