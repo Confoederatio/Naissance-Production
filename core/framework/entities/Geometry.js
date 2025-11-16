@@ -15,7 +15,9 @@ naissance.Geometry = class extends ve.Class {
 			this.options.instance = this;
 		
 		//Declare local instance variables
+		this.fire_action_silently = true;
 		this.name = undefined;
+		delete this.fire_action_silently;
 		
 		//Define naissance.Geometry contract
 		
@@ -50,9 +52,11 @@ naissance.Geometry = class extends ve.Class {
 	get name () {
 		//Declare local instance variables
 		let current_keyframe = this.history.getKeyframe();
+		let current_value = current_keyframe.value;
 		
 		//Return statement
-		return (current_keyframe[2] && current_keyframe[2].name) ? current_keyframe[2].name : `New ${(this.class_name) ? this.class_name : "Geometry"}`;
+		return (current_value[2] && current_value[2].name) ? 
+			current_value[2].name : `New ${(this.class_name) ? this.class_name : "Geometry"}`;
 	}
 	
 	set name (arg0_value) {
@@ -63,7 +67,7 @@ naissance.Geometry = class extends ve.Class {
 		DALS.Timeline.parseAction({
 			options: { name: "Rename Geometry", key: "rename_Geometry" },
 			value: [{ type: "Geometry", geometry_id: this.id, set_name: value }]
-		});
+		}, this.fire_action_silently);
 	}
 	
 	fromJSON () {
@@ -95,7 +99,7 @@ naissance.Geometry = class extends ve.Class {
 				geometry_obj.history.addKeyframe(date, undefined, undefined, { name: new_name });
 				geometry_obj.draw();
 			} else if (typeof json.set_name === "string") {
-				geometry_obj.history.addKeyframe(date, undefined, undefined, { name: json.set_name });
+				geometry_obj.history.addKeyframe(main.date, undefined, undefined, { name: json.set_name });
 				geometry_obj.draw();
 			}
 		}
