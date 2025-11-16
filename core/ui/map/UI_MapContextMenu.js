@@ -17,7 +17,10 @@ global.UI_MapContextMenu = class UI_MapContextMenu extends ve.Class {
 						
 						DALS.Timeline.parseAction({
 							options: { name: "Create GeometryPolygon", key: "create_GeometryPolygon" },
-							value: [{ type: "GeometryPolygon", create_polygon: { id: selected_geometry_id }}]
+							value: [{ type: "GeometryPolygon", create_polygon: { 
+								id: selected_geometry_id,
+								name: new_polygon_interface.polygon_name.v
+							}}]
 						});
 						DALS.Timeline.parseAction({
 							options: { name: "Select Geometry", key: "select_geometry" },

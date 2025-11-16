@@ -116,7 +116,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		if (this.geometry) {
 			this.keyframes_ui.v = this.history.interface.v;
 			this.geometry.addEventListener("click", (e) => {
-				super.open("instance", { name: "Polygon", width: "20rem" });
+				super.open("instance", { name: this.name, width: "20rem" });
 			});
 		}
 		
@@ -167,6 +167,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 	 * - #### Extraneous Commands:
 	 * - `.create_polygon`: {@link Object}
 	 *   - `.id`: {@link string}
+	 *   - `.name`: {@link string}
 	 * - #### Internal Commands:
 	 * - `.add_to_polygon`: {@link Object}
 	 *   - `.geometry`: {@link string}
@@ -189,7 +190,12 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		if (json.create_polygon)
 			if (json.create_polygon.id) {
 				let new_polygon = new naissance.GeometryPolygon();
-				new_polygon.id = json.create_polygon.id;
+					new_polygon.id = json.create_polygon.id;
+					if (json.create_polygon.name) {
+						new_polygon.fire_action_silently = true;
+						new_polygon.name = json.create_polygon.name;
+						delete new_polygon.fire_action_silently;
+					}
 			}
 		
 		//Parse commands for polygon_obj
