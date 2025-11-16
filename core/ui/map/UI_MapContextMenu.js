@@ -23,7 +23,6 @@ global.UI_MapContextMenu = class UI_MapContextMenu extends ve.Class {
 							options: { name: "Select Geometry", key: "select_geometry" },
 							value: [{ type: "Brush", selected_geometry_id: selected_geometry_id }]
 						});
-						
 						this.interface.close();
 					}, { name: "Create Polygon" })
 				}, { id: "brush_map_context_menu_new_polygon" })
@@ -37,7 +36,15 @@ global.UI_MapContextMenu = class UI_MapContextMenu extends ve.Class {
 			
 			new_point: veButton(() => {
 				
-			}, { name: "New Point" })
+			}, { name: "New Point" }),
+			
+			clear_brush: veButton(() => {
+				DALS.Timeline.parseAction({
+					options: { name: "Clear Brush", key: "clear_brush" },
+					value: [{ type: "Brush", selected_geometry_id: null }]
+				});
+				this.interface.close();
+			}, { name: "Clear Brush", limit: () => main.brush._selected_geometry })
 		}, { id: "ui_map_context_menu" })
 	}
 };
