@@ -128,20 +128,22 @@ naissance.Brush = class extends ve.Class {
 			if (this._selected_geometry instanceof naissance.GeometryPolygon && (HTML.left_click || HTML.right_click)) {
 				let turf_cursor_geometry = Geospatiale.convertMaptalksToTurf(this.cursor);
 				
-				//1. Fetch the current layer of the present geometry
-				let current_layer = this._selected_geometry.getLayer();
-				
-				//2. If defined, difference all geometries in the layer from turf_cursor_geometry
-				if (current_layer) {
-					let all_layer_geometries = current_layer.getAllGeometries();
+				if (HTML.left_click) {
+					//1. Fetch the current layer of the present geometry
+					let current_layer = this._selected_geometry.getLayer();
 					
-					for (let i = 0; i < all_layer_geometries.length; i++)
-						if (all_layer_geometries[i].id !== this._selected_geometry.id && all_layer_geometries[i].geometry) try {
-							turf_cursor_geometry = turf.difference(turf.featureCollection([
-								turf_cursor_geometry,
-								Geospatiale.convertMaptalksToTurf(all_layer_geometries[i].geometry)
-							]));
-						} catch (e) { console.warn(e); }
+					//2. If defined, difference all geometries in the layer from turf_cursor_geometry
+					if (current_layer) {
+						let all_layer_geometries = current_layer.getAllGeometries();
+						
+						for (let i = 0; i < all_layer_geometries.length; i++)
+							if (all_layer_geometries[i].id !== this._selected_geometry.id && all_layer_geometries[i].geometry) try {
+								turf_cursor_geometry = turf.difference(turf.featureCollection([
+									turf_cursor_geometry,
+									Geospatiale.convertMaptalksToTurf(all_layer_geometries[i].geometry)
+								]));
+							} catch (e) { console.warn(e); }
+					}
 				}
 				
 				let processed_geometry = Geospatiale.convertTurfToMaptalks(turf_cursor_geometry);
