@@ -113,6 +113,7 @@ naissance.FeatureLayer = class extends naissance.Feature {
 		
 		//Declare local instance variables
 		this.id = json.id;
+		this.is_collapsed = json.is_collapsed;
 		this.options = json.options;
 		
 		//Iterate over json.entities and restore them
@@ -185,6 +186,7 @@ naissance.FeatureLayer = class extends naissance.Feature {
 		//Return statement
 		return JSON.stringify({
 			id: this.id,
+			is_collapsed: this.is_collapsed,
 			entities: entity_ids,
 			options: this.options
 		});

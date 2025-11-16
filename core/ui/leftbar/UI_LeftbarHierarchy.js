@@ -92,7 +92,18 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 						}
 				}
 				
-				//2. If reassignment is allowed, reassign the present entity to its new group
+				//2. Check if user is attempting to drag it before the control element
+				let all_sibling_li_els = e.on_stop_data.movedNode.parentElement.children;
+				
+				for (let i = 0; i < all_sibling_li_els.length; i++) 
+					if (all_sibling_li_els[i].getAttribute("data-nestable-disabled") === "dragging")
+						if (i > 0) {
+							veToast(`You cannot drag an item before the control block.`);
+							this.refresh();
+							return;
+						}
+				
+				//3. If reassignment is allowed, reassign the present entity to its new group
 				if (allow_reassignment[0]) {
 					if (old_parent && old_parent.entities)
 						for (let i = old_parent.entities.length - 1; i >= 0; i--)
