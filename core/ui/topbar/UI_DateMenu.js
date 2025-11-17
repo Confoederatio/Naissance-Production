@@ -6,6 +6,8 @@ global.UI_DateMenu = class extends ve.Class {
 		let navbar_el = document.querySelector(".ve.navbar");
 		this.date = veDate(undefined, {
 			binding: "main.date",
+			name: " ",
+			
 			//Split up directional flows to prevent accessor race conditions
 			onprogramchange: (v) => {
 				//console.trace("date, onprogramchange");

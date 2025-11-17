@@ -5,7 +5,7 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 		this.groups = {};
 		this.hierarchy_obj = {};
 		this.items = {};
-		this.value = new ve.HTML("Loading ..");
+		this.value = new ve.HTML("Loading ..", { style: { padding: 0 } });
 		this.refresh();
 		
 		UI_LeftbarHierarchy.instances.push(this);
@@ -130,6 +130,9 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 					veToast(`${allow_reassignment[1]} cannot nest itself.`);
 					setTimeout(() => this.refresh(), 100);
 				}
+			},
+			style: {
+				padding: 0
 			}
 		});
 		
