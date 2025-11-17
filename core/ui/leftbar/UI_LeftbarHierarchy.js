@@ -106,6 +106,7 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 				
 				//3. If reassignment is allowed, reassign the present entity to its new group
 				if (allow_reassignment[0]) {
+					//3.1. Remove from old_parent.entities
 					if (old_parent && old_parent.entities)
 						for (let i = old_parent.entities.length - 1; i >= 0; i--)
 							if (
@@ -113,9 +114,16 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 								old_parent.entities[i].id === instance.id
 							)
 								old_parent.entities.splice(i, 1);
+					
+					//3.2. Reconstruct new_parent.entities
 					if (new_parent && new_parent.entities) {
+						let new_parent_entity_els = e.on_stop_data.newParentItem.querySelectorAll("ol > li[component='ve-hierarchy-datatype']");
+						
+						new_parent.entities = [];
+						for (let i = 0; i < new_parent_entity_els.length; i++) try {
+							new_parent.entities.push(new_parent_entity_els[i].instance.options.instance);
+						} catch (e) { console.warn(e); }
 						instance.parent = new_parent;
-						new_parent.entities.push(instance);
 					}
 				} else {
 					veToast(`${allow_reassignment[1]} cannot nest itself.`);
