@@ -11,8 +11,8 @@ naissance.FeatureGroup = class extends naissance.Feature {
 		this.entities = (arg0_entities) ? arg0_entities : [];
 		this.options = (arg1_options) ? arg1_options : {};
 		
-		//Initialise this.options
-		if (this.options.name === undefined) this.options.name = "New Group";
+		//Declare local instance variables
+		this._name = "New Group";
 		
 		//Declare UI; attached to UI_LeftbarHierarchy
 		this.interface = undefined;
@@ -93,10 +93,10 @@ naissance.FeatureGroup = class extends naissance.Feature {
 		}, {
 			instance: this,
 			is_collapsed: this.is_collapsed,
-			name: this.options.name,
+			name: this.name,
 			name_options: {
 				onchange: (v) => {
-					this.options.name = v;
+					this.name = v;
 					this.drawHierarchyDatatype();
 				}
 			},

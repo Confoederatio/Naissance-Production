@@ -105,7 +105,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 				this.selected_geometry = this.geometry.copy();
 				this.selected_geometry.setSymbol({
 					lineColor: `rgb(255, 255, 0)`,
-					lineDasharray : (main.brush.selected_geometry.id !== this.id) ? [10, 10, 10] : undefined,
+					lineDasharray : (main.brush.selected_geometry?.id !== this.id) ? [10, 10, 10] : undefined,
 					lineOpacity: 0.5,
 					lineWidth: 4,
 				});
@@ -137,7 +137,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		//Return statement
 		return new ve.HierarchyDatatype({
 			icon: veHTML(`<icon style = "${
-				(current_symbol.polygonFill) ? `color: ${current_symbol.polygonFill};` : ""
+				(current_symbol?.polygonFill) ? `color: ${current_symbol?.polygonFill};` : ""
 			}">pentagon</icon>`, {
 				tooltip: "GeometryPolygon"
 			})
