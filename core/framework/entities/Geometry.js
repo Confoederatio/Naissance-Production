@@ -47,6 +47,10 @@ naissance.Geometry = class extends ve.Class {
 		
 		//Push to naissance.Geometry.instances
 		naissance.Geometry.instances.push(this);
+		if (main.brush.selected_feature) {
+			this.parent = main.brush.selected_feature;
+			main.brush.selected_feature.entities.push(this);
+		}
 	}
 	
 	get name () {

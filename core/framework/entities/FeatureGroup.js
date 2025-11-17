@@ -14,9 +14,6 @@ naissance.FeatureGroup = class extends naissance.Feature {
 		//Initialise this.options
 		if (this.options.name === undefined) this.options.name = "New Group";
 		
-		//Declare local instance variables
-		this.parent = undefined;
-		
 		//Declare UI; attached to UI_LeftbarHierarchy
 		this.interface = undefined;
 		this.drawHierarchyDatatype(); //Declares this.interface
@@ -218,10 +215,7 @@ naissance.FeatureGroup = class extends naissance.Feature {
 			if (json.create_group.id) {
 				let new_group = new naissance.FeatureGroup();
 				new_group.id = json.create_group.id;
-				if (main.brush.selected_feature) {
-					new_group.parent = main.brush.selected_feature;
-					main.brush.selected_feature.entities.push(new_group);
-				}
+				
 				if (!json.create_group.do_not_refresh)
 					UI_LeftbarHierarchy.refresh();
 			}

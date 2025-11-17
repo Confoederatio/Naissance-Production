@@ -197,12 +197,9 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 						new_polygon.name = json.create_polygon.name;
 						delete new_polygon.fire_action_silently;
 					}
-					if (main.brush.selected_feature) {
-						new_polygon.parent = main.brush.selected_feature;
-						main.brush.selected_feature.entities.push(new_polygon);
+					if (main.brush.selected_feature)
 						if (!json.create_polygon.do_not_refresh)
 							UI_LeftbarHierarchy.refresh();
-					}
 			}
 		
 		//Parse commands for polygon_obj

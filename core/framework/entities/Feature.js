@@ -15,5 +15,9 @@ naissance.Feature = class extends ve.Class {
 		
 		//Push to naissance.Feature.instances
 		naissance.Feature.instances.push(this);
+		if (main.brush.selected_feature) {
+			this.parent = main.brush.selected_feature;
+			main.brush.selected_feature.entities.push(this);
+		}
 	}
 };
