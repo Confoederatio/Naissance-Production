@@ -57,6 +57,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		//Set selected, then update draw
 		this._selected = v;
 		this.draw();
+		UI_LeftbarHierarchy.refresh();
 	}
 	
 	addKeyframe (arg0_date, arg1_coords, arg2_symbol, arg3_data) {
@@ -131,10 +132,14 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 	drawHierarchyDatatype () {
 		//Return statement
 		return new ve.HierarchyDatatype({
-			icon: new veHTML(`<icon>pentagon</icon>`, {
+			icon: veHTML(`<icon>pentagon</icon>`, {
 				tooltip: "GeometryPolygon"
 			})
 		},  {
+			attributes: {
+				"data-is-selected": this.selected,
+				"data-selected-geometry": (main.brush.selected_geometry?.id === this.id),
+			},
 			instance: this,
 			name: this.name,
 			name_options: {
