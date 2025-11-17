@@ -161,10 +161,26 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 							value: [{ type: "Brush", select_feature_id: local_instance.id }]
 						});
 					} else {
-						DALS.Timeline.parseAction({
-							options: { name: "Select Geometry", key: "select_geometry" },
-							value: [{ type: "Brush", select_geometry_id: local_instance.id }]
-						});
+						//Selection logic for naissance.Geometry
+						let already_selected = (main.brush.selected_geometry?.id === local_instance.id);
+						
+						if (!already_selected) {
+							if (!HTML.ctrl_pressed) {
+								DALS.Timeline.parseAction({
+									options: { name: "Select Geometry", key: "select_geometry" },
+									value: [{ type: "Brush", select_geometry_id: local_instance.id }]
+								});
+							} else {
+								local_instance.selected = (!local_instance.selected);
+							}
+						}
+						//Deselect if already selected
+						else {
+							DALS.Timeline.parseAction({
+								options: { name: "Deselect Geometry", key: "deselect_geometry" },
+								value: [{ type: "Brush", select_geometry_id: false }]
+							});
+						}
 					}
 				};
 			}
