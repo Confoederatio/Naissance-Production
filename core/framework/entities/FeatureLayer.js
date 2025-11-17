@@ -56,7 +56,7 @@ naissance.FeatureLayer = class extends naissance.Feature {
 				if (local_entity instanceof naissance.Feature) {
 					hierarchy_obj[local_key] = new ve.HierarchyDatatype({
 						icon: new ve.HTML(`<icon>inventory_2</icon>`, {
-							style: { padding: 0 }, tooltip: local_entity.class_name } )
+							tooltip: local_entity.class_name } )
 					}, { instance: local_entity });
 				}
 				//naissance.Geometry generic handling
@@ -66,7 +66,7 @@ naissance.FeatureLayer = class extends naissance.Feature {
 					} else { //[WIP] - Implement naissance.Geometry.name accessor
 						hierarchy_obj[local_key] = new ve.HierarchyDatatype({
 							icon: new ve.HTML(`<icon>shapes</icon>`, {
-								style: { padding: 0 }, tooltip: local_entity.class_name } )
+								tooltip: local_entity.class_name } )
 						}, {
 							instance: local_entity,
 							name: local_entity.name,
@@ -86,7 +86,7 @@ naissance.FeatureLayer = class extends naissance.Feature {
 		
 		//Set this.interface
 		this.interface = new ve.HierarchyDatatype({
-			icon: new ve.HTML(`<icon>layers</icon>`, { style: { padding: 0 } }),
+			icon: new ve.HTML(`<icon>layers</icon>`),
 			...hierarchy_obj
 		}, {
 			instance: this,

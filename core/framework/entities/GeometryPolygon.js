@@ -132,7 +132,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		//Return statement
 		return new ve.HierarchyDatatype({
 			icon: new veHTML(`<icon>pentagon</icon>`, {
-				style: { padding: 0 }, tooltip: "GeometryPolygon"
+				tooltip: "GeometryPolygon"
 			})
 		},  {
 			instance: this,
