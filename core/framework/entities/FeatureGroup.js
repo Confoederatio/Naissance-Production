@@ -218,6 +218,10 @@ naissance.FeatureGroup = class extends naissance.Feature {
 			if (json.create_group.id) {
 				let new_group = new naissance.FeatureGroup();
 				new_group.id = json.create_group.id;
+				if (main.brush.selected_feature) {
+					new_group.parent = main.brush.selected_feature;
+					main.brush.selected_feature.entities.push(new_group);
+				}
 				if (!json.create_group.do_not_refresh)
 					UI_LeftbarHierarchy.refresh();
 			}

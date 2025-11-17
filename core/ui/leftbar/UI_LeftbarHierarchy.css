@@ -1,0 +1,10 @@
+[component="ve-hierarchy"] .naissance-selected-feature {
+    > .nst-content {
+        border: 3px solid var(--accent-secondary-colour);
+    }
+    
+    [component="ve-hierarchy-datatype"] > .nst-content {
+        box-shadow: 0 0 0 1px solid var(--bg-primary-colour);
+        outline: dashed 3px var(--accent-secondary-colour);
+    }
+}

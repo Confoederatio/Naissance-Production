@@ -5,6 +5,7 @@ naissance.Brush = class extends ve.Class {
 		
 		//Declare local instance variables
 		this.radius = 50000;
+		this._selected_feature = undefined;
 		this._selected_geometry = undefined;
 		this.symbol = {};
 		
@@ -84,6 +85,20 @@ naissance.Brush = class extends ve.Class {
 		this.handleEvents();
 	}
 	
+	get selected_feature () {
+		//Return statement
+		return this._selected_feature;
+	}
+	
+	set selected_feature (v) {
+		let old_selected_feature = this._selected_feature;
+		this._selected_feature = v;
+		if (old_selected_feature && old_selected_feature.draw) {
+			old_selected_feature.draw(); //Update draw
+			UI_LeftbarHierarchy.refresh();
+		}
+	}
+	
 	get selected_geometry () {
 		//Return statement
 		return this._selected_geometry;
@@ -92,7 +107,8 @@ naissance.Brush = class extends ve.Class {
 	set selected_geometry (v) {
 		let old_selected_geometry = this._selected_geometry;
 		this._selected_geometry = v;
-		if (old_selected_geometry) old_selected_geometry.draw(); //Update draw
+		if (old_selected_geometry && old_selected_geometry.draw) 
+			old_selected_geometry.draw(); //Update draw
 	}
 	
 	getBrushSymbol () {
@@ -188,16 +204,34 @@ naissance.Brush = class extends ve.Class {
 		});
 	}
 	
+	/**
+	 * Parses a JSON action for the target Brush.
+	 * - Static method of: {@link naissance.Brush}
+	 * 
+	 * `arg0_json`: {@link Object|string}
+	 * - `.select_feature_id`: {@link string|null}
+	 * - `.select_geometry_id`: {@link string|null}
+	 * 
+	 * @param {Object|string} arg0_json
+	 */
 	static parseAction (arg0_json) {
 		//Convert from parameters
 		let json = (typeof arg0_json === "string") ? JSON.parse(arg0_json) : arg0_json;
 		
-		if (typeof json.selected_geometry_id === "string") {
-			let geometry_obj = naissance.Geometry.instances.filter((v) => v.id === json.selected_geometry_id);
+		if (typeof json.select_feature_id === "string") {
+			let feature_obj = naissance.Feature.instances.filter((v) => v.id === json.select_feature_id);
+				if (feature_obj) feature_obj = feature_obj[0];
+			main.brush.selected_feature = feature_obj;
+			if (main.brush.selected_feature) main.brush.selected_feature.draw(); 
+		} else if (json.select_feature_id === false) {
+			main.brush.selected_feature = undefined;
+		}
+		if (typeof json.select_geometry_id === "string") {
+			let geometry_obj = naissance.Geometry.instances.filter((v) => v.id === json.select_geometry_id);
 				if (geometry_obj) geometry_obj = geometry_obj[0];
 			main.brush.selected_geometry = geometry_obj;
-			main.brush.selected_geometry.draw();
-		} else if (json.selected_geometry_id === null) {
+			if (main.brush.selected_geometry) main.brush.selected_geometry.draw();
+		} else if (json.select_geometry_id === false) {
 			main.brush.selected_geometry = undefined;
 		}
 	}

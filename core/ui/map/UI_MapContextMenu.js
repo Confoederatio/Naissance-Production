@@ -13,18 +13,18 @@ global.UI_MapContextMenu = class UI_MapContextMenu extends ve.Class {
 					}),
 					create_polygon: veButton(() => {
 						new veToast(`Created ${new_polygon_interface.polygon_name.v}`);
-						let selected_geometry_id = Class.generateRandomID(naissance.Geometry);
+						let select_geometry_id = Class.generateRandomID(naissance.Geometry);
 						
 						DALS.Timeline.parseAction({
 							options: { name: "Create GeometryPolygon", key: "create_GeometryPolygon" },
 							value: [{ type: "GeometryPolygon", create_polygon: { 
-								id: selected_geometry_id,
+								id: select_geometry_id,
 								name: new_polygon_interface.polygon_name.v
 							}}]
 						});
 						DALS.Timeline.parseAction({
 							options: { name: "Select Geometry", key: "select_geometry" },
-							value: [{ type: "Brush", selected_geometry_id: selected_geometry_id }]
+							value: [{ type: "Brush", select_geometry_id: select_geometry_id }]
 						});
 						this.interface.close();
 					}, { name: "Create Polygon" })
@@ -44,7 +44,7 @@ global.UI_MapContextMenu = class UI_MapContextMenu extends ve.Class {
 			clear_brush: veButton(() => {
 				DALS.Timeline.parseAction({
 					options: { name: "Clear Brush", key: "clear_brush" },
-					value: [{ type: "Brush", selected_geometry_id: null }]
+					value: [{ type: "Brush", select_geometry_id: false }]
 				});
 				this.interface.close();
 			}, { name: "Clear Brush", limit: () => main.brush._selected_geometry })

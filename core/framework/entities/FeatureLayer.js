@@ -234,6 +234,10 @@ naissance.FeatureLayer = class extends naissance.Feature {
 			if (json.create_layer.id) {
 				let new_layer = new naissance.FeatureLayer();
 				new_layer.id = json.create_layer.id;
+				if (main.brush.selected_feature) {
+					new_layer.parent = main.brush.selected_feature;
+					main.brush.selected_feature.entities.push(new_layer);
+				}
 				if (!json.create_layer.do_not_refresh)
 					UI_LeftbarHierarchy.refresh();
 			}

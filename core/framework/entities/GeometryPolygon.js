@@ -17,7 +17,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 			information: veHTML(() => `ID: ${this.id}`, { x: 0, y: 0 }),
 			move_to_brush: veButton(() => DALS.Timeline.parseAction({
 				options: { name: "Select Geometry" },
-				value: [{ type: "Brush", selected_geometry_id: this.id }]
+				value: [{ type: "Brush", select_geometry_id: this.id }]
 			}), { name: "Move To Brush", x: 0, y: 1 }),
 			selected: veCheckbox(this.selected, {
 				onuserchange: (v) => this.selected = v,
@@ -166,6 +166,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 	 * <br>
 	 * - #### Extraneous Commands:
 	 * - `.create_polygon`: {@link Object}
+	 *   - `.do_not_refresh`: {@link boolean}
 	 *   - `.id`: {@link string}
 	 *   - `.name`: {@link string}
 	 * - #### Internal Commands:
@@ -195,6 +196,12 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 						new_polygon.fire_action_silently = true;
 						new_polygon.name = json.create_polygon.name;
 						delete new_polygon.fire_action_silently;
+					}
+					if (main.brush.selected_feature) {
+						new_polygon.parent = main.brush.selected_feature;
+						main.brush.selected_feature.entities.push(new_polygon);
+						if (!json.create_polygon.do_not_refresh)
+							UI_LeftbarHierarchy.refresh();
 					}
 			}
 		

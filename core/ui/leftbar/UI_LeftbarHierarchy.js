@@ -106,14 +106,15 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 				
 				//3. If reassignment is allowed, reassign the present entity to its new group
 				if (allow_reassignment[0]) {
-					//3.1. Remove from old_parent.entities
-					if (old_parent && old_parent.entities)
-						for (let i = old_parent.entities.length - 1; i >= 0; i--)
-							if (
-								old_parent.entities[i].class_name === instance.class_name &&
-								old_parent.entities[i].id === instance.id
-							)
-								old_parent.entities.splice(i, 1);
+					//3.1. Remove from the .entities of any old naissance.Feature that contains it
+					for (let i = 0; i < naissance.Feature.instances.length; i++) {
+						let local_feature = naissance.Feature.instances[i];
+						
+						if (local_feature.entities)
+							for (let x = local_feature.entities.length - 1; x >= 0; x--)
+								if (local_feature.entities[x].class_name === instance.class_name && local_feature.entities[x].id === instance.id)
+									local_feature.entities.splice(x, 1);
+					}
 					
 					//3.2. Reconstruct new_parent.entities
 					if (new_parent && new_parent.entities) {
@@ -131,6 +132,37 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 				}
 			}
 		});
+		
+		//3. Attach event handlers, select classes to all elements in this.hierarchy_obj
+		let all_hierarchy_els = current_hierarchy.element.querySelectorAll("li[component='ve-hierarchy-datatype']");
+		
+		for (let i = 0; i < all_hierarchy_els.length; i++) {
+			let local_instance = all_hierarchy_els[i]?.instance?.options?.instance;
+			let local_value = all_hierarchy_els[i]?.instance;
+			
+			//console.log(local_instance, local_value);
+			if (local_instance) {
+				(main.brush?.selected_feature?.id === local_instance.id) ?
+					local_value.element.classList.add("naissance-selected-feature") :
+					local_value.element.classList.remove("naissance-selected-feature");
+				
+				let component_handler_el = local_value.element.querySelector(".nst-content");
+				
+				component_handler_el.onclick = (e) => {
+					if (document.querySelector(`input:focus`)) return;
+					
+					//console.log(e.target, local_instance.element)
+					if (local_instance instanceof naissance.Feature) {
+						DALS.Timeline.parseAction({
+							options: { name: "Selected Feature", key: "select_feature" },
+							value: [{ type: "Brush", select_feature_id: local_instance.id }]
+						});
+					} else {
+						
+					}
+				};
+			}
+		}
 		
 		this.value.element.innerHTML = "";
 		this.value.element.appendChild(current_hierarchy.element);
