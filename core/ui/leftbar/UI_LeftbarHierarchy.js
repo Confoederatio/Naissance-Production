@@ -157,11 +157,14 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 					//console.log(e.target, local_instance.element)
 					if (local_instance instanceof naissance.Feature) {
 						DALS.Timeline.parseAction({
-							options: { name: "Selected Feature", key: "select_feature" },
+							options: { name: "Select Feature", key: "select_feature" },
 							value: [{ type: "Brush", select_feature_id: local_instance.id }]
 						});
 					} else {
-						
+						DALS.Timeline.parseAction({
+							options: { name: "Select Geometry", key: "select_geometry" },
+							value: [{ type: "Brush", select_geometry_id: local_instance.id }]
+						});
 					}
 				};
 			}
