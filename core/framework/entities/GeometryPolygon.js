@@ -130,9 +130,15 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 	}
 	
 	drawHierarchyDatatype () {
+		//Declare local instance variables
+		let current_keyframe = this.history.getKeyframe();
+		let current_symbol = current_keyframe.value[1];
+		
 		//Return statement
 		return new ve.HierarchyDatatype({
-			icon: veHTML(`<icon>pentagon</icon>`, {
+			icon: veHTML(`<icon style = "${
+				(current_symbol.polygonFill) ? `color: ${current_symbol.polygonFill};` : ""
+			}">pentagon</icon>`, {
 				tooltip: "GeometryPolygon"
 			})
 		},  {
