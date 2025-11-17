@@ -1,9 +1,9 @@
 [component="ve-hierarchy"] {
     [data-is-selected="true"] > .nst-content {
-        border: 3px dashed yellow;
+        border: 3px dashed var(--geometry-selection-colour);
     }
     [data-selected-geometry="true"] > .nst-content {
-        border: 3px solid yellow;
+        border: 3px solid var(--geometry-selection-colour);
     }
     
     .naissance-selected-feature {
