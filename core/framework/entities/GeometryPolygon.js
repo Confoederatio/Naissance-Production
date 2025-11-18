@@ -151,7 +151,6 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 				}
 			}),
 			delete: veButton(() => {
-				console.log("Hello")
 				DALS.Timeline.parseAction({
 					options: { name: "Delete Geometry", key: "delete_geometry" },
 					value: [{ type: "Geometry", geometry_id: this.id, delete_geometry: true }]
@@ -161,7 +160,9 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 				tooltip: "Delete Polygon",
 				style: { cursor: "pointer", order: 100, padding: 0 }
 			}),
-			context_menu: veButton(() => {}, {
+			context_menu: veButton(() => {
+				super.open("instance", { name: this.name, width: "20rem" });
+			}, {
 				name: "<icon>more_vert</icon>",
 				tooltip: "More Actions",
 				style: { cursor: "padding", order: 101, padding: 0 }
