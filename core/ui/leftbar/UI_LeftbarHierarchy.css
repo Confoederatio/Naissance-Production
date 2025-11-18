@@ -5,6 +5,12 @@
     [data-selected-geometry="true"] > .nst-content {
         border: 3px solid var(--geometry-selection-colour);
     }
+    [data-is-visible="false"]:not([data-selected-geometry="true"]) > .nst-content {
+        opacity: 0.4;
+    }
+    [data-is-visible="false"][data-selected-geometry="true"] > .nst-content {
+        opacity: 0.7;
+    }
     
     .naissance-selected-feature {
         > .nst-content {

@@ -6,7 +6,7 @@ naissance.HistoryKeyframe = class extends ve.Class {
 		let date = arg0_date;
 		
 		//Declare local instance variables
-		this.date = Date.convertTimestampToDate(date);
+		this.date = Date.convertTimestampToDate(JSON.parse(JSON.stringify(date))); //Needs to be deep-copied since date can be a Proxy
 		this.timestamp = Date.getTimestamp(date);
 		this.value = [];
 		

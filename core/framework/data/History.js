@@ -39,7 +39,7 @@ naissance.History = class extends ve.Class {
 		let components_obj = {};
 		
 		//Iterate over all_keyframes and push it to components_obj
-		let all_keyframes = Object.keys(this.keyframes).sort().reverse();
+		let all_keyframes = Object.keys(this.keyframes).sort();
 		
 		for (let i = 0; i < all_keyframes.length; i++) {
 			let local_key = all_keyframes[i];
@@ -52,7 +52,7 @@ naissance.History = class extends ve.Class {
 					let icon_el = document.createElement("icon");
 					icon_el.innerHTML = `arrow_forward`;
 					icon_el.addEventListener("click", (e) => {
-						console.log(e);
+						console.log(`[WIP] - Jump to not yet implemented:`, e);
 					});
 					return icon_el;
 				}, { tooltip: "Jump to Date", style: { cursor: "pointer" } })
@@ -72,7 +72,7 @@ naissance.History = class extends ve.Class {
 		
 		//Iterate over all_json_keys and assume them as keyframes
 		if (json.keyframes) {
-			let all_keyframes = Object.keys(json.keyframes).sort().reverse();
+			let all_keyframes = Object.keys(json.keyframes).sort();
 			
 			this.do_not_draw = true;
 			this.keyframes = {};
@@ -101,7 +101,7 @@ naissance.History = class extends ve.Class {
 		let timestamp = Date.getTimestamp(options.date);
 		
 		//1. If options.absolute_keyframe = true, iterate over all keyframes in this.keyframes, and return the most recent one
-		let all_keyframes = Object.keys(this.keyframes).sort().reverse();
+		let all_keyframes = Object.keys(this.keyframes).sort();
 		
 		if (options.absolute_keyframe) {
 			for (let i = 0; i < all_keyframes.length; i++)
@@ -158,7 +158,7 @@ naissance.History = class extends ve.Class {
 		};
 		
 		//Iterate over all this.keyframes and parse them to a minimal JSON contract
-		let all_keyframes = Object.keys(this.keyframes).sort().reverse();
+		let all_keyframes = Object.keys(this.keyframes).sort();
 		
 		for (let i = 0; i < all_keyframes.length; i++) {
 			let local_keyframe = this.keyframes[all_keyframes[i]];

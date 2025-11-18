@@ -170,7 +170,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		},  {
 			attributes: {
 				"data-is-selected": this.selected,
-				"data-is-visible": (current_keyframe.value[0] !== undefined),
+				"data-is-visible": (current_keyframe.value[0] !== undefined && Object.keys(current_keyframe.value[0]).length) ? "true" : "false",
 				"data-selected-geometry": (main.brush.selected_geometry?.id === this.id),
 			},
 			instance: this,

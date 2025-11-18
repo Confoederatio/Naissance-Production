@@ -47,6 +47,7 @@
 		scene.map_component.clear();
 		naissance.Feature.instances = [];
 		naissance.Geometry.instances = [];
+		console.log(`DALS.Timeline.loadState called.`);
 		
 		//1. Handle naissance.Geometry classes
 		//Iterate over json to load in each class
