@@ -140,10 +140,36 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 				(current_symbol?.polygonFill) ? `color: ${current_symbol?.polygonFill};` : ""
 			}">pentagon</icon>`, {
 				tooltip: "GeometryPolygon"
+			}),
+			multitag: veButton(() => {}, { 
+				name: "<icon>new_label</icon>", tooltip: "Manage Tags",
+				style: { 
+					marginLeft: "auto", order: 99, padding: 0,
+					"button": {
+						marginLeft: "1rem"
+					}
+				}
+			}),
+			delete: veButton(() => {
+				console.log("Hello")
+				DALS.Timeline.parseAction({
+					options: { name: "Delete Geometry", key: "delete_geometry" },
+					value: [{ type: "Geometry", geometry_id: this.id, delete_geometry: true }]
+				});
+			}, {
+				name: "<icon>delete</icon>",
+				tooltip: "Delete Polygon",
+				style: { cursor: "pointer", order: 100, padding: 0 }
+			}),
+			context_menu: veButton(() => {}, {
+				name: "<icon>more_vert</icon>",
+				tooltip: "More Actions",
+				style: { cursor: "padding", order: 101, padding: 0 }
 			})
 		},  {
 			attributes: {
 				"data-is-selected": this.selected,
+				"data-is-visible": (current_keyframe.value[0] !== undefined),
 				"data-selected-geometry": (main.brush.selected_geometry?.id === this.id),
 			},
 			instance: this,
@@ -154,6 +180,14 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 				},
 				onuserchange: (v) => {
 					this.name = v;
+				}
+			},
+			style: {
+				".nst-content": {
+					paddingRight: 0
+				},
+				"[component='ve-button'] > button": {
+					border: 0
 				}
 			}
 		});

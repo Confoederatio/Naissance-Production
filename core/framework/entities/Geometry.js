@@ -99,6 +99,22 @@ naissance.Geometry = class extends ve.Class {
 	}
 	
 	remove () {
+		//Remove from naissance.Feature .entities
+		for (let i = 0; i < naissance.Feature.instances.length; i++) {
+			let local_feature = naissance.Feature.instances[i];
+			
+			if (local_feature.entities)
+				for (let x = 0; x < local_feature.entities.length; x++)
+					if (local_feature.entities[x].id === this.id)
+						naissance.Feature.instances.splice(x, 1);
+		}
+		
+		//Remove from naissance.Geometry.instances
+		for (let i = 0; i < naissance.Geometry.instances.length; i++)
+			if (naissance.Geometry.instances[i].id === this.id)
+				naissance.Geometry.instances.splice(i, 1);
+			
+		//Rerender deleted geometry and remove it from the map
 		this.history = new naissance.History();
 		this.draw();
 	}
@@ -112,6 +128,10 @@ naissance.Geometry = class extends ve.Class {
 		
 		//Parse commands for geometry_obj
 		if (geometry_obj) {
+			//delete_geometry
+			if (json.delete_geometry === true)
+				geometry_obj.remove();
+			
 			//set_name
 			if (typeof json.set_name === "object") {
 				let date = (json.set_name.date) ? json.set_name.date : main.date;

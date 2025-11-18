@@ -27,7 +27,10 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 					options: { name: "Create Layer", key: "create_layer" },
 					value: [{ type: "FeatureLayer", create_layer: { id: feature_id } }]
 				});
-			}, { name: "<icon>layers</icon>", tooltip: "Create New Layer" })
+			}, { name: "<icon>layers</icon>", tooltip: "Create New Layer" }),
+			create_new_sketch_map: new ve.Button(() => {
+				
+			}, { name: "<icon>app_registration</icon>", tooltip: "Create New Sketch Map" })
 		}, { disabled: true });
 			actions_bar.element.classList.add("actions-bar");
 		this.hierarchy_obj = {};
@@ -152,7 +155,10 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 				let component_handler_el = local_value.element.querySelector(".nst-content");
 				
 				component_handler_el.onclick = (e) => {
-					if (document.querySelector(`input:focus`)) return;
+					if (
+						document.querySelector(`input:focus`) ||
+						document.querySelector(`[component="ve-button"]:hover`)
+					) return;
 					
 					//console.log(e.target, local_instance.element)
 					if (local_instance instanceof naissance.Feature) {
