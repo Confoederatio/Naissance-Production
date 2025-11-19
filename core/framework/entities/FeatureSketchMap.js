@@ -16,7 +16,7 @@ naissance.FeatureSketchMap = class extends naissance.Feature {
 		
 		//Declare UI, attached to UI_LeftbarHierarchy
 		this.interface = undefined;
-		this.handleToolbar();
+		this.handleEvents();
 	}
 	
 	addGeometry (arg0_geometry) {
@@ -35,16 +35,95 @@ naissance.FeatureSketchMap = class extends naissance.Feature {
 	}
 	
 	draw () {
-		/*
-		if (main.brush.selected_feature?.id === this.id)
-			if (!document.querySelector(`.ve.window[id="${this.id}"]`))
-				//Open UI
-				super.open("instance", {
-					id: this.id,
-					name: this._name,
-					width: "24rem"
+		if (this._is_visible) {
+			//Iterate over all this._entities and declare their corresponding context menus on click
+			for (let i = 0; i < this._entities.length; i++) {
+				let local_entity = this._entities[i];
+					local_entity.show();
+				
+				let local_generic_ui = () => {
+					return {
+						pre_ui: {
+							header: veHTML(`<b>${local_entity.getType()}</b>`)
+						},
+						post_ui: {
+							actions_bar: veRawInterface({
+								edit_toggle_container: veRawInterface({
+									edit_button: veButton(() => {
+										main.brush.disabled = true;
+										local_entity.startEdit();
+									}, { name: "<icon>edit</icon> Edit", limit: () => !local_entity.isEditing(), x: 0, y: 0 }),
+									cancel_edit_button: veButton(() => {
+										local_entity.endEdit()
+									}, { name: "<icon>edit</icon> Cancel Edit", limit: () => local_entity.isEditing(), x: 0, y: 0 })
+								}, { name: " ", style: { display: "inline" } }),
+								
+								delete_button: veButton(() => {
+									local_entity.remove();
+									this._entities.splice(i, 1);
+								}, { name: "<icon>delete</icon> Delete" })
+							}, { name: " " })
+						}
+					}
+				};
+				let local_properties = local_entity.getProperties();
+					if (local_properties === null || local_properties === undefined) local_properties = {};
+				
+				//Instantiate UI handlers
+				if (local_entity instanceof maptalks.Marker) {
+					local_entity.addEventListener("click", (e) => {
+						let local_interface = veContextMenu({
+							...local_generic_ui().pre_ui,
+							name_element: new ve.Text((local_properties.name) ? local_properties.name : "", { 
+								name: "Name",
+								onchange: (v, e) => {
+									DALS.Timeline.parseAction({
+										options: { name: "Edited SketchMap Marker Label", key: "edit_sketch_map_marker_label" },
+										value: [{ 
+											type: "FeatureSketchMap", 
+											feature_id: this.id, 
+											set_entity_symbol: {
+												id: i,
+												value: {
+													textFaceName: "Karla, sans-serif",
+													textFill: `rgb(255, 255, 255)`,
+													textHaloFill: `rgb(0, 0, 0)`,
+													textHaloRadius: 2,
+													textName: v
+												}
+											}
+										}]
+									});
+									console.log(local_entity);
+								}
+							}),
+							...local_generic_ui().post_ui
+						}, { id: "sketch_geometry_context_menu" })
+					});
+				} else {
+					local_entity.addEventListener("click", (e) => {
+						let local_interface = veContextMenu({
+							...local_generic_ui().pre_ui,
+							...local_generic_ui().post_ui
+						}, { id: "sketch_geometry_context_menu" })
+					});
+				}
+				local_entity.addEventListener("editend", (e) => {
+					DALS.Timeline.parseAction({
+						options: { name: "Edited SketchMap Geometry", key: "edit_sketch_map_geometry" },
+						value: [{
+							type: "FeatureSketchMap",
+							feature_id: this.id,
+							edit_entity: { id: i, value: e.target.toJSON() }
+						}]
+					});
 				});
-		 */
+			}
+			
+		} else {
+			for (let i = 0; i < this._entities.length; i++)
+				this._entities[i].hide();
+		}
 	}
 	
 	drawHierarchyDatatype () {
@@ -57,6 +136,7 @@ naissance.FeatureSketchMap = class extends naissance.Feature {
 					name: this._name,
 					width: "24rem"
 				});
+				this.draw();
 			}, {
 				name: "<icon>more_vert</icon>",
 				tooltip: "Edit Sketch Map",
@@ -109,7 +189,7 @@ naissance.FeatureSketchMap = class extends naissance.Feature {
 		this.drawHierarchyDatatype();
 	}
 	
-	handleToolbar () {
+	handleEvents () {
 		//Declare local instance variables
 		if (!this.draw_tool) {
 			this.draw_tool = new maptalks.DrawTool({ mode: "Polygon" }).addTo(map).disable();
@@ -118,6 +198,8 @@ naissance.FeatureSketchMap = class extends naissance.Feature {
 					options: { name: "Create SketchMap Geometry", key: "create_sketch_map_geometry" },
 					value: [{ type: "FeatureSketchMap", feature_id: this.id, add_geometry: e.geometry.toJSON() }]
 				});
+				this.draw_tool.disable();
+				this.draw();
 			});
 		}
 		
@@ -133,13 +215,15 @@ naissance.FeatureSketchMap = class extends naissance.Feature {
 		this.brush_interface = new ve.Interface({
 			clear_brush: new ve.Button(() => {
 				this.draw_tool.disable();
-			}, { name: "<icon>edit_off</icon> Clear Brush&nbsp;&nbsp;", x: 0, y: 0 }),
+			}, { name: "<icon>edit_off</icon> Clear Brush", x: 0, y: 0 }),
 			clear_layer: new ve.Button(() => {
-				DALS.Timeline.parseAction({
-					options: { name: "Clear SketchMap Layer", key: "clear_sketch_map_layer" },
-					value: [{ type: "FeatureSketchMap", feature_id: this.id, clear_layer: true }]
+				veConfirm(`Are you sure you want to delete this layer? This clears all geometries currently bound to the Sketch Layer!`, { special_function: () =>
+					DALS.Timeline.parseAction({
+						options: { name: "Clear SketchMap Layer", key: "clear_sketch_map_layer" },
+						value: [{ type: "FeatureSketchMap", feature_id: this.id, clear_layer: true }]
+					})
 				});
-			}, { name: "<icon>delete</icon> Clear Layer&nbsp;&nbsp;", x: 1, y: 0 }),
+			}, { name: "<icon>delete</icon> Clear Layer", x: 1, y: 0 }),
 		}, { 
 			is_folder: false,
 			style: { marginLeft: "auto", marginRight: "auto" }
@@ -147,7 +231,8 @@ naissance.FeatureSketchMap = class extends naissance.Feature {
 	}
 	
 	hide () {
-		
+		this._is_visible = false;
+		this.draw();
 	}
 	
 	remove () {
@@ -155,7 +240,8 @@ naissance.FeatureSketchMap = class extends naissance.Feature {
 	}
 	
 	show () {
-		
+		this._is_visible = true;
+		this.draw();
 	}
 	
 	toJSON () {
@@ -185,6 +271,13 @@ naissance.FeatureSketchMap = class extends naissance.Feature {
 	 * - `.create_sketch_map`: {@link Object}
 	 *   - `.do_not_refresh=false`: {@link boolean}
 	 *   - `.id`: {@link string}
+	 * - #### Internal Commands:
+	 * - `.edit_entity`: {@link Object}
+	 *   - `.id`: {@link number} - The index of the edited geometry.
+	 *   - `.value`: {@link string} - The JSON value of the edited geometry.
+	 * - `.set_entity_symbol`: {@link Object}
+	 *   - `.id`: {@link number} - The index of the edited geometry.
+	 *   - `.value`: {@link Object} - The value of the edited symbol.
 	 */
 	static parseAction (arg0_json) {
 		//Convert from parameters
@@ -212,6 +305,19 @@ naissance.FeatureSketchMap = class extends naissance.Feature {
 			//clear_layer
 			if (json.clear_layer)
 				sketch_map_obj.clearLayer();
+			//edit_entity
+			if (json.edit_entity)
+				if (sketch_map_obj._entities[json.edit_entity.id]) {
+					sketch_map_obj._entities[json.edit_entity.id].remove();
+					sketch_map_obj._entities[json.edit_entity.id] = maptalks.Geometry.fromJSON(json.edit_entity.value);
+					sketch_map_obj._entities[json.edit_entity.id].addTo(main.layers.overlay_layer);
+					sketch_map_obj.draw();
+				}
+			
+			//set_entity_symbol
+			if (json.set_entity_symbol)
+				if (sketch_map_obj._entities[json.set_entity_symbol.id])
+					sketch_map_obj._entities[json.set_entity_symbol.id].setSymbol(json.set_entity_symbol.value);
 		}
 	}
 };

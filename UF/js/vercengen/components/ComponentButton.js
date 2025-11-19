@@ -53,6 +53,10 @@ ve.Button = class extends ve.Component {
 		this.name = options.name;
 		this.v = this.value;
 		
+		//Post-value styling
+		let name_el = this.element.querySelector(`#name`);
+		if (name_el && HTML.getInnerText(name_el).length > 0 && name_el.querySelector("icon"))
+			this.name += "&nbsp;&nbsp;";
 	}
 	
 	/**

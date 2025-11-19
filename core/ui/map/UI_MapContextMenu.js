@@ -1,7 +1,7 @@
 global.UI_MapContextMenu = class UI_MapContextMenu extends ve.Class {
 	constructor () {
 		super();
-		this.interface = new veContextMenu({
+		this.interface = veContextMenu({
 			//New Polygon/Line/Point
 			new_polygon: veButton(() => {
 				let new_polygon_interface = this.interface.addContextMenu({
