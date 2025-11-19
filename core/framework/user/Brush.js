@@ -52,7 +52,7 @@ naissance.Brush = class extends ve.Class {
 			colour: veColour("#1bbc9b", {
 				binding: "this.colour",
 				onchange: (v, e) => {
-					try {console.log(`Changed from user ${v}`);
+					try { //console.log(`Changed from user ${v}`);
 						naissance.Brush.setSelectedSymbol({ polygonFill: e.getHex() }); 
 					} catch (e) { console.error(e); }
 				},
@@ -242,7 +242,7 @@ naissance.Brush = class extends ve.Class {
 		if (json.select_geometry_id !== undefined) {
 			//Handle old geometry
 			//main.brush.mode === "override" handling
-			if (main.brush.mode === "override") {
+			if (main.brush.selected_geometry && main.brush.mode === "override") {
 				//1. Fetch the current layer, turf_cursor_geometry of the present brush
 				let current_layer = main.brush.selected_geometry.getLayer();
 				

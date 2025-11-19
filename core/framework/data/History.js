@@ -131,7 +131,7 @@ naissance.History = class extends ve.Class {
 								...(return_keyframe.value[x] ? return_keyframe.value[x] : {}),
 								...local_keyframe.value[x]
 							};
-						} else {
+						} else if (local_keyframe.value[x] !== undefined) {
 							return_keyframe.value[x] = local_keyframe.value[x];
 						}
 				}

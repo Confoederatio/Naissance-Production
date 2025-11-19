@@ -128,6 +128,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		
 		//5. Derender geometry handler
 		if (derender_geometry) {
+			console.log(`Derendering geometry!`);
 			if (this.geometry) this.geometry.remove();
 			if (this.label) this.label.remove();
 			if (this.selected_geometry) this.selected_geometry.remove();
@@ -291,7 +292,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 			
 			//set_symbol
 			if (json.set_symbol) {
-				polygon_obj.addKeyframe(main.date, undefined, json.set_symbol);
+				polygon_obj.addKeyframe(main.date, undefined, json.set_symbol, undefined);
 			} else if (json.set_symbol === null) { //[WIP] - Implement clear symbol ability later
 				
 			}
