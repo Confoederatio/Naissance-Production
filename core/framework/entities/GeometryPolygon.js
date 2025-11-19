@@ -276,7 +276,6 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 			//remove_from_polygon
 			if (json.remove_from_polygon) {
 				let geometry = polygon_obj.geometry;
-				console.log(json.remove_from_polygon.geometry);
 				let ot_geometry = maptalks.Geometry.fromJSON(json.remove_from_polygon.geometry);
 				
 				//Difference with existing geometry, if return value is null replace geometry
@@ -287,6 +286,8 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 					]));
 					polygon_obj.addKeyframe(main.date, (turf_difference) ? 
 						Geospatiale.convertTurfToMaptalks(turf_difference).toJSON() : null);
+					/*console.log((turf_difference) ?
+						Geospatiale.convertTurfToMaptalks(turf_difference).toJSON() : null);*/
 				}
 			}
 			
