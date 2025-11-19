@@ -51,7 +51,7 @@ naissance.FeatureLayer = class extends naissance.Feature {
 			let local_key = `${local_entity.class_name}-${local_entity.id}`;
 			
 			//naissance.FeatureGroup, naissance.FeatureLayer handling
-			if (local_entity instanceof naissance.FeatureGroup || local_entity instanceof naissance.FeatureLayer) {
+			if (local_entity instanceof naissance.Feature && local_entity.drawHierarchyDatatype) {
 				hierarchy_obj[local_key] = local_entity.drawHierarchyDatatype();
 			} else {
 				//naissance.Feature generic handling
