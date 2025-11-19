@@ -113,14 +113,11 @@ naissance.FeatureSketchMap = class extends naissance.Feature {
 		//Declare local instance variables
 		if (!this.draw_tool) {
 			this.draw_tool = new maptalks.DrawTool({ mode: "Polygon" }).addTo(map).disable();
-			
 			this.draw_tool.on("drawend", (e) => {
 				DALS.Timeline.parseAction({
 					options: { name: "Create SketchMap Geometry", key: "create_sketch_map_geometry" },
 					value: [{ type: "FeatureSketchMap", feature_id: this.id, add_geometry: e.geometry.toJSON() }]
 				});
-				//console.log(e);
-				//this.addGeometry(e.geometry);
 			});
 		}
 		
@@ -138,7 +135,10 @@ naissance.FeatureSketchMap = class extends naissance.Feature {
 				this.draw_tool.disable();
 			}, { name: "<icon>edit_off</icon> Clear Brush&nbsp;&nbsp;", x: 0, y: 0 }),
 			clear_layer: new ve.Button(() => {
-				this.clearLayer();
+				DALS.Timeline.parseAction({
+					options: { name: "Clear SketchMap Layer", key: "clear_sketch_map_layer" },
+					value: [{ type: "FeatureSketchMap", feature_id: this.id, clear_layer: true }]
+				});
 			}, { name: "<icon>delete</icon> Clear Layer&nbsp;&nbsp;", x: 1, y: 0 }),
 		}, { 
 			is_folder: false,
@@ -209,6 +209,9 @@ naissance.FeatureSketchMap = class extends naissance.Feature {
 			//add_geometry
 			if (json.add_geometry)
 				sketch_map_obj.addGeometry(maptalks.Geometry.fromJSON(json.add_geometry));
+			//clear_layer
+			if (json.clear_layer)
+				sketch_map_obj.clearLayer();
 		}
 	}
 };
