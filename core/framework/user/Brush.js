@@ -239,12 +239,8 @@ naissance.Brush = class extends ve.Class {
 		} else if (json.select_feature_id === false) {
 			main.brush.selected_feature = undefined;
 		}
-		if (typeof json.select_geometry_id === "string") {
-			let geometry_obj = naissance.Geometry.instances.filter((v) => v.id === json.select_geometry_id);
-				if (geometry_obj) geometry_obj = geometry_obj[0];
-			main.brush.selected_geometry = geometry_obj;
-			if (main.brush.selected_geometry) main.brush.selected_geometry.draw();
-		} else if (json.select_geometry_id === false) {
+		if (json.select_geometry_id !== undefined) {
+			//Handle old geometry
 			//main.brush.mode === "override" handling
 			if (main.brush.mode === "override") {
 				//1. Fetch the current layer, turf_cursor_geometry of the present brush
@@ -269,7 +265,15 @@ naissance.Brush = class extends ve.Class {
 				}
 			}
 			
-			main.brush.selected_geometry = undefined;
+			//Select new geometry
+			if (typeof json.select_geometry_id === "string") {
+				let geometry_obj = naissance.Geometry.instances.filter((v) => v.id === json.select_geometry_id);
+				if (geometry_obj) geometry_obj = geometry_obj[0];
+				main.brush.selected_geometry = geometry_obj;
+				if (main.brush.selected_geometry) main.brush.selected_geometry.draw();
+			} else if (json.select_geometry_id === false) {
+				main.brush.selected_geometry = undefined;
+			}
 		}
 	}
 	
