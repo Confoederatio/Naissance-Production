@@ -29,7 +29,11 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 				});
 			}, { name: "<icon>layers</icon>", tooltip: "Create New Layer" }),
 			create_new_sketch_map: new ve.Button(() => {
-				
+				let feature_id = Class.generateRandomID(naissance.Feature);
+				DALS.Timeline.parseAction({
+					options: { name: "Create Sketch Map", key: "create_sketch_map" },
+					value: [{ type: "FeatureSketchMap", create_sketch_map: { id: feature_id } }]
+				});
 			}, { name: "<icon>app_registration</icon>", tooltip: "Create New Sketch Map" })
 		}, { disabled: true });
 			actions_bar.element.classList.add("actions-bar");
