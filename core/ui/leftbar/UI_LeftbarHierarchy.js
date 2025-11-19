@@ -160,6 +160,7 @@ global.UI_LeftbarHierarchy = class { //[WIP] - Finish naissance.Feature first
 				
 				component_handler_el.onclick = (e) => {
 					if (
+						document.querySelector("button:hover") ||
 						document.querySelector(`input:focus`) ||
 						document.querySelector(`[component="ve-button"]:hover`)
 					) return;
