@@ -15,13 +15,16 @@ naissance.Feature = class extends ve.Class {
 			
 		//Declare local instance variables
 		this._name = "New Feature";
+		this._parent = undefined;
 		
 		//Push to naissance.Feature.instances
 		naissance.Feature.instances.push(this);
-		if (main.brush.selected_feature?.entities) {
-			this.parent = main.brush.selected_feature;
-			main.brush.selected_feature.entities.push(this);
-		}
+		setTimeout(() => {
+			if (main.brush.selected_feature?.entities) {
+				this.parent = main.brush.selected_feature;
+				main.brush.selected_feature.entities.push(this);
+			}
+		});
 	}
 	
 	get name () {
@@ -38,6 +41,20 @@ naissance.Feature = class extends ve.Class {
 			options: { name: "Rename Feature", key: "rename_Feature" },
 			value: [{ type: "Feature", feature_id: this.id, set_name: value }]
 		}, this.fire_action_silently);
+	}
+	
+	get parent () {
+		//Return statement
+		return this._parent;
+	}
+	
+	set parent (arg0_v) {
+		//Convert from parameters
+		let value = arg0_v;
+		
+		//Make sure parent cannot be self
+		if (value && value.id !== this.id)
+			this._parent = value;
 	}
 	
 	static parseAction (arg0_json) {

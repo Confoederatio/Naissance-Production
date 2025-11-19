@@ -25,7 +25,7 @@ naissance.FeatureLayer = class extends naissance.Feature {
 		//Declare local instance variables
 		let has_entity = this.hasEntity(naissance_obj);
 		
-		if (!has_entity) {
+		if (!has_entity && !(naissance_obj instanceof naissance.Feature && naissance_obj.id === this.id)) {
 			naissance_obj.parent = this;
 			this.entities.push(naissance_obj);
 			if (!do_not_refresh) this.drawHierarchyDatatype();
@@ -36,10 +36,12 @@ naissance.FeatureLayer = class extends naissance.Feature {
 		//Declare local instance variables
 		let hierarchy_obj = {};
 		
-		//Delete any self-references
+		//Delete any self-references; already assigned entities with other .parent
 		for (let i = this.entities.length - 1; i >= 0; i--)
 			if (this.entities[i].class_name === "FeatureLayer" && this.entities[i].id === this.id) {
 				console.warn(`Deleting self-reference`, this.entities[i], `from`, this);
+				this.entities.splice(i, 1);
+			} else if (this.entities[i].parent && this.entities[i].parent.id !== this.id) {
 				this.entities.splice(i, 1);
 			}
 		

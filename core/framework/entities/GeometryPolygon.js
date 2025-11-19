@@ -18,7 +18,12 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 			move_to_brush: veButton(() => DALS.Timeline.parseAction({
 				options: { name: "Select Geometry" },
 				value: [{ type: "Brush", select_geometry_id: this.id }]
-			}), { name: "Move To Brush", x: 0, y: 1 }),
+			}), { name: "Move To Brush", limit: () => (main.brush.selected_geometry?.id !== this.id), x: 0, y: 1 }),
+			finish_polygon: veButton(() => DALS.Timeline.parseAction({
+				options: { name: "Deselect Geometry", key: "deselect_geometry" },
+				value: [{ type: "Brush", select_geometry_id: false }]
+			}), { name: "Finish Polygon", limit: () => (main.brush.selected_geometry?.id === this.id), x: 0, y: 1 }),
+			
 			selected: veCheckbox(this.selected, {
 				onuserchange: (v) => this.selected = v,
 				x: 1, y: 1
@@ -270,6 +275,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 			//remove_from_polygon
 			if (json.remove_from_polygon) {
 				let geometry = polygon_obj.geometry;
+				console.log(json.remove_from_polygon.geometry);
 				let ot_geometry = maptalks.Geometry.fromJSON(json.remove_from_polygon.geometry);
 				
 				//Difference with existing geometry, if return value is null replace geometry

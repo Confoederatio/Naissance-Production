@@ -35,6 +35,19 @@ naissance.Brush = class extends ve.Class {
 				},
 				name: "Disable Brush", x: 0, y: 0
 			}),
+			brush_mode: veSelect({
+				normal: {
+					name: "Normal",
+					selected: true
+				},
+				override: {
+					name: "Override"
+				}
+			}, {
+				binding: "this.mode",
+				name: "Brush Mode:", x: 1, y: 0
+			}),
+			
 			//Row 1: Colour
 			colour: veColour("#1bbc9b", {
 				binding: "this.colour",
@@ -144,7 +157,7 @@ naissance.Brush = class extends ve.Class {
 			if (this._selected_geometry instanceof naissance.GeometryPolygon && (HTML.left_click || HTML.right_click)) {
 				let turf_cursor_geometry = Geospatiale.convertMaptalksToTurf(this.cursor);
 				
-				if (HTML.left_click) {
+				if (HTML.left_click && !["override"].includes(this.mode)) {
 					//1. Fetch the current layer of the present geometry
 					let current_layer = this._selected_geometry.getLayer();
 					
@@ -232,11 +245,35 @@ naissance.Brush = class extends ve.Class {
 			main.brush.selected_geometry = geometry_obj;
 			if (main.brush.selected_geometry) main.brush.selected_geometry.draw();
 		} else if (json.select_geometry_id === false) {
+			//main.brush.mode === "override" handling
+			if (main.brush.mode === "override") {
+				//1. Fetch the current layer, turf_cursor_geometry of the present brush
+				let current_layer = main.brush.selected_geometry.getLayer();
+				
+				//2. If defined, difference turf_brush_geometry from all geometries in the layer
+				if (current_layer && main.brush.selected_geometry.geometry) {
+					let all_layer_geometries = current_layer.getAllGeometries();
+					
+					for (let i = 0; i < all_layer_geometries.length; i++)
+						if (all_layer_geometries[i].id !== main.brush.selected_geometry.id && all_layer_geometries[i].geometry) try {
+							DALS.Timeline.parseAction({
+								options: { name: "Remove from Polygon", key: "remove_from_polygon" },
+								value: [{
+									type: "GeometryPolygon",
+									
+									geometry_id: all_layer_geometries[i].id,
+									remove_from_polygon: { geometry: main.brush.selected_geometry.geometry.toJSON() }
+								}]
+							});
+						} catch (e) { console.warn(e); }
+				}
+			}
+			
 			main.brush.selected_geometry = undefined;
 		}
 	}
 	
-	static setSelectedSymbol (arg0_symbol_obj) {
+	static setSelectedSymbol (arg0_symbol_obj) { //[WIP] - Implement this.mode === "override" later
 		//Convert from parameters
 		let symbol_obj = (arg0_symbol_obj) ? arg0_symbol_obj : {};
 		

@@ -373,7 +373,7 @@ ve.UndoRedo = class extends ve.Component {
 				
 				this.html_select = new ve.Interface({
 					select_field: new ve.Select(this.timeline_select_obj, {
-						name: "Viewing: ",
+						name: "Viewing:",
 						onchange: (v, e) => {
 							this.value = v;
 							this.draw(true);
