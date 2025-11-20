@@ -76,6 +76,12 @@ naissance.Brush = class extends ve.Class {
 					} catch (e) { console.error(e); }
 				},
 				x: 1, y: 1
+			}),
+			properties: veButton(() => {}, {
+				name: "Edit Selected Geometries",
+				limit: () => this.hasSelectedGeometry(),
+				width: 2,
+				x: 0, y: 2
 			})
 		}, { name: "Brush Options:", open: true });
 		
@@ -177,7 +183,7 @@ naissance.Brush = class extends ve.Class {
 					//1. Fetch the current layer of the present geometry
 					let current_layer = this._selected_geometry.getLayer();
 					
-					//2. If defined, difference all geometries in the layer from turf_cursor_geometry
+					//2. If defined, buffer first (to prevent zero-width holes), then difference all geometries in the layer from turf_cursor_geometry
 					if (current_layer) {
 						let all_layer_geometries = current_layer.getAllGeometries();
 						
@@ -234,6 +240,13 @@ naissance.Brush = class extends ve.Class {
 				this.cursor.setRadius(this.radius);
 			}
 		});
+	}
+	
+	hasSelectedGeometry () {
+		//Return statement
+		for (let i = 0; i < naissance.Geometry.instances.length; i++)
+			if (naissance.Geometry.instances[i].selected === true)
+				return true;
 	}
 	
 	/**
