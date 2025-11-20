@@ -37,15 +37,22 @@ naissance.Brush = class extends ve.Class {
 			}),
 			brush_mode: veSelect({
 				normal: {
-					name: "Normal",
+					name: "Default",
 					selected: true
 				},
+				node: {
+					name: "Node"
+				},
+				node_override: {
 				override: {
 					name: "Override"
 				}
 			}, {
 				binding: "this.mode",
-				name: "Brush Mode:", x: 1, y: 0
+				name: "Brush Mode:", x: 1, y: 0,
+				onchange: (v) => {
+					console.log(`Brush Mode changed to:`, v);
+				}
 			}),
 			
 			//Row 1: Colour
@@ -157,7 +164,7 @@ naissance.Brush = class extends ve.Class {
 			if (this._selected_geometry instanceof naissance.GeometryPolygon && (HTML.left_click || HTML.right_click)) {
 				let turf_cursor_geometry = Geospatiale.convertMaptalksToTurf(this.cursor);
 				
-				if (HTML.left_click && !["override"].includes(this.mode)) {
+				if (HTML.left_click && !["node_override", "override"].includes(this.mode)) {
 					//1. Fetch the current layer of the present geometry
 					let current_layer = this._selected_geometry.getLayer();
 					
@@ -242,7 +249,7 @@ naissance.Brush = class extends ve.Class {
 		if (json.select_geometry_id !== undefined) {
 			//Handle old geometry
 			//main.brush.mode === "override" handling
-			if (main.brush.selected_geometry && main.brush.mode === "override") {
+			if (main.brush.selected_geometry && ["node_override", "override"].includes(main.brush.mode)) {
 				//1. Fetch the current layer, turf_cursor_geometry of the present brush
 				let current_layer = main.brush.selected_geometry.getLayer();
 				
@@ -277,7 +284,7 @@ naissance.Brush = class extends ve.Class {
 		}
 	}
 	
-	static setSelectedSymbol (arg0_symbol_obj) { //[WIP] - Implement this.mode === "override" later
+	static setSelectedSymbol (arg0_symbol_obj) {
 		//Convert from parameters
 		let symbol_obj = (arg0_symbol_obj) ? arg0_symbol_obj : {};
 		
