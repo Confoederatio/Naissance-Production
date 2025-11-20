@@ -86,7 +86,7 @@ naissance.Brush = class extends ve.Class {
 			}),
 			simplify_applies_to_brush: veCheckbox(false, {
 				to_binding: "this.simplify_applies_to_brush",
-				name: "Applies to Brush<br>[WIP]",
+				name: "Applies to Brush",
 				tooltip: "Whether the simplification should apply to the brush only instead of the selected polygon.",
 				x: 1, y: 0
 			})
@@ -185,7 +185,7 @@ naissance.Brush = class extends ve.Class {
 							if (all_layer_geometries[i].id !== this._selected_geometry.id && all_layer_geometries[i].geometry) try {
 								turf_cursor_geometry = turf.difference(turf.featureCollection([
 									turf_cursor_geometry,
-									Geospatiale.convertMaptalksToTurf(all_layer_geometries[i].geometry)
+									turf.buffer(Geospatiale.convertMaptalksToTurf(all_layer_geometries[i].geometry), 0.001, { units: "kilometers"})
 								]));
 							} catch (e) { console.warn(e); }
 					}
