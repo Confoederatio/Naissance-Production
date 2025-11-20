@@ -39,12 +39,7 @@ naissance.History = class extends ve.Class {
 		let components_obj = {};
 		
 		//Iterate over all_keyframes and push it to components_obj
-		let all_keyframes = Object.keys(this.keyframes).sort();
-		
-		for (let i = 0; i < all_keyframes.length; i++) {
-			let local_key = all_keyframes[i];
-			let local_value = this.keyframes[all_keyframes[i]];
-			
+		Object.iterate(this.keyframes, (local_key, local_value) => {
 			//Set components_obj
 			components_obj[local_key] = new ve.RawInterface({
 				date_info: new ve.HTML((e) => `${local_value.timestamp}`, { x: 0, y: 0 }),
@@ -62,7 +57,8 @@ naissance.History = class extends ve.Class {
 					display: "flex"
 				}
 			});
-		}
+		}, { sort_mode: "date_descending" });
+		
 		this.interface.v = components_obj;
 	}
 	
@@ -101,15 +97,14 @@ naissance.History = class extends ve.Class {
 		let timestamp = Date.getTimestamp(options.date);
 		
 		//1. If options.absolute_keyframe = true, iterate over all keyframes in this.keyframes, and return the most recent one
-		let all_keyframes = Object.keys(this.keyframes).sort();
+		let all_keyframes = Object.keys(this.keyframes).sort().reverse();
 		
 		if (options.absolute_keyframe) {
-			for (let i = 0; i < all_keyframes.length; i++)
-				if (parseFloat(all_keyframes[i]) <= timestamp) {
-					return_keyframe = this.keyframes[all_keyframes[i]];
-				} else {
-					break;
-				}
+			Object.iterate(this.keyframes, (local_key, local_keyframe) => {
+				if (Date.convertTimestampToInt(local_keyframe) <= Date.convertTimestampToInt(timestamp))
+					return_keyframe = this.keyframes[local_key];
+			}, { sort_mode: "date_ascending" });
+			
 			//Return statement
 			return return_keyframe;
 		}
@@ -121,20 +116,19 @@ naissance.History = class extends ve.Class {
 				timestamp: timestamp,
 				value: []
 			};
-			for (let i = 0; i < all_keyframes.length; i++)
-				if (Date.convertTimestampToInt(all_keyframes[i]) <= Date.convertTimestampToInt(timestamp)) {
-					let local_keyframe = this.keyframes[all_keyframes[i]];
-					
-					for (let x = 0; x < local_keyframe.value.length; x++)
-						if (typeof local_keyframe.value[x] === "object") {
-							return_keyframe.value[x] = {
-								...(return_keyframe.value[x] ? return_keyframe.value[x] : {}),
-								...local_keyframe.value[x]
-							};
-						} else if (local_keyframe.value[x] !== undefined) {
-							return_keyframe.value[x] = local_keyframe.value[x];
-						}
-				}
+			Object.iterate(this.keyframes, (local_key, local_keyframe) => {
+				if (Date.convertTimestampToInt(local_key) <= Date.convertTimestampToInt(timestamp))
+				for (let x = 0; x < local_keyframe.value.length; x++)
+					if (typeof local_keyframe.value[x] === "object") {
+						return_keyframe.value[x] = {
+							...(return_keyframe.value[x] ? return_keyframe.value[x] : {}),
+							...local_keyframe.value[x]
+						};
+					} else if (local_keyframe.value[x] !== undefined) {
+						return_keyframe.value[x] = local_keyframe.value[x];
+					}
+			}, { sort_mode: "date_ascending" });
+			
 			//Return statement
 			return return_keyframe;
 		}
