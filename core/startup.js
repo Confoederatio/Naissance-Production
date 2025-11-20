@@ -14,6 +14,7 @@ global.path = require("path");
 			global.map = scene.map_component.map;
 		
     //Declare global variables
+		global.main_navbar = new UI_Navbar();
     global.main = {
 			date: Date.getCurrentDate(),
 			hierarchy: {},
@@ -22,7 +23,8 @@ global.path = require("path");
 				leftbar_ui: new UI_Leftbar(),
 				
 				//Topbar
-				date_ui: new UI_DateMenu()
+				date_ui: new UI_DateMenu(),
+				navbar: global.main_navbar
 			},
 			layers: {
 				//Foreground layers

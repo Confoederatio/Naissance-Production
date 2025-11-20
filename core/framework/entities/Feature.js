@@ -70,7 +70,7 @@ naissance.Feature = class extends ve.Class {
 	}
 	
 	show () {
-		this._is_visible = true;
+		this._is_visible = true;``
 		
 		//Iterate over all entities; attempt to show all entities
 		if (this.entities)
