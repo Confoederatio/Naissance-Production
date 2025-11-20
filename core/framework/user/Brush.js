@@ -166,6 +166,13 @@ naissance.Brush = class extends ve.Class {
 			if (this._selected_geometry instanceof naissance.GeometryPolygon && (HTML.left_click || HTML.right_click)) {
 				let turf_cursor_geometry = Geospatiale.convertMaptalksToTurf(this.cursor);
 				
+				//1. Brush; Simplify handling
+				if (main.brush.simplify > 0)
+					turf_cursor_geometry = turf.simplify(turf_cursor_geometry, {
+						tolerance: main.brush.simplify
+					});
+				
+				//2. Commit; Layer handling
 				if (HTML.left_click && !["node_override", "override"].includes(this.mode)) {
 					//1. Fetch the current layer of the present geometry
 					let current_layer = this._selected_geometry.getLayer();
@@ -188,13 +195,16 @@ naissance.Brush = class extends ve.Class {
 				
 				if (processed_geometry)
 					if (HTML.left_click) {
+						//add_to_polygon
 						DALS.Timeline.parseAction({
 							options: { name: "Add to Polygon", key: "add_to_polygon" },
 							value: [{
 								type: "GeometryPolygon",
 								
 								geometry_id: this._selected_geometry.id,
-								add_to_polygon: { geometry: processed_geometry.toJSON() }
+								add_to_polygon: { geometry: processed_geometry.toJSON() },
+								simplify_polygon: (main.brush.simplify > 0 && main.brush.simplify_applies_to_brush) ?
+									main.brush.simplify : undefined
 							}]
 						});
 					} else if (HTML.right_click) {
@@ -261,16 +271,16 @@ naissance.Brush = class extends ve.Class {
 					
 					for (let i = 0; i < all_layer_geometries.length; i++)
 						if (all_layer_geometries[i].id !== main.brush.selected_geometry.id && all_layer_geometries[i].geometry) try {
-							DALS.Timeline.parseAction({
-								options: { name: "Remove from Polygon", key: "remove_from_polygon" },
-								value: [{
-									type: "GeometryPolygon",
-									
-									geometry_id: all_layer_geometries[i].id,
-									remove_from_polygon: { geometry: main.brush.selected_geometry.geometry.toJSON() }
-								}]
-							});
-						} catch (e) { console.warn(e); }
+								DALS.Timeline.parseAction({
+									options: { name: "Remove from Polygon", key: "remove_from_polygon" },
+									value: [{
+										type: "GeometryPolygon",
+										
+										geometry_id: all_layer_geometries[i].id,
+										remove_from_polygon: { geometry: main.brush.selected_geometry.geometry.toJSON() }
+									}]
+								});
+							} catch (e) { console.warn(e); }
 				}
 			}
 			

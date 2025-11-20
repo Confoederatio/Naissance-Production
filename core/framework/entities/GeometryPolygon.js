@@ -228,6 +228,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 	 *   - `.geometry`: {@link string}
 	 * - `.set_data`: {@link Object}
 	 *   - `<data_key>`: {@link any}
+	 * - `.set_polygon`: {@link string} - The JSON to set the polygon geometry to.
 	 * - `.set_symbol`: {@link Object}
 	 *   - `<symbol_key>`: {@link any}
 	 */
@@ -291,6 +292,20 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 				}
 			}
 			
+			//set_data
+			if (json.set_data) {
+				polygon_obj.addKeyframe(main.date, undefined, undefined, json.set_data);
+			} else if (json.set_data === null) { //[WIP] - Implement clear data ability later
+				
+			}
+			
+			//set_polygon
+			if (json.set_polygon) {
+				polygon_obj.addKeyframe(main.date, json.set_polygon);
+			} else if (json.set_polygon === null) {
+				
+			}
+			
 			//set_symbol
 			if (json.set_symbol) {
 				polygon_obj.addKeyframe(main.date, undefined, json.set_symbol, undefined);
@@ -298,11 +313,13 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 				
 			}
 			
-			//set_data
-			if (json.set_data) {
-				polygon_obj.addKeyframe(main.date, undefined, undefined, json.set_data);
-			} else if (json.set_data === null) { //[WIP] - Implement clear data ability later
+			//simplify_polygon
+			if (json.simplify_polygon !== undefined) {
+				let geometry = polygon_obj.geometry;
+				let turf_simplify = turf.simplify(Geospatiale.convertMaptalksToTurf(geometry), { tolerance: json.simplify_polygon });
 				
+				polygon_obj.addKeyframe(main.date, (turf_simplify) ?
+					Geospatiale.convertTurfToMaptalks(turf_simplify).toJSON() : null);
 			}
 		}
 	}
