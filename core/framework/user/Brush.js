@@ -44,6 +44,8 @@ naissance.Brush = class extends ve.Class {
 					name: "Node"
 				},
 				node_override: {
+					name: "Node Override"
+				},
 				override: {
 					name: "Override"
 				}
