@@ -12,7 +12,16 @@ global.UI_Leftbar = class extends ve.Class {
 						name: " ",
 						navigation_only: true,
 						
-						load_function: DALS.Timeline.loadState,
+						load_function: (arg0_data) => {
+							//Convert from parameters
+							let data = (arg0_data) ? arg0_data : {};
+							
+							//Load state
+							DALS.Timeline.parseAction({
+								options: { name: "Load Save", key: "load_save" },
+								value: [{ type: "global", load_save: data }]
+							});
+						},
 						save_extension: ".naissance",
 						save_function: DALS.Timeline.saveState
 					})

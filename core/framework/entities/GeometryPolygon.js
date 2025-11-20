@@ -84,7 +84,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 		
 		//1. Set this.value from current relative keyframe
 		this.value = this.history.getKeyframe({ date: main.date }).value;
-		if (this.value === undefined || this.value.length === 0) derender_geometry = true;
+		if (this.value === undefined || this.value.length === 0 || this._is_visible === false) derender_geometry = true;
 			
 		//2. Draw this.geometry, this.label from this.value onto map
 		if (this.value && this.value[0] === null) derender_geometry = true; //Coords are null, derender geometry

@@ -130,6 +130,38 @@ naissance.FeatureSketchMap = class extends naissance.Feature {
 		//Declare local instance variables
 		this.interface = new ve.HierarchyDatatype({
 			icon: new ve.HTML(`<icon>app_registration</icon>`),
+			hide_visibility: veButton(() => {
+				DALS.Timeline.parseAction({
+					options: { name: "Hide SketchMap", key: "hide_sketch_map" },
+					value: [{ type: "Feature", feature_id: this.id, set_visibility: false }]
+				});
+			}, {
+				name: "<icon>visibility</icon>",
+				limit: () => this._is_visible,
+				tooltip: "Hide Sketch Map",
+				style: {
+					marginLeft: "auto", order: 99, padding: 0,
+					"button": {
+						marginLeft: "1rem"
+					}
+				}
+			}),
+			show_visibility: veButton(() => {
+				DALS.Timeline.parseAction({
+					options: { name: "Show SketchMap", key: "show_sketch_map" },
+					value: [{ type: "Feature", feature_id: this.id, set_visibility: true }]
+				});
+			}, {
+				name: "<icon>visibility_off</icon>",
+				limit: () => !this._is_visible,
+				tooltip: "Show Sketch Map",
+				style: {
+					marginLeft: "auto", order: 99, padding: 0,
+					"button": {
+						marginLeft: "1rem"
+					}
+				}
+			}),
 			edit: veButton(() => {
 				super.open("instance", {
 					id: this.id,
@@ -140,12 +172,7 @@ naissance.FeatureSketchMap = class extends naissance.Feature {
 			}, {
 				name: "<icon>more_vert</icon>",
 				tooltip: "Edit Sketch Map",
-				style: {
-					marginLeft: "auto", order: 99, padding: 0,
-					"button": {
-						marginLeft: "1rem"
-					}
-				}
+				style: { order: 100 }
 			})
 		}, {
 			ignore_component: true,
@@ -313,7 +340,6 @@ naissance.FeatureSketchMap = class extends naissance.Feature {
 					sketch_map_obj._entities[json.edit_entity.id].addTo(main.layers.overlay_layer);
 					sketch_map_obj.draw();
 				}
-			
 			//set_entity_symbol
 			if (json.set_entity_symbol)
 				if (sketch_map_obj._entities[json.set_entity_symbol.id])

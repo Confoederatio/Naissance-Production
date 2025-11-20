@@ -13,6 +13,8 @@
 		//console.log(json.value);
 		for (let i = 0; i < json.value.length; i++) {
 			if (json.value[i].type === "global") {
+				if (json.value[i].load_save)
+					DALS.Timeline.loadState(json.value[i].load_save);
 				if (json.value[i].set_date) {
 					main.date = json.value[i].set_date;
 				} else if (json.value[i].refresh_date === true) {

@@ -94,6 +94,11 @@ naissance.Geometry = class extends ve.Class {
 		}
 	}
 	
+	hide () {
+		this._is_visible = false;
+		if (this.draw) this.draw();
+	}
+	
 	toJSON () {
 		console.warn(`naissance.Geometry.toJSON() was called for: ${this.class_name}, but was not defined.`);
 	}
@@ -117,6 +122,11 @@ naissance.Geometry = class extends ve.Class {
 		//Rerender deleted geometry and remove it from the map
 		this.history = new naissance.History();
 		this.draw();
+	}
+	
+	show () {
+		this._is_visible = true;
+		if (this.draw) this.draw();
 	}
 	
 	static parseAction (arg0_json) {

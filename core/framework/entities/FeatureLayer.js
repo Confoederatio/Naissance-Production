@@ -89,6 +89,39 @@ naissance.FeatureLayer = class extends naissance.Feature {
 		//Set this.interface
 		this.interface = new ve.HierarchyDatatype({
 			icon: new ve.HTML(`<icon>layers</icon>`),
+			hide_visibility: veButton(() => {
+				DALS.Timeline.parseAction({
+					options: { name: "Hide Layer", key: "hide_layer" },
+					value: [{ type: "Feature", feature_id: this.id, set_visibility: false }]
+				});
+			}, {
+				name: "<icon>visibility</icon>",
+				limit: () => this._is_visible,
+				tooltip: "Hide Layer",
+				style: {
+					marginLeft: "auto", order: 99, padding: 0,
+					"button": {
+						marginLeft: "1rem"
+					}
+				}
+			}),
+			show_visibility: veButton(() => {
+				DALS.Timeline.parseAction({
+					options: { name: "Show Layer", key: "show_layer" },
+					value: [{ type: "Feature", feature_id: this.id, set_visibility: true }]
+				});
+			}, {
+				name: "<icon>visibility_off</icon>",
+				limit: () => !this._is_visible,
+				tooltip: "Show Layer",
+				style: {
+					marginLeft: "auto", order: 99, padding: 0,
+					"button": {
+						marginLeft: "1rem"
+					}
+				}
+			}),
+			
 			...hierarchy_obj
 		}, {
 			instance: this,
@@ -97,6 +130,14 @@ naissance.FeatureLayer = class extends naissance.Feature {
 				onchange: (v) => {
 					this.name = v;
 					this.drawHierarchyDatatype();
+				}
+			},
+			style: {
+				".nst-content": {
+					paddingRight: 0
+				},
+				"[component='ve-button'] > button": {
+					border: 0
 				}
 			},
 			type: "group"

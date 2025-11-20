@@ -8,6 +8,7 @@ naissance.Feature = class extends ve.Class {
 		this.id = Class.generateRandomID(naissance.Feature);
 		this.instance = this;
 		this.is_naissance_feature = true;
+		this._is_visible = true;
 		
 		//Initialise this.options
 		if (!this.options) this.options = {};
@@ -57,6 +58,27 @@ naissance.Feature = class extends ve.Class {
 			this._parent = value;
 	}
 	
+	hide () {
+		//Declare local instance variables
+		this._is_visible = false;
+		
+		//Iterate over all entities; attempt to hide all entities
+		if (this.entities)
+			for (let i = 0; i < this.entities.length; i++)
+				if (this.entities[i].hide)
+					this.entities[i].hide();
+	}
+	
+	show () {
+		this._is_visible = true;
+		
+		//Iterate over all entities; attempt to show all entities
+		if (this.entities)
+			for (let i = 0; i < this.entities.length; i++)
+				if (this.entities[i].show)
+					this.entities[i].show();
+	}
+	
 	static parseAction (arg0_json) {
 		//Convert from parameters
 		let json = (typeof arg0_json === "string") ? JSON.parse(arg0_json) : arg0_json;
@@ -69,6 +91,14 @@ naissance.Feature = class extends ve.Class {
 			//set_name
 			if (typeof json.set_name === "string")
 				feature_obj._name = json.set_name;
+			
+			//set_visibility
+			if (json.set_visibility !== undefined)
+				if (json.set_visibility === true) {
+					feature_obj.show();
+				} else if (json.set_visibility === false) {
+					feature_obj.hide();
+				}
 		}
 	}
 };
