@@ -47,8 +47,16 @@ naissance.History = class extends ve.Class {
 					let icon_el = document.createElement("icon");
 					icon_el.innerHTML = `arrow_forward`;
 					icon_el.addEventListener("click", (e) => {
-						console.log(`[WIP] - Jump to not yet implemented:`, e);
+						DALS.Timeline.parseAction({
+							options: { name: "Set Date", key: "load_date" },
+							value: [
+								{ type: "global", set_date: Date.convertTimestampToDate(local_key) },
+								{ type: "global", refresh_date: true }
+							]
+						});
 					});
+					
+					//Return statement
 					return icon_el;
 				}, { tooltip: "Jump to Date", style: { cursor: "pointer" } })
 			}, {
