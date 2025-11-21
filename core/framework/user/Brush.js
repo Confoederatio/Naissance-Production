@@ -59,6 +59,7 @@ naissance.Brush = class extends ve.Class {
 			
 			//Row 1: Colour
 			colour: veColour("#1bbc9b", {
+				name: "Fill Colour",
 				binding: "this.colour",
 				onchange: (v, e) => {
 					try { //console.log(`Changed from user ${v}`);
@@ -77,7 +78,9 @@ naissance.Brush = class extends ve.Class {
 				},
 				x: 1, y: 1
 			}),
-			properties: veButton(() => {}, {
+			properties: veButton(() => {
+				main.interfaces.edit_selected_geometries_ui.open();
+			}, {
 				name: "Edit Selected Geometries",
 				limit: () => this.hasSelectedGeometry(),
 				width: 2,

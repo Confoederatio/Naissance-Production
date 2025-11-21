@@ -22,6 +22,9 @@ global.path = require("path");
 				//Leftbar
 				leftbar_ui: new UI_Leftbar(),
 				
+				//Rightbar
+				edit_selected_geometries_ui: new UI_EditSelectedGeometries(),
+				
 				//Topbar
 				date_ui: new UI_DateMenu(),
 				navbar: global.main_navbar
