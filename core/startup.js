@@ -44,6 +44,7 @@ global.path = require("path");
 				})
 			},
 			map: map,
+			renderer: new naissance.Renderer(map),
 			user: {}
     };
 		if (!global.naissance) global.naissance = {};

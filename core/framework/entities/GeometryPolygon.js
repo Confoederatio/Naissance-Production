@@ -88,47 +88,53 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 			
 		//2. Draw this.geometry, this.label from this.value onto map
 		if (this.value && this.value[0] === null) derender_geometry = true; //Coords are null, derender geometry
-		try {
-			//console.log(`naissance.GeometryPolygon, render keyframe:`, this.value);
-			if (this.geometry) this.geometry.remove();
-			if (this.value[0]) {
-				this.geometry = maptalks.Geometry.fromJSON(this.value[0]);
-				if (this.value[1] && this.geometry) this.geometry.setSymbol(this.value[1]);
-				main.layers.entity_layer.addGeometry(this.geometry);
-			}
-			if (this.value[2]) { //[WIP] - Finish backend for label rendering
-				//Fetch this.value[2].label_geometry, this.value[2].label_name, this.value[2].label_symbol
-			}
-		} catch (e) { console.error(e); }
+		if (this.value && this.value[2]) {
+			if (this.value[2].max_zoom && map.getZoom() > this.value[2].max_zoom) derender_geometry = true;
+			if (this.value[2].min_zoom && map.getZoom() < this.value[2].min_zoom) derender_geometry = true;
+		}
 		
-		//3. Draw this.selected_geometry
-		try {
-			if (this.selected_geometry) this.selected_geometry.remove();
-			this.selected_geometry = undefined;
+		if (!derender_geometry) {
+			try {
+				//console.log(`naissance.GeometryPolygon, render keyframe:`, this.value);
+				if (this.geometry) this.geometry.remove();
+				if (this.value[0]) {
+					this.geometry = maptalks.Geometry.fromJSON(this.value[0]);
+					if (this.value[1] && this.geometry) this.geometry.setSymbol(this.value[1]);
+					main.layers.entity_layer.addGeometry(this.geometry);
+				}
+				if (this.value[2]) { //[WIP] - Finish backend for label rendering
+					//Fetch this.value[2].label_geometry, this.value[2].label_name, this.value[2].label_symbol
+				}
+			} catch (e) { console.error(e); }
 			
-			if (this.geometry && this.selected) {
-				this.selected_geometry = this.geometry.copy();
-				this.selected_geometry.setSymbol({
-					lineColor: `rgb(255, 255, 0)`,
-					lineDasharray : (main.brush.selected_geometry?.id !== this.id) ? [10, 10, 10] : undefined,
-					lineOpacity: 0.5,
-					lineWidth: 4,
+			//3. Draw this.selected_geometry
+			try {
+				if (this.selected_geometry) this.selected_geometry.remove();
+				this.selected_geometry = undefined;
+				
+				if (this.geometry && this.selected) {
+					this.selected_geometry = this.geometry.copy();
+					this.selected_geometry.setSymbol({
+						lineColor: `rgb(255, 255, 0)`,
+						lineDasharray : (main.brush.selected_geometry?.id !== this.id) ? [10, 10, 10] : undefined,
+						lineOpacity: 0.5,
+						lineWidth: 4,
+					});
+					main.layers.selection_layer.addGeometry(this.selected_geometry);
+				}
+			} catch (e) { console.error(e); }
+			
+			//4. Add bindings
+			if (this.geometry) {
+				this.keyframes_ui.v = this.history.interface.v;
+				this.geometry.addEventListener("click", (e) => {
+					super.open("instance", { name: this.name, width: "20rem" });
 				});
-				main.layers.selection_layer.addGeometry(this.selected_geometry);
 			}
-		} catch (e) { console.error(e); }
-		
-		//4. Add bindings
-		if (this.geometry) {
-			this.keyframes_ui.v = this.history.interface.v;
-			this.geometry.addEventListener("click", (e) => {
-				super.open("instance", { name: this.name, width: "20rem" });
-			});
 		}
 		
 		//5. Derender geometry handler
 		if (derender_geometry) {
-			console.log(`Derendering geometry!`);
 			if (this.geometry) this.geometry.remove();
 			if (this.label) this.label.remove();
 			if (this.selected_geometry) this.selected_geometry.remove();
@@ -256,7 +262,7 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 			}
 		
 		//Parse commands for polygon_obj
-		if (polygon_obj) {
+		if (polygon_obj && polygon_obj instanceof naissance.GeometryPolygon) {
 			//add_to_polygon
 			if (json.add_to_polygon) {
 				let geometry = polygon_obj.geometry;
@@ -292,25 +298,25 @@ naissance.GeometryPolygon = class extends naissance.Geometry {
 				}
 			}
 			
-			//set_data
-			if (json.set_data) {
-				polygon_obj.addKeyframe(main.date, undefined, undefined, json.set_data);
-			} else if (json.set_data === null) { //[WIP] - Implement clear data ability later
-				
-			}
-			
 			//set_polygon
 			if (json.set_polygon) {
 				polygon_obj.addKeyframe(main.date, json.set_polygon);
 			} else if (json.set_polygon === null) {
-				
+				polygon_obj.addKeyframe(main.date, null);
+			}
+			
+			//set_properties
+			if (json.set_properties) {
+				polygon_obj.addKeyframe(main.date, undefined, undefined, json.set_properties);
+			} else if (json.set_properties === null) {
+				polygon_obj.addKeyframe(main.date, undefined, undefined, null);
 			}
 			
 			//set_symbol
 			if (json.set_symbol) {
-				polygon_obj.addKeyframe(main.date, undefined, json.set_symbol, undefined);
-			} else if (json.set_symbol === null) { //[WIP] - Implement clear symbol ability later
-				
+				polygon_obj.addKeyframe(main.date, undefined, json.set_symbol);
+			} else if (json.set_symbol === null) {
+				polygon_obj.addKeyframe(main.date, undefined, null);
 			}
 			
 			//simplify_polygon

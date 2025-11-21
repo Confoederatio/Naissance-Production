@@ -14,17 +14,13 @@ global.UI_EditSelectedGeometries = class extends ve.Class {
 				colour: veColour(main.brush.colour, {
 					name: "Fill Colour",
 					onuserchange: (v, e) => {
-						try {
-							naissance.Brush.setSelectedSymbol({ polygonFill: e.getHex() });
-						} catch (e) { console.error(e); }
+						naissance.Brush.setSelectedSymbol({ polygonFill: e.getHex() });
 					}
 				}),
 				opacity: veRange(main.brush.opacity/100, {
 					name: "Fill Opacity",
 					onuserchange: (v) => {
-						try {
-							naissance.Brush.setSelectedSymbol({ polygonOpacity: v });
-						} catch (e) { console.error(e); }
+						naissance.Brush.setSelectedSymbol({ polygonOpacity: v });
 					}
 				}),
 				pattern_url: new ve.Text("", {
@@ -36,9 +32,7 @@ global.UI_EditSelectedGeometries = class extends ve.Class {
 						if (v.length === 0) {
 							veToast("Reset fill pattern!");
 						} else {
-							try {
-								naissance.Brush.setSelectedSymbol({ polygonPatternFile: v });
-							} catch (e) { console.error(e); }
+							naissance.Brush.setSelectedSymbol({ polygonPatternFile: v });
 						}
 					}
 				})
@@ -49,25 +43,19 @@ global.UI_EditSelectedGeometries = class extends ve.Class {
 				colour: veColour(main.brush.stroke_colour, {
 					name: "Stroke Colour",
 					onuserchange: (v, e) => {
-						try {
-							naissance.Brush.setSelectedSymbol({ lineColor: e.getHex() });
-						} catch (e) { console.error(e); }
+						naissance.Brush.setSelectedSymbol({ lineColor: e.getHex() });
 					}
 				}),
 				opacity: veRange(main.brush.stroke_opacity/100, {
 					name: "Stroke Opacity",
 					onuserchange: (v, e) => {
-						try {
-							naissance.Brush.setSelectedSymbol({ lineOpacity: e });
-						} catch (e) { console.error(e); }
+						naissance.Brush.setSelectedSymbol({ lineOpacity: e });
 					}
 				}),
 				width: veNumber(main.brush.stroke_width, {
 					name: "Stroke Width",
 					onuserchange: (v) => {
-						try {
-							naissance.Brush.setSelectedSymbol({ lineWidth: v });
-						} catch (e) { console.error(e); }
+						naissance.Brush.setSelectedSymbol({ lineWidth: v });
 					}
 				}),
 				
@@ -85,9 +73,7 @@ global.UI_EditSelectedGeometries = class extends ve.Class {
 				}, { 
 					name: "Line Cap",
 					onuserchange: (v) => {
-						try {
-							naissance.Brush.setSelectedSymbol({ lineCap: v });
-						} catch (e) { console.error(e); }
+						naissance.Brush.setSelectedSymbol({ lineCap: v });
 					}
 				}),
 				line_join: new ve.Select({
@@ -104,9 +90,7 @@ global.UI_EditSelectedGeometries = class extends ve.Class {
 				}, { 
 					name: "Line Join",
 					onuserchange: (v) => {
-						try {
-							naissance.Brush.setSelectedSymbol({ lineJoin: v });
-						} catch (e) { console.error(e); }
+						naissance.Brush.setSelectedSymbol({ lineJoin: v });
 					}
 				}),
 			}, { name: "Stroke", open: true })
@@ -123,7 +107,20 @@ global.UI_EditSelectedGeometries = class extends ve.Class {
 			
 		}, { name: "Label" });
 		this.properties = new ve.Interface({
-			
+			visibility: new ve.Interface({
+				minimum_zoom: new ve.Number(0, {
+					name: "Minimum Zoom",
+					onuserchange: (v) => {
+						naissance.Brush.setSelectedProperties({ min_zoom: v });
+					}
+				}),
+				maximum_zoom: new ve.Number(0,{
+					name: "Maximum Zoom",
+					onuserchange: (v) => {
+						naissance.Brush.setSelectedProperties({ max_zoom: v });
+					}
+				})
+			}, { name: "Visibility", open: true })
 		}, { name: "Properties", open: true });
 	}
 	

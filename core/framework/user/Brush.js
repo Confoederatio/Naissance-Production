@@ -380,4 +380,26 @@ naissance.Brush = class extends ve.Class {
 				});
 		DALS.Timeline.parseAction(json_obj);
 	}
+	
+	static setSelectedProperties (arg0_properties_obj) {
+		//Convert from parameters
+		let properties_obj = (arg0_properties_obj) ? arg0_properties_obj : {};
+		
+		//Declare local instance variables
+		let json_obj = {
+			options: { name: "Set Selected Properties", key: "set_selected_properties" },
+			value: []
+		};
+		
+		//Iterate over naissance.Geometry.instances and check for .selected
+		for (let i = 0; i < naissance.Geometry.instances.length; i++)
+			if (naissance.Geometry.instances[i].selected)
+				json_obj.value.push({
+					type: naissance.Geometry.instances[i].class_name,
+					
+					geometry_id: naissance.Geometry.instances[i].id,
+					set_properties: properties_obj
+				});
+		DALS.Timeline.parseAction(json_obj);
+	}
 };
