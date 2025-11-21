@@ -59,7 +59,7 @@ naissance.Brush = class extends ve.Class {
 			
 			//Row 1: Colour
 			colour: veColour("#1bbc9b", {
-				name: "Fill Colour",
+				name: "<b>Fill</b> Colour",
 				binding: "this.colour",
 				onchange: (v, e) => {
 					try { //console.log(`Changed from user ${v}`);
@@ -68,23 +68,67 @@ naissance.Brush = class extends ve.Class {
 				},
 				x: 0, y: 1
 			}),
-			opacity: veRange(0.70, {
+			opacity: veNumber(70, {
 				name: "Opacity",
+				max: 100,
+				min: 0,
+				
 				binding: "this.opacity",
 				onchange: (v) => {
 					try { 
-						naissance.Brush.setSelectedSymbol({ polygonOpacity: v }); 
+						naissance.Brush.setSelectedSymbol({
+							polygonOpacity: v/100
+						}); 
 					} catch (e) { console.error(e); }
 				},
 				x: 1, y: 1
 			}),
+			stroke_colour: veColour("#000000", {
+				name: "<b>Stroke</b> Colour",
+				binding: "this.stroke_colour",
+				onchange: (v, e) => {
+					try {
+						naissance.Brush.setSelectedSymbol({ lineColor: e.getHex() });
+					} catch (e) { console.error(e); }
+				},
+				x: 0, y: 2
+			}),
+			stroke_opacity: veNumber(100, {
+				name: "Opacity",
+				max: 100,
+				min: 0,
+				
+				binding: "this.stroke_opacity",
+				onchange: (v) => {
+					try {
+						naissance.Brush.setSelectedSymbol({
+							lineOpacity: v/100
+						});
+					} catch (e) { console.error(e); }
+				},
+				style: { display: "inline" },
+				x: 1, y: 2
+			}),
+			stroke_width: new ve.Number(1, {
+				name: "Width",
+				binding: "this.stroke_width",
+				step: 1,
+				onchange: (v) => {
+					try {
+						naissance.Brush.setSelectedSymbol({ lineWidth: v });
+					} catch (e) { console.error(e); }
+				},
+				style: { display: "inline" },
+				x: 1, y: 2
+			}),
+			
 			properties: veButton(() => {
 				main.interfaces.edit_selected_geometries_ui.open();
 			}, {
 				name: "Edit Selected Geometries",
 				limit: () => this.hasSelectedGeometry(),
 				width: 2,
-				x: 0, y: 2
+				x: 0, y: 3
 			})
 		}, { name: "Brush Options:", open: true });
 		
@@ -146,8 +190,11 @@ naissance.Brush = class extends ve.Class {
 		//Return statement
 		return {
 			polygonFill: this.brush_options.colour.getHex(), //[WIP] - Using this.colour doesn't work for now because Proxy<Array> does not have a getter
-			polygonOpacity: this.opacity
-		}
+			polygonOpacity: this.opacity/100,
+			lineColor: this.brush_options.stroke_colour.getHex(),
+			lineOpacity: this.brush_options.stroke_opacity/100,
+			lineWidth: this.brush_options.stroke_width
+		};
 	}
 	
 	handleEvents () {
