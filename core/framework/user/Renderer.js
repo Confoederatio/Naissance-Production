@@ -17,7 +17,18 @@ naissance.Renderer = class extends ve.Class {
 		});
 	}
 	
-	update () {
+	/**
+	 * Returns the ordered z-indexes of all Geometries within each Feature based on {@link UI_LeftbarHierarchy}.
+	 */
+	getRenderingOrder () { //[WIP] - Finish function body
+		//Declare local instance variables
+		
+	}
+	
+	/**
+	 * Updates the z-indexes and rendering orders of various geometries.
+	 */
+	update () { //[WIP] - Finish function body
 		
 	}
 };
